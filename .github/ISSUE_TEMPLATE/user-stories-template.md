@@ -1,6 +1,6 @@
 ---
 name: User stories template
-about: "<user story number>"
+about: Template to create user stories issues
 title: ''
 labels: user story
 assignees: ''
