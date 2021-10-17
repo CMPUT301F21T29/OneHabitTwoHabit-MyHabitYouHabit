@@ -1,5 +1,6 @@
 package com.example.ohthmhyh;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -7,6 +8,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +29,8 @@ public class UserFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private FirebaseUser user;
 
     public UserFragment() {
         // Required empty public constructor
@@ -58,7 +66,35 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Get the user that is currently signed in.
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
+
+        Button signOutButton = view.findViewById(R.id.button_sign_out);
+        signOutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // The user wants to sign out. Sign the user out and go back to the login activity.
+                FirebaseAuth.getInstance().signOut();
+                goToLoginActivity();
+            }
+        });
+
+        // Display the user's email.
+        TextView userTextView = view.findViewById(R.id.text_view_user);
+        userTextView.setText(user.getEmail());
+
+        return view;
+    }
+
+    /**
+     * Create an intent and start the login activity.
+     */
+    private void goToLoginActivity() {
+        // Go to the login activity from this fragment.
+        Intent loginActivityIntent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(loginActivityIntent);
     }
 }
