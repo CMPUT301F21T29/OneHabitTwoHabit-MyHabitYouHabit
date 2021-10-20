@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,6 +16,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Login Activity"
+        android:textColor="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +29,10 @@
         android:ems="10"
         android:hint="Email"
         android:inputType="textPersonName"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#8DFFFFFF"
         app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/text_view_email" />
 
     <EditText
@@ -37,8 +42,12 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ems="10"
+        android:hint="Password"
         android:inputType="textPassword"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#8DFFFFFF"
         app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@+id/text_view_password" />
 
     <Button
@@ -49,6 +58,7 @@
         android:layout_marginTop="16dp"
         android:text="Continue"
         app:layout_constraintStart_toStartOf="parent"
+        android:backgroundTint="#656565"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_password" />
 
     <Button
@@ -58,6 +68,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Switch"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#656565"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_continue" />
 
@@ -68,6 +81,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Email"
+        android:textColor="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_login" />
@@ -79,6 +93,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Password"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_email" />
