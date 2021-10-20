@@ -3,8 +3,11 @@ package com.example.ohthmhyh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
@@ -17,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private HabitsTodayFragment habitsTodayFragment = new HabitsTodayFragment();
     private HabitEventsFragment habitEventsFragment = new HabitEventsFragment();
     private UserFragment userFragment = new UserFragment();
+    private Button button;
 
     /**
      * Called to create the main activity.
@@ -27,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be
         // shown as the "Feed" fragment.
@@ -57,5 +60,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
         bottomNavigationView.setSelectedItemId(R.id.feed_nav_item);  // Set feed as the initial screen.
-    }
+        Button button=findViewById(R.id.Createhabit);
+        button.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                Intent intent= new Intent(v.getContext(), CreateHabitEvent.class);
+                startActivity(intent);
+            }});}
 }
