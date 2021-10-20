@@ -56,6 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
-        bottomNavigationView.setSelectedItemId(R.id.feed_nav_item);  // Set feed as the initial screen.
+        bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set feed as the initial screen.
     }
 }
