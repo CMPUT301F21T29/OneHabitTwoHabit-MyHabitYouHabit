@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be
-        // shown as the "Feed" fragment.
+        // shown as the "Habit Today" fragment.
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -59,11 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
-        bottomNavigationView.setSelectedItemId(R.id.feed_nav_item);  // Set feed as the initial screen.
-        Button button=findViewById(R.id.Createhabit);
-        button.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Intent intent= new Intent(v.getContext(), CreateHabitEvent.class);
-                startActivity(intent);
-            }});}
+
+        bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
+    }
 }
