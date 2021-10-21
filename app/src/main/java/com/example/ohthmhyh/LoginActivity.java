@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,6 +36,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button switchButton;  // Switches the responsibility of this activity from either signing up or logging in.
     private EditText emailEditText;
     private EditText passwordEditText;
+    private TextView greetingText;
+    private TextView usernameText;
+    private EditText usernameEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,10 @@ public class LoginActivity extends AppCompatActivity {
 
         // Used to verify login credentials and/or create a new user with an email and password.
         mAuth = FirebaseAuth.getInstance();
+
+        greetingText = findViewById(R.id.greeting_text);
+        usernameText = findViewById(R.id.text_view_username);
+        usernameEditText = findViewById(R.id.edit_text_username);
 
         continueButton = findViewById(R.id.button_continue);
         continueButton.setOnClickListener(new View.OnClickListener() {
@@ -133,10 +141,16 @@ public class LoginActivity extends AppCompatActivity {
     private void updateResponsibility() {
         if (loggingIn) {
             // We are currently using this activity to log in an existing.
+            greetingText.setText("To begin, please log in: ");
+            usernameText.setVisibility(View.GONE);
+            usernameEditText.setVisibility(View.GONE);
             continueButton.setText("Login");
             switchButton.setText("Don't have an account? Sign up!");
         } else {
             // We are currently using this activity to sign up a non-existing user.
+            greetingText.setText("To sign up, please fill out the following fields: ");
+            usernameText.setVisibility(View.VISIBLE);
+            usernameEditText.setVisibility(View.VISIBLE);
             continueButton.setText("Sign up");
             switchButton.setText("Already have an account? Login!");
         }
