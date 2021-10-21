@@ -49,12 +49,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/greenD3"
         android:ems="10"
         android:hint="Email"
         android:inputType="textPersonName"
-        android:textColor="@color/black"
-        android:textColorHint="@color/semiVisBlack"
+        android:textColor="@color/greenD3"
+        android:textColorHint="@color/greenD3semi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_email" />
 
@@ -76,12 +76,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/greenD3"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPassword"
-        android:textColor="@color/black"
-        android:textColorHint="@color/semiVisBlack"
+        android:textColor="@color/greenD3"
+        android:textColorHint="@color/greenD3semi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_username" />
 
@@ -90,12 +90,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/greenD3"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        android:textColor="@color/black"
-        android:textColorHint="@color/semiVisBlack"
+        android:textColor="@color/greenD3"
+        android:textColorHint="@color/greenD3semi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_password" />
 
