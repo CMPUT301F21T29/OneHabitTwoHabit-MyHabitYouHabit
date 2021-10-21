@@ -56,10 +56,15 @@ public class LoginActivity extends AppCompatActivity {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                boolean validInputs = false;
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if (loggingIn) {
+                if ((!email.equals("")) && (!password.equals(""))) {
+                    validInputs = true;
+                }
+
+                if (loggingIn && validInputs) {
                     // We are logging in an existing user.
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(
@@ -77,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-                } else {
+                } else if (validInputs) {
                     // We are signing up a new user.
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(
@@ -95,6 +100,9 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                }
+                else {
+                    //display error: Inputs are whitespace
                 }
             }
         });
