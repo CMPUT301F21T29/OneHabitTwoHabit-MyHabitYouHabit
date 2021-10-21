@@ -79,7 +79,7 @@
         android:backgroundTint="#FFFFFF"
         android:ems="10"
         android:hint="Username"
-        android:inputType="textPassword"
+        android:inputType="textPersonName"
         android:textColor="#FFFFFF"
         android:textColorHint="#8DFFFFFF"
         app:layout_constraintStart_toStartOf="parent"
