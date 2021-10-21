@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     private HabitsTodayFragment habitsTodayFragment = new HabitsTodayFragment();
     private HabitEventsFragment habitEventsFragment = new HabitEventsFragment();
     private UserFragment userFragment = new UserFragment();
-    private Button button;
 
     /**
      * Called to create the main activity.
