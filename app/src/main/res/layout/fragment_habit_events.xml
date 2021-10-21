@@ -21,9 +21,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/Createhabit"
+        android:id="@+id/CreateHabit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="GotoCreateHabitEvent"
         android:text="Create New Habit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

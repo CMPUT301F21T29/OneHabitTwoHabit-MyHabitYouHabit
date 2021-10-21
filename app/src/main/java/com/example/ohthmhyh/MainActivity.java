@@ -62,4 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
     }
+    public void GotoCreateHabitEvent(View view){
+        Intent intent =new Intent(this,CreateHabitEvent.class);
+        startActivity(intent);
+    }
 }

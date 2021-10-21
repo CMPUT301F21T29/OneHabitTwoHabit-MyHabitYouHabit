@@ -54,8 +54,12 @@ dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
 
     //This is for getting a user picture https://github.com/ArthurHub/Android-Image-Cropper and https://github.com/square/picasso
-    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    //api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    //This is used for getting the day of week from user
+    //https://androidexample365.com/an-elegant-day-of-the-week-picker-inspired-by-googles-clock-app/
+    implementation 'ca.antonious:materialdaypicker:0.7.3'
 
 }
 

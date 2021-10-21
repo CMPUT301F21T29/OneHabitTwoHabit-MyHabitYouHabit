@@ -128,4 +128,17 @@ String storagePermition[];
             break;
         }
     }
+
+    public void thing(View view){
+
+    }
+
+    public void final_create_habit(View view){
+
+
+
+        Intent intent =new Intent(this,MainActivity.class);
+        startActivity(intent);
+    }
+
 }
