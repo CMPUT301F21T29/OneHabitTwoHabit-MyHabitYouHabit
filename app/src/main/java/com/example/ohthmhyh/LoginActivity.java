@@ -3,6 +3,8 @@ package com.example.ohthmhyh;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailEditText;
     private EditText passwordEditText;
     private TextView greetingText;
-    private TextView usernameText;
     private EditText usernameEditText;
 
     @Override
@@ -49,22 +50,20 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         greetingText = findViewById(R.id.greeting_text);
-        usernameText = findViewById(R.id.text_view_username);
-        usernameEditText = findViewById(R.id.edit_text_username);
 
         continueButton = findViewById(R.id.button_continue);
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean validInputs = false;
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
-                if ((!email.equals("")) && (!password.equals(""))) {
-                    validInputs = true;
+                // Don't do anything if the email and password fields are blank.
+                if (email.length() == 0 || password.length() == 0) {
+                    return;
                 }
 
-                if (loggingIn && validInputs) {
+                if (loggingIn) {
                     // We are logging in an existing user.
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(
@@ -76,14 +75,20 @@ public class LoginActivity extends AppCompatActivity {
                                         Log.d("LoginActivity", "loginUserEmail:success");
                                         goToMainActivity();
                                     } else {
-                                        // TODO: May want to display more informative errors.
                                         Log.w("LoginActivity", "loginUserEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, "Login failed.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
-                } else if (validInputs) {
+                } else {
                     // We are signing up a new user.
+                    String username = usernameEditText.getText().toString();
+                    if (username.length() == 0) {
+                        return;
+                    }
+
+                    // TODO: Check if username already exists.
+
                     mAuth.createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener(
                                     LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -92,17 +97,14 @@ public class LoginActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         // Sign uo success! Go to the main activity.
                                         Log.d("LoginActivity", "createUserEmail:success");
+                                        // TODO: Get current user and set their username.
                                         goToMainActivity();
                                     } else {
-                                        // TODO: May want to display more informative errors.
                                         Log.w("LoginActivity", "createUserEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, "Sign up failed.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
-                }
-                else {
-                    //display error: Inputs are whitespace
                 }
             }
         });
@@ -118,10 +120,20 @@ public class LoginActivity extends AppCompatActivity {
 
         emailEditText = findViewById(R.id.edit_text_email);
 
-        passwordEditText = findViewById(R.id.edit_text_password);
+        usernameEditText = findViewById(R.id.edit_text_username);
 
-        // Display to the user whether we are trying to log them in or sign them up.
-        updateResponsibility();
+        passwordEditText = findViewById(R.id.edit_text_password);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        // Need to put the update responsibility in here so that animation is performed even on the
+        // app's startup. If the responsibility update is just done in onCreate, it won't perform
+        // the animation won't play.
+        if (hasFocus) {
+            // Display to the user whether we are trying to log them in or sign them up.
+            updateResponsibility();
+        }
     }
 
     @Override
@@ -150,15 +162,48 @@ public class LoginActivity extends AppCompatActivity {
         if (loggingIn) {
             // We are currently using this activity to log in an existing.
             greetingText.setText("To begin, please log in: ");
-            usernameText.setVisibility(View.GONE);
-            usernameEditText.setVisibility(View.GONE);
+
+            // Perform animations in a separate thread. This is for performance enhancement and also
+            // to allow the animation to occur after the initial onCreate call.
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    float distance = passwordEditText.getY() - usernameEditText.getY();
+                    emailEditText.animate().translationY(distance / 2);
+                    passwordEditText.animate().translationY(-distance / 2);
+                    usernameEditText.animate().alpha(0.0f).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            usernameEditText.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
+            }).start();
+
             continueButton.setText("Login");
             switchButton.setText("Don't have an account? Sign up!");
         } else {
             // We are currently using this activity to sign up a non-existing user.
             greetingText.setText("To sign up, please fill out the following fields: ");
-            usernameText.setVisibility(View.VISIBLE);
-            usernameEditText.setVisibility(View.VISIBLE);
+
+            // Perform animations in a separate thread. This is for performance enhancement and also
+            // to allow the animation to occur after the initial onCreate call.
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    emailEditText.animate().translationY(0);
+                    passwordEditText.animate().translationY(0);
+                    usernameEditText.animate().alpha(1.0f).setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            super.onAnimationStart(animation);
+                            usernameEditText.setVisibility(View.VISIBLE);
+                        }
+                    });
+                }
+            }).start();
+
             continueButton.setText("Sign up");
             switchButton.setText("Already have an account? Login!");
         }
