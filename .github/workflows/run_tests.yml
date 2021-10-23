@@ -13,7 +13,7 @@ jobs:
           java-version: '11'
       - name: Unit tests
         run: ./gradlew test
-  intstrumentation-tests:
+  instrumentation-tests:
     runs-on: [macos-latest]
     steps:
       - uses: actions/checkout@v2
