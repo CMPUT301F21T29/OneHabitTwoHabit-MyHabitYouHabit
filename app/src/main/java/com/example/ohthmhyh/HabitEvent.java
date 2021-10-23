@@ -13,9 +13,9 @@ public class HabitEvent {
     private Uri resultUri;
 
 
-    public HabitEvent(Date date, String name,
-                       String dose_unit, int dose_amount,
-                       int daily_frequency, int Id_number) {
+    public HabitEvent(Habit habit, String comment,
+                       String UUID, String UHID,
+                      String Locatoion, Uri resultUri) {
         this.habit = habit;
         this.comment = comment;
         this.UUID = UUID;
