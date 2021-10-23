@@ -62,7 +62,8 @@ dependencies {
     implementation 'ca.antonious:materialdaypicker:0.7.3'
     //Needed for location
     implementation 'com.google.android.gms:play-services-location:18.0.0'
-
+    //Used for the drop down menu (Might not be needed)
+    //implementation 'com.google.android.material:material:1.1.0'
 
 }
 

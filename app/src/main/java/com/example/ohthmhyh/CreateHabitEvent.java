@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -12,7 +13,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,13 +40,45 @@ import java.util.List;
 import java.util.Locale;
 
 public class CreateHabitEvent extends AppCompatActivity {
+
+    //used for image
     public ImageView pick;
     public static final int Camra_request = 100;
     public static final int Storage_request = 101;
     private Uri resultUri;
     String camraPermition[];
     String storagePermition[];
+
+    //used for location
     FusedLocationProviderClient fusedLocationProviderClient;
+    Address address;
+    //Used for drop down menu
+    private AutoCompleteTextView autoCompleteTextView;
+
+
+    //Used for comment
+    EditText getComment;
+
+    private String comment;
+    //Flags, Used to error check and see what optinal data the user used.
+    //flag=pic
+    //flag2=comment
+    //flag3=location
+     Boolean flag=false, flag2=false, flag3=false;
+
+//Only Needed if fragments happen
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Down here is for dropdown menu
+        //Needs to get the habit
+        //Need to habit
+        String [] habitList={"Habit one", "Habit two", "Habit three"};
+        autoCompleteTextView=findViewById(R.id.AutoCompleteTextviewCE);
+        ArrayAdapter arrayAdapter=new ArrayAdapter(this,R.layout.create_habit_habit_drop_down_menu,habitList);
+        autoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
+        autoCompleteTextView.setAdapter(arrayAdapter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +89,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         storagePermition = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
+        getComment=(EditText) findViewById(R.id.Get_a_comment_CE);
         pick = (ImageView) findViewById(R.id.pickImage);
         pick.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -75,6 +112,7 @@ public class CreateHabitEvent extends AppCompatActivity {
 
             }
         });
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -111,6 +149,7 @@ public class CreateHabitEvent extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 resultUri = result.getUri();
                 Picasso.with(this).load(resultUri).into(pick);
+                flag=true;
             }
         }
     }
@@ -147,19 +186,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         }
     }
 
-    public void List_of_habits(View view) {
 
-    }
-
-    public void final_create_habit(View view) {
-        //TODO
-        //Get user info
-        //Get a habit from user
-        //HabitEvent habitEvent=new HabitEvent(habit,comment,UUID,UHID,location,resultUri);
-        //push habitEvent into data base
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
 
     public void get_user_location(View view) {
         //Check Permitions
@@ -175,7 +202,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         }
     }
 
-    //Does give an error but..........works
+    //Does give an error but..........works, Does not see that I ask for Permission elsewhere I believe
     @SuppressLint("MissingPermission")
     private void getLocation() {
         //Simple tests
@@ -195,7 +222,8 @@ public class CreateHabitEvent extends AppCompatActivity {
                         List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                         //To get everything do addressList.get(0).getLatitude
                         //getLongatude, get(0).getCountry  getAddressLine
-
+                        flag3=true;
+                        address=addressList.get(0);
                         testLocationthing.setText(Html.fromHtml(addressList.get(0).getAddressLine(0)));
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -205,4 +233,40 @@ public class CreateHabitEvent extends AppCompatActivity {
         });
     }
 
+    Boolean commentvalidater(String string){
+        if (string.length()>20){
+            return false;
+        }
+        return true;
+    }
+
+    public void final_create_habit(View view) {
+        comment=getComment.getText().toString();
+
+        if (commentvalidater(comment)){
+            getComment.setBackgroundColor(Color.rgb(0,255,0));
+            flag2=true;
+        }
+        else{
+            getComment.setBackgroundColor(Color.rgb(255,0,0));
+            flag2=false;
+        }
+        //No image was givin
+        if (!flag){
+            resultUri=null;
+        }
+        if (!flag3){
+            address=null;
+        }
+        String test;
+        test=autoCompleteTextView.getText().toString();
+        Toast.makeText(this, test, Toast.LENGTH_LONG).show();
+        //TODO
+        //Get user info
+        //Get a habit from user
+        //HabitEvent habitEvent=new HabitEvent(habit,comment,UUID,UHID,location,resultUri);
+        //push habitEvent into data base
+        //Intent intent = new Intent(this, MainActivity.class);
+        //startActivity(intent);
+    }
 }
