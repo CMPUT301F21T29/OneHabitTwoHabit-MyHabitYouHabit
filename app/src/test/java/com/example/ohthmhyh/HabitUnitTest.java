@@ -25,7 +25,7 @@ public class HabitUnitTest {
         h.setStartDate(LocalDate.now());
 
         // test the parameters
-        assertEquals("test name", h.getName());
+        assertEquals("test name1", h.getName());
         assertEquals("test description", h.getDescription());
         assertEquals(sched, h.getSchedule());
         assertEquals(LocalDate.now(), h.getStartDate());

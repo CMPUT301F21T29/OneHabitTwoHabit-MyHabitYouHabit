@@ -45,7 +45,7 @@ public class LoginActivityTest {
     @Test
     public void testNoInput() throws Exception {
         // Ensure we are in the LoginActivity.
-        solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
+        solo.assertCurrentActivity("Wrong activity", MainActivity.class);
 
         // Click on the continue button without entering any input.
         solo.clickOnView(solo.getView(R.id.button_continue));
