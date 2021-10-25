@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Html;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -40,6 +42,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class CreateHabitEvent extends AppCompatActivity {
+    Bitmap bitmap = null;
+
 
     //used for image
     public ImageView pick;
@@ -150,6 +154,12 @@ public class CreateHabitEvent extends AppCompatActivity {
                 resultUri = result.getUri();
                 Picasso.with(this).load(resultUri).into(pick);
                 flag=true;
+                //Should get the bitmap from the givin URL
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -268,5 +278,26 @@ public class CreateHabitEvent extends AppCompatActivity {
         //push habitEvent into data base
         //Intent intent = new Intent(this, MainActivity.class);
         //startActivity(intent);
+    }
+    /**
+     * https://stackoverflow.com/questions/16954109/reduce-the-size-of-a-bitmap-to-a-specified-size-in-android
+     * reduces the size of the image
+     * @param image
+     * @param maxSize
+     * @return
+     */
+    //public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+      //  int width = image.getWidth();
+        //int height = image.getHeight();
+
+        //float bitmapRatio = (float)width / (float) height;
+        //if (bitmapRatio > 1) {
+          //  width = maxSize;
+           // height = (int) (width / bitmapRatio);
+        //} else {
+         //   height = maxSize;
+        //    width = (int) (height * bitmapRatio);
+        //}
+       // return Bitmap.createScaledBitmap(image, width, height, true);
     }
 }
