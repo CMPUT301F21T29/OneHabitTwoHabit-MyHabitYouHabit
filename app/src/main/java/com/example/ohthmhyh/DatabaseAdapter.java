@@ -5,50 +5,169 @@ import static android.content.ContentValues.TAG;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.util.Pair;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 public class DatabaseAdapter{
 
-    private FirebaseFirestore db;
-    private String UID;
+    /**
+     * A callback used when retrieving the users profile from the database.
+     */
+    public interface ProfileCallback{
+        void onProfileCallback(User profile);
+    }
+
+    /**
+     * A callback used when checking if a username is already in use.
+     */
+    public interface UsernameCheckCallback{
+        void onUsernameCheckCallback(boolean usernameExists);
+    }
+
+    /**
+     * A callback used when retrieving a users habits from the database.
+     */
+    public interface HabitCallback{
+        void onHabitCallback(ArrayList<Habit> habits);
+    }
 
 
+//    public interface FollowingCallback{
+//        void onFollowingCallback(ArrayList<String> following);
+//    }
+
+//    public interface HabitEventsCallback{
+//        void onHabitEventsCallback(ArrayList<HabitEvent> habitEvents);
+//    }
+
+    private static FirebaseFirestore db;
+    private static String UID;
+
+
+    /**
+     * Create an instance of the database adapter. UID will automatically be set. This is the
+     * constructor you should probably be using.
+     */
     public DatabaseAdapter(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         UID = user.getUid();
         db = FirebaseFirestore.getInstance();
     }
 
+
+    /**
+     * Create an instance of the database adapter, specifying a UID. Ideally, this should only be
+     * used while testing as specifying the wrong UID can cause database errors.
+     */
     public DatabaseAdapter(String UID){
         this.UID = UID;
         db = FirebaseFirestore.getInstance();
     }
 
 
-    public void pushHabit(Habit habit){
+    /**
+     * Call this method to check if a username is in the database. Need to do this when changing a
+     * username or when signing up.
+     * @param username The username to check the database for
+     * @
+     */
+    public static void checkUsernameExists(String username, DatabaseAdapter.UsernameCheckCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query conflicts = db.collection("Profiles").whereEqualTo("username", username);
 
+        conflicts.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(queryDocumentSnapshots.isEmpty()){
+                    callback.onUsernameCheckCallback(false);
+                }
+                else{
+                    callback.onUsernameCheckCallback(true);
+                }
+            }
+        });
     }
 
 
-    public ArrayList<Habit> pullHabits(){
+    /**
+     * Call with a user profile to update it in the database. This should be called whenever a data
+     * member is changed in a user profile.
+     * @param profile The user profile to push to / update in the database
+     */
+    public void updateUser(User profile){
+        // only update if the username is unique
+        // TODO: make sure username is unique and stuff
 
-        return new ArrayList<Habit>();
+        db.collection("Profiles")
+                .document(UID)
+                .set(profile)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Error adding document", e);
+                    }
+                });
     }
+
+
+    /**
+     * Call this when a user logs-on in order to retrieve their user profile from the database
+     * @param callback A callback which will be used to update the user profile
+     */
+    public void getUser(DatabaseAdapter.ProfileCallback callback){
+        DocumentReference profile = db.collection("Profiles").document(UID);
+        profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User profile = documentSnapshot.toObject(User.class);
+                callback.onProfileCallback(profile);
+            }
+        });
+    }
+
+
+
+
+
+////////////////////////////////////////////////
+//// warning: stuff below is likely broken! ////
+////////////////////////////////////////////////
+
+//    // get the habits of another user by UID
+//    public void getHabits(String UID, DatabaseAdapter.HabitCallback callback){
+//        DocumentReference profile = db.collection("Profiles").document(UID);
+//        profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                User profile = documentSnapshot.toObject(User.class);
+//                callback.onHabitCallback(profile.getHabitList());
+//            }
+//        });
+//    }
+
+//    public void pushHabit(Habit habit){
+//        db.collection("Habits")
+//                .document(UID)
+//                .collection("Habits")
+//                .document(Integer.toString(habit.getUHID()))
+//                .set(habit)
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e(TAG, "Error adding document", e);
+//                    }
+//                });
+//    }
 
 
 //    public void pushHabitEvent(HabitEvent habitEvent){
@@ -60,55 +179,6 @@ public class DatabaseAdapter{
 //
 //        return new ArrayList<HabitEvent>();
 //    }
-
-
-    public void updateUser(User profile){
-        Pair<String, User> userPair = new Pair<>(UID, profile);
-
-        db.collection("Profiles")
-                .add(userPair)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
-    }
-
-
-    public User getUser(){
-        CollectionReference profiles = db.collection("Profiles");
-        Query query = profiles.whereEqualTo("first", UID);
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    Log.e("HERE", "HHHHHHEEEEEEEEEEERRRRRRREEEEEEE");
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.e("AYY GOT DATA!", document.getId() + " => " + document.getData());
-                    }
-                } else {
-                    Log.e(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
-
-        return null;
-    }
-
-
-    public ArrayList<User> getFollowing(){
-
-        return null;
-    }
-
 
 }
 
