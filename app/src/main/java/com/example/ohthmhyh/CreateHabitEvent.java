@@ -234,7 +234,7 @@ public class CreateHabitEvent extends AppCompatActivity {
                         //getLongatude, get(0).getCountry  getAddressLine
                         flag3=true;
                         address=addressList.get(0);
-                        testLocationthing.setText(Html.fromHtml(addressList.get(0).getAddressLine(0)));
+                        testLocationthing.setText(Html.fromHtml(address.getAddressLine(0)));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

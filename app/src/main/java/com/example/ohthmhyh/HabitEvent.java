@@ -1,5 +1,6 @@
 package com.example.ohthmhyh;
 
+import android.location.Address;
 import android.net.Uri;
 
 import java.util.Date;
@@ -9,13 +10,13 @@ public class HabitEvent {
     private String comment;
     private String UUID;
     private String UHID;
-    private String Locatoion;
+    private Address Locatoion;
     private Uri resultUri;
 
 
     public HabitEvent(Habit habit, String comment,
                        String UUID, String UHID,
-                      String Locatoion, Uri resultUri) {
+                      Address Locatoion, Uri resultUri) {
         this.habit = habit;
         this.comment = comment;
         this.UUID = UUID;
@@ -56,11 +57,11 @@ public class HabitEvent {
         this.UHID = UHID;
     }
 
-    public String getLocatoion() {
+    public Address getLocatoion() {
         return Locatoion;
     }
 
-    public void setLocatoion(String locatoion) {
+    public void setLocatoion(Address locatoion) {
         Locatoion = locatoion;
     }
 
