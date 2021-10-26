@@ -83,28 +83,43 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     // We are signing up a new user.
                     String username = usernameEditText.getText().toString();
+                    // tell the user to pick a username if they didn't
                     if (username.length() == 0) {
+                        Toast.makeText(getApplicationContext(),"Please pick a username!",Toast.LENGTH_SHORT).show();
                         return;
                     }
 
                     // TODO: Check if username already exists.
+                    // only allow signing up if the username is not already in use
+                    DatabaseAdapter.checkUsernameExists(username, new DatabaseAdapter.UsernameCheckCallback() {
+                        @Override
+                        public void onUsernameCheckCallback(boolean usernameExists) {
+                            // if the username exists, tell the user to pick another one
+                            if(usernameExists){
+                                Toast.makeText(getApplicationContext(),"Username already in use!",Toast.LENGTH_SHORT).show();
+                            }
+                            // else username is good; sign the user up
+                            else{
+                                mAuth.createUserWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener(
+                                        LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    // Sign up success! Go to the main activity.
+                                                    Log.d("LoginActivity", "createUserEmail:success");
+//TODO:                                             // TODO: Get current user and set their username.
+                                                    goToMainActivity();
+                                                } else {
+                                                    Log.w("LoginActivity", "createUserEmail:failure", task.getException());
+                                                    Toast.makeText(LoginActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+                    });
 
-                    mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(
-                                    LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (task.isSuccessful()) {
-                                        // Sign uo success! Go to the main activity.
-                                        Log.d("LoginActivity", "createUserEmail:success");
-                                        // TODO: Get current user and set their username.
-                                        goToMainActivity();
-                                    } else {
-                                        Log.w("LoginActivity", "createUserEmail:failure", task.getException());
-                                        Toast.makeText(LoginActivity.this, task.getException().getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
                 }
             }
         });

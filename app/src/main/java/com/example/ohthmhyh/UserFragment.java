@@ -90,7 +90,7 @@ public class UserFragment extends Fragment {
     }
 
     /**
-     * Create an intent and start the login activity.
+     * Create an intent and start the login activity. (when sign out button pressed)
      */
     private void goToLoginActivity() {
         // Go to the login activity from this fragment.
