@@ -1,12 +1,16 @@
 package com.example.ohthmhyh;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,20 +53,51 @@ public class HabitsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_habits, null);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_habits, container, false);
+        View view = inflater.inflate(R.layout.fragment_habits, container, false);
+
+        Button addButton = view.findViewById(R.id.add_habit);
+        addButton.setOnClickListener((v) -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
+
+            alertDialog.setTitle("Add a Habit");
+            alertDialog.setMessage("ABC");
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Empty Listener as the Cancel button doesn't do anything.
+                        }
+                    });
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+
+
+            alertDialog.show();
+        });
+
+        return view;
     }
 
-    public void addHabit(Habit habit) {
+
+    private void addHabit(Habit habit) {
 
     }
 }
