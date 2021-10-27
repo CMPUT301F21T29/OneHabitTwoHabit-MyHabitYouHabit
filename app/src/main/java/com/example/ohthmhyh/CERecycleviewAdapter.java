@@ -46,16 +46,20 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         holder.ExtraDisplay.setText("Extra: ");
 
         holder.DisplayLocation.setText("Location: "+(Html.fromHtml(habitEventsList.get(position).getLocatoion().getAddressLine(0))));
-        holder.DisplayUserpic.setImageURI(habitEventsList.get(position).getResultUri());
+        holder.DisplayUserpic.setImageBitmap(habitEventsList.get(position).getBitmapPic());
 
         //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             //Used for editing
+
             @Override
+
             public void onClick(View view) {
+                habitEventsList.get(position).setFlag(1);
                 Intent intent = new Intent(context,CreateHabitEvent.class);
-                intent.putExtra("id",habitEventsList.get(position).getId_number());
+                intent.putExtra("flag",habitEventsList.get(position).getFlag());
+                intent.putExtra("position",position);
                 context.startActivity(intent);
             }
         });

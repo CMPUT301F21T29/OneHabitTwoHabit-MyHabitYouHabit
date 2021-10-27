@@ -1,5 +1,6 @@
 package com.example.ohthmhyh;
 
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.net.Uri;
 
@@ -11,18 +12,20 @@ public class HabitEvent {
     private String UUID;
     private String UHID;
     private Address Locatoion;
-    private Uri resultUri;
+    private Bitmap BitmapPic;
+    private int flag;
 
 
     public HabitEvent(Habit habit, String comment,
                        String UUID, String UHID,
-                      Address Locatoion, Uri resultUri) {
+                      Address Locatoion, Bitmap BitmapPic,int flag) {
         this.habit = habit;
         this.comment = comment;
         this.UUID = UUID;
         this.UHID = UHID;
         this.Locatoion = Locatoion;
-        this.resultUri=resultUri;
+        this.BitmapPic=BitmapPic;
+        this.flag=flag;
     }
 
     public Habit getHabit() {
@@ -65,11 +68,19 @@ public class HabitEvent {
         Locatoion = locatoion;
     }
 
-    public Uri getResultUri() {
-        return resultUri;
+    public Bitmap getBitmapPic() {
+        return BitmapPic;
     }
 
-    public void setResultUri(Uri resultUri) {
-        this.resultUri = resultUri;
+    public void setBitmapPic(Bitmap bitmapPic) {
+        BitmapPic = bitmapPic;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
@@ -69,7 +70,9 @@ public class CreateHabitEvent extends AppCompatActivity {
     //flag2=comment
     //flag3=location
      Boolean flag=false, flag2=false, flag3=false;
-
+     int flag4=-1;
+    int position;
+    TextView localText;
 //Only Needed if fragments happen
     @Override
     protected void onResume() {
@@ -93,8 +96,13 @@ public class CreateHabitEvent extends AppCompatActivity {
         storagePermition = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        localText= (TextView) findViewById(R.id.Add_Location_text);
         getComment=(EditText) findViewById(R.id.Get_a_comment_CE);
         pick = (ImageView) findViewById(R.id.pickImage);
+
+
+
         pick.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -116,6 +124,35 @@ public class CreateHabitEvent extends AppCompatActivity {
 
             }
         });
+        Intent intent= getIntent();
+        flag4=intent.getIntExtra("flag",-1);
+        position=intent.getIntExtra("position",69);
+        HabitEvent habitEvent=null;
+        //edit Habitevent when clicked on in list
+        if (flag4>=0){
+            //todo
+            //edit medicine when clicked on in list
+            //habitEvent=magichabitlist.get(position);
+
+            pick.setImageBitmap(habitEvent.getBitmapPic());
+            getComment.setText(habitEvent.getComment());
+            if (habitEvent.getLocatoion()==null){
+                localText.setText("");
+            }else{
+                localText.setText(Html.fromHtml(habitEvent.getLocatoion().getAddressLine(0)));
+            }
+            String temp= habitEvent.getHabit().getName();
+            //pop item from string habit list take note of position
+            //append it to the front
+            String [] habitList={"Habit one", "Habit two", "Habit three"};
+            autoCompleteTextView=findViewById(R.id.AutoCompleteTextviewCE);
+            ArrayAdapter arrayAdapter=new ArrayAdapter(this,R.layout.create_habit_habit_drop_down_menu,habitList);
+            autoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
+            autoCompleteTextView.setAdapter(arrayAdapter);
+
+            autoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
+            //reverse the changes above.
+    }
 
     }
 
@@ -250,7 +287,42 @@ public class CreateHabitEvent extends AppCompatActivity {
         return true;
     }
 
+    //Should work in maybe...
+    //todo
+    //get everything running with data
     public void final_create_habit(View view) {
+
+        if (flag4 >=0){//need to edit medicine
+            comment=getComment.getText().toString();
+
+            if (commentvalidater(comment)){
+                getComment.setBackgroundColor(Color.rgb(0,255,0));
+                flag2=true;
+            }
+            else{
+                getComment.setBackgroundColor(Color.rgb(255,0,0));
+                flag2=false;
+                return;
+            }
+            //No image was givin
+            if (!flag){
+                resultUri=null;
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.lol_pic);
+
+            }
+            if (!flag3){
+                address=null;
+            }
+            String test;
+            test=autoCompleteTextView.getText().toString();
+            Toast.makeText(this, test, Toast.LENGTH_LONG).show();
+            //HabitEvent updatehabitEvent=new HabitEvent(habit,comment,UUID,UHID,location,bitmap,flag);
+            //Magichabitlist.set.(position,updatehabitEvent);
+            Intent intent =new Intent(CreateHabitEvent.this,MainActivity.class);
+            startActivity(intent);
+
+        }else{
+
         comment=getComment.getText().toString();
 
         if (commentvalidater(comment)){
@@ -260,10 +332,12 @@ public class CreateHabitEvent extends AppCompatActivity {
         else{
             getComment.setBackgroundColor(Color.rgb(255,0,0));
             flag2=false;
+            return;
         }
         //No image was givin
         if (!flag){
             resultUri=null;
+            bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.lol_pic);
         }
         if (!flag3){
             address=null;
@@ -274,10 +348,11 @@ public class CreateHabitEvent extends AppCompatActivity {
         //TODO
         //Get user info
         //Get a habit from user
-        //HabitEvent habitEvent=new HabitEvent(habit,comment,UUID,UHID,location,resultUri);
+        //HabitEvent habitEvent=new HabitEvent(habit,comment,UUID,UHID,location,bitmap,flag);
         //push habitEvent into data base
-        //Intent intent = new Intent(this, MainActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
     }
     /**
      * https://stackoverflow.com/questions/16954109/reduce-the-size-of-a-bitmap-to-a-specified-size-in-android
@@ -299,5 +374,5 @@ public class CreateHabitEvent extends AppCompatActivity {
         //    width = (int) (height * bitmapRatio);
         //}
        // return Bitmap.createScaledBitmap(image, width, height, true);
-    }
+     //}
 }
