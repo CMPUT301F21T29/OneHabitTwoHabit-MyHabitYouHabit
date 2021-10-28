@@ -3,7 +3,9 @@ package com.example.ohthmhyh;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,10 +22,11 @@ import java.util.List;
  * Use the {@link HabitEventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HabitEventsFragment extends Fragment {
+public class HabitEventsFragment extends Fragment implements CERecycleviewAdapter.OntouchListener {
 
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
+     RecyclerView recyclerView;
+     CERecycleviewAdapter mAdapter;
+    private ArrayList<HabitEvent> habitEventArrayList;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,16 +71,31 @@ public class HabitEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ArrayList<HabitEvent> habitEventArrayList;
-        TestClassStuart testClassStuart = (TestClassStuart) getActivity().getApplication();
-        habitEventArrayList= TestClassStuart.getHabiteventlist();
+
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
+        habitEventArrayList=TestClassStuart.getHabiteventlist();
         recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+        LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(Mmanager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter=new CERecycleviewAdapter(habitEventArrayList,getActivity());//Might error getActivity works?
+        mAdapter=new CERecycleviewAdapter(habitEventArrayList,getActivity(),this);//Might error getActivity works?
+        ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
+        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+        mAdapter.setTouchhelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(mAdapter);
         return view;
+    }
+
+
+    @Override
+    public void onItemclicked(int position) {
+        habitEventArrayList=TestClassStuart.getHabiteventlist();
+        habitEventArrayList.get(position).setFlag(1);
+        Intent intent = new Intent(getActivity(),CreateHabitEvent.class);
+        intent.putExtra("flag",habitEventArrayList.get(position).getFlag());
+        intent.putExtra("position",position);
+        getActivity().startActivity(intent);
     }
 }

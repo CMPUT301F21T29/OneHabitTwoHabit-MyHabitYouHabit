@@ -1,38 +1,47 @@
-package com.example.ohthmhyh;
-
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.location.Address;
-import android.text.Html;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 
-public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder> {
+        package com.example.ohthmhyh;
+
+        import android.annotation.SuppressLint;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.location.Address;
+        import android.text.Html;
+        import android.view.GestureDetector;
+        import android.view.LayoutInflater;
+        import android.view.MotionEvent;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.ImageView;
+        import android.widget.TextView;
+
+        import androidx.annotation.NonNull;
+        import androidx.constraintlayout.widget.ConstraintLayout;
+        import androidx.recyclerview.widget.ItemTouchHelper;
+        import androidx.recyclerview.widget.RecyclerView;
+
+        import com.squareup.picasso.Picasso;
+
+        import java.util.ArrayList;
+
+
+public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder>
+        implements CeitemHelpToucherAdapter{
     ArrayList<HabitEvent> habitEventsList;
     Context context;
+    ItemTouchHelper mTouchhelper;
+    OntouchListener mOntouchListener;
 
-    public  CERecycleviewAdapter(ArrayList<HabitEvent> habitEventsList, Context context){
+    public  CERecycleviewAdapter(ArrayList<HabitEvent> habitEventsList, Context context,OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
         this.context=context;
+        this.mOntouchListener=mOntouchListener;
     }
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.display_habit_event_list,parent,false);
-        Myviewholder holder =new Myviewholder(view);
+        Myviewholder holder =new Myviewholder(view, mOntouchListener);
 
         return holder;
     }
@@ -50,22 +59,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         }
 
         holder.DisplayUserpic.setImageBitmap(habitEventsList.get(position).getBitmapPic());
-
         //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
-
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            //Used for editing
-
-            @Override
-
-            public void onClick(View view) {
-                habitEventsList.get(position).setFlag(1);
-                Intent intent = new Intent(context,CreateHabitEvent.class);
-                intent.putExtra("flag",habitEventsList.get(position).getFlag());
-                intent.putExtra("position",position);
-                context.startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -73,16 +67,38 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         return habitEventsList.size();
     }
 
-    public class Myviewholder extends RecyclerView.ViewHolder {
+    @Override
+    public void onItemMove(int frompositon, int toposition) {
+        HabitEvent fromHabitevent=habitEventsList.get(frompositon);
+        habitEventsList.remove(fromHabitevent);
+        habitEventsList.add(toposition,fromHabitevent);
+        notifyItemMoved(frompositon,toposition);
+    }
+
+    @Override
+    public void onItemSwiped(int position) {
+        habitEventsList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+
+    public void setTouchhelper(ItemTouchHelper touchhelper){
+        this.mTouchhelper=touchhelper;
+    }
+
+    public class Myviewholder extends RecyclerView.ViewHolder implements
+            View.OnTouchListener,
+            GestureDetector.OnGestureListener
+    {
         TextView Displaycomment;
         TextView DisplayHabit;
         TextView ExtraDisplay;
         TextView DisplayLocation;
         ImageView DisplayUserpic;
-
+        GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
-
-        public Myviewholder(@NonNull View itemView) {
+        OntouchListener ontouchListener;
+        public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
             super(itemView);
             Displaycomment=itemView.findViewById(R.id.DisplayCommentCE);
             DisplayHabit=itemView.findViewById(R.id.DisplayHabitCE);
@@ -91,7 +107,54 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
             DisplayUserpic=itemView.findViewById(R.id.DisplayUserpicCE);
             //This is the name of the contrant layout in display HE list
             parentLayout=itemView.findViewById(R.id.Displayed_HabitEvent_list);
-        }
-    }
+            mGestureDetector=new GestureDetector(itemView.getContext(),this);
 
+            this.ontouchListener= ontouchListener;
+
+            itemView.setOnTouchListener(this);
+
+        }
+
+        @Override
+        public boolean onDown(MotionEvent motionEvent) {
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent motionEvent) {
+
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent motionEvent) {
+            ontouchListener.onItemclicked(getAdapterPosition());
+            return true;
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+            return false;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent motionEvent) {
+            mTouchhelper.startDrag(this);
+        }
+
+        @Override
+        public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+            return true;
+        }
+
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mGestureDetector.onTouchEvent(motionEvent);
+            return true;
+        }
+
+
+    }
+    public interface OntouchListener{
+        void onItemclicked(int position);
+    }
 }
