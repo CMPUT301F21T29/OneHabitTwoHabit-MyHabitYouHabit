@@ -108,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     // Sign up success! Go to the main activity.
                                                     Log.d("LoginActivity", "createUserEmail:success");
-//TODO:                                             // TODO: Get current user and set their username.
+                                                    // TODO: Get current user and set their username.
                                                     goToMainActivity();
                                                 } else {
                                                     Log.w("LoginActivity", "createUserEmail:failure", task.getException());

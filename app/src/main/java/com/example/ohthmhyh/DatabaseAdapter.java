@@ -79,7 +79,7 @@ public class DatabaseAdapter{
      * Call this method to check if a username is in the database. Need to do this when changing a
      * username or when signing up.
      * @param username The username to check the database for
-     * @
+     * @param callback The callback to obtain the result of if the username is in the database
      */
     public static void checkUsernameExists(String username, DatabaseAdapter.UsernameCheckCallback callback){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
