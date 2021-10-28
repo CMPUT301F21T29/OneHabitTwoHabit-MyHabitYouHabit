@@ -9,20 +9,16 @@ import java.util.Date;
 public class HabitEvent {
     private Habit habit;
     private String comment;
-    private String UUID;
-    private String UHID;
     private Address Locatoion;
     private Bitmap BitmapPic;
     private int flag;
 
 
     public HabitEvent(Habit habit, String comment,
-                       String UUID, String UHID,
                       Address Locatoion, Bitmap BitmapPic,int flag) {
         this.habit = habit;
         this.comment = comment;
-        this.UUID = UUID;
-        this.UHID = UHID;
+
         this.Locatoion = Locatoion;
         this.BitmapPic=BitmapPic;
         this.flag=flag;
@@ -42,22 +38,6 @@ public class HabitEvent {
 
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    public String getUUID() {
-        return UUID;
-    }
-
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
-    }
-
-    public String getUHID() {
-        return UHID;
-    }
-
-    public void setUHID(String UHID) {
-        this.UHID = UHID;
     }
 
     public Address getLocatoion() {

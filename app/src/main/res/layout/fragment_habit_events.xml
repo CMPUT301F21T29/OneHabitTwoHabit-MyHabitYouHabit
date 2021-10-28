@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/Displayed_HabitEvent_list_CE"
+            android:id="@+id/Displayed_HabitEvent_list_CE"
         android:layout_width="400dp"
         android:layout_height="477dp"
         app:layout_constraintBottom_toTopOf="@+id/CreateHabit"

@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,6 +21,9 @@ import android.widget.ImageView;
  * create an instance of this fragment.
  */
 public class HabitEventsFragment extends Fragment {
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,7 +68,16 @@ public class HabitEventsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ArrayList<HabitEvent> habitEventArrayList;
+        TestClassStuart testClassStuart = (TestClassStuart) getActivity().getApplication();
+        habitEventArrayList= TestClassStuart.getHabiteventlist();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_habit_events, container, false);
+        View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
+        recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mAdapter=new CERecycleviewAdapter(habitEventArrayList,getActivity());//Might error getActivity works?
+        recyclerView.setAdapter(mAdapter);
+        return view;
     }
 }

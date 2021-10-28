@@ -39,21 +39,25 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 public class CreateHabitEvent extends AppCompatActivity {
     Bitmap bitmap = null;
 
+    Habit habit=Habit.makeDummyHabit();
+    ArrayList<HabitEvent> habiteventlist;
+    HabitEvent habitEvent;
 
     //used for image
     public ImageView pick;
     public static final int Camra_request = 100;
     public static final int Storage_request = 101;
     private Uri resultUri;
+    int flag5=-1;
     String camraPermition[];
     String storagePermition[];
-
     //used for location
     FusedLocationProviderClient fusedLocationProviderClient;
     Address address;
@@ -91,7 +95,7 @@ public class CreateHabitEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_habit_event);
-
+        habiteventlist=TestClassStuart.getHabiteventlist();
         camraPermition = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermition = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -127,9 +131,10 @@ public class CreateHabitEvent extends AppCompatActivity {
         Intent intent= getIntent();
         flag4=intent.getIntExtra("flag",-1);
         position=intent.getIntExtra("position",69);
-        HabitEvent habitEvent=null;
+
         //edit Habitevent when clicked on in list
         if (flag4>=0){
+            habitEvent=habiteventlist.get(position);
             //todo
             //edit medicine when clicked on in list
             //habitEvent=magichabitlist.get(position);
@@ -316,8 +321,9 @@ public class CreateHabitEvent extends AppCompatActivity {
             String test;
             test=autoCompleteTextView.getText().toString();
             Toast.makeText(this, test, Toast.LENGTH_LONG).show();
-            //HabitEvent updatehabitEvent=new HabitEvent(habit,comment,UUID,UHID,location,bitmap,flag);
+            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,flag5);
             //Magichabitlist.set.(position,updatehabitEvent);
+            habiteventlist.set(position,updatehabitEvent);
             Intent intent =new Intent(CreateHabitEvent.this,MainActivity.class);
             startActivity(intent);
 
@@ -344,12 +350,14 @@ public class CreateHabitEvent extends AppCompatActivity {
         }
         String test;
         test=autoCompleteTextView.getText().toString();
+        //Do a for loop in habit list and find the name of test
         Toast.makeText(this, test, Toast.LENGTH_LONG).show();
         //TODO
         //Get user info
         //Get a habit from user
-        //HabitEvent habitEvent=new HabitEvent(habit,comment,UUID,UHID,location,bitmap,flag);
+        HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,flag5);
         //push habitEvent into data base
+            habiteventlist.add(habitEvent);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
