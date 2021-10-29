@@ -20,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +94,7 @@ public class CreateHabitEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_habit_event);
-        habiteventlist=TestClassStuart.getHabiteventlist();
+        habiteventlist= ApplicationCE.getHabiteventlist();
         camraPermition = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermition = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 

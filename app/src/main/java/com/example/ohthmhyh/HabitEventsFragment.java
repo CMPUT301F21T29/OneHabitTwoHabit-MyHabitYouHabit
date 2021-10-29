@@ -3,7 +3,6 @@ package com.example.ohthmhyh;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,10 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,7 +71,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
-        habitEventArrayList=TestClassStuart.getHabiteventlist();
+        habitEventArrayList= ApplicationCE.getHabiteventlist();
         recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
         LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(Mmanager);
@@ -91,7 +88,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 
     @Override
     public void onItemclicked(int position) {
-        habitEventArrayList=TestClassStuart.getHabiteventlist();
+        habitEventArrayList= ApplicationCE.getHabiteventlist();
         habitEventArrayList.get(position).setFlag(1);
         Intent intent = new Intent(getActivity(),CreateHabitEvent.class);
         intent.putExtra("flag",habitEventArrayList.get(position).getFlag());
