@@ -51,14 +51,21 @@ public class DatabaseAdapterTests{
 
     @Test
     public void getUserTest_1() throws Exception{
-        // make sure the user is in the DB
-        pushUserTest_1();
+        // make a database adapter and force a UID because we're not logged in while testing
+        dba = new DatabaseAdapter("testUID10");
+        // test pushing a user to the DB
+        User testUser = new User("AdaLovelace");
+        testUser.addHabit(Habit.makeDummyHabit());
+        testUser.addHabit(Habit.makeDummyHabit());
+        dba.updateUser(testUser);
         // get the user back from the DB
         dba.getUser(new DatabaseAdapter.ProfileCallback() {
             @Override
             public void onProfileCallback(User profile) {
-                // make sure the usernames match
-                assertEquals("BobbyWasabi", profile.getUsername());
+                // make sure the stuff matches
+                assertEquals("AdaLovelace", profile.getUsername());
+                assertEquals(testUser.getHabitList().get(0).getName(), profile.getHabitList().get(0).getName());
+                assertEquals(testUser.getHabitList().get(0).getSchedule(), profile.getHabitList().get(0).getSchedule());
             }
         });
     }
