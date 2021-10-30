@@ -3,10 +3,10 @@ package com.example.ohthmhyh;
 import java.util.ArrayList;
 
 public class User {
-    private static String username;
-    private static ArrayList<Habit> habitList;
-    private static ArrayList<String> friendList;
-    private static int UHIDCounter, UPIDCounter;
+    private String username;
+    private ArrayList<Habit> habitList;
+    private ArrayList<String> friendList;
+    private int UHIDCounter, UPIDCounter;
 
     // We need this for database reasons.
     public User(){}

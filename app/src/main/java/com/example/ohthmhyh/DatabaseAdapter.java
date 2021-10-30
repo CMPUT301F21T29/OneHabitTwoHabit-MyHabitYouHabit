@@ -113,21 +113,10 @@ public class DatabaseAdapter{
      */
     private void pushHabits(User user, WriteBatch batch){
         DocumentReference habits = db.collection("Habits").document(UID);
-        ArrayList<Map<String, Object>> allHabits = new ArrayList<>();
 
-        // make an arraylist with the essence of each habit
-        for(int i=0; i<user.getHabitList().size(); i++){
-            Map<String, Object> habitData = new HashMap<>();
-            habitData.put("name", user.getHabitList().get(i).getName());
-            habitData.put("description", user.getHabitList().get(i).getDescription());
-            habitData.put("startDate", user.getHabitList().get(i).getStartDate());
-            habitData.put("schedule", user.getHabitList().get(i).getSchedule());
-            allHabits.add(habitData);
-        }
+        HashMap<String, ArrayList<Habit>> field = new HashMap<>();
+        field.put("habits", user.getHabitList());
 
-        // next line obtained through cosmic rituals
-        HashMap<String, ArrayList<Map<String, Object>>> field = new HashMap<>();
-        field.put("habits", allHabits);
         batch.set(habits, field);
     }
 
@@ -176,11 +165,11 @@ public class DatabaseAdapter{
         habits.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                ArrayList<Habit> habitList = new ArrayList<>();
+                //ArrayList<Habit> habitList = new ArrayList<>();
 
                 // next line obtained through cosmic rituals
-                ArrayList<Map<String, Object>> group = (ArrayList<Map<String, Object>>) documentSnapshot.get("Habits");
-                callback.onHabitCallback(habitList);
+                HashMap<String, ArrayList<Habit>> habitslist = (HashMap<String, ArrayList<Habit>>) documentSnapshot.get("Habits");
+                callback.onHabitCallback(habitslist.get("habits"));
             }
         });
     }
@@ -226,4 +215,28 @@ public class DatabaseAdapter{
     }
 
 }
+
+//////////////////////////////////////////////////////////////////
+// works, but probably not super efficient. Kept for posterity ///
+//////////////////////////////////////////////////////////////////
+
+//    private void pushHabits(User user, WriteBatch batch){
+//        DocumentReference habits = db.collection("Habits").document(UID);
+//        ArrayList<Map<String, Object>> allHabits = new ArrayList<>();
+//
+//        // make an arraylist with the essence of each habit
+//        for(int i=0; i<user.getHabitList().size(); i++){
+//            Map<String, Object> habitData = new HashMap<>();
+//            habitData.put("name", user.getHabitList().get(i).getName());
+//            habitData.put("description", user.getHabitList().get(i).getDescription());
+//            habitData.put("startDate", user.getHabitList().get(i).getStartDate());
+//            habitData.put("schedule", user.getHabitList().get(i).getSchedule());
+//            allHabits.add(habitData);
+//        }
+//
+//        // next line obtained through cosmic rituals
+//        HashMap<String, ArrayList<Map<String, Object>>> field = new HashMap<>();
+//        field.put("habits", allHabits);
+//        batch.set(habits, field);
+//    }
 

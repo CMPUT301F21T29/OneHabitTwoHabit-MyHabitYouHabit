@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import android.util.Log;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -63,9 +65,9 @@ public class DatabaseAdapterTests{
             @Override
             public void onProfileCallback(User profile) {
                 // make sure the stuff matches
-                assertEquals("AdaLovelace", profile.getUsername());
-                assertEquals(testUser.getHabitList().get(0).getName(), profile.getHabitList().get(0).getName());
-                assertEquals(testUser.getHabitList().get(0).getSchedule(), profile.getHabitList().get(0).getSchedule());
+                assertTrue("AdaLovelace".equals(profile.getUsername()));
+                assertTrue(testUser.getHabitList().get(0).getName().equals(profile.getHabitList().get(0).getName()));
+                assertTrue(testUser.getHabitList().get(0).getSchedule().equals(profile.getHabitList().get(0).getSchedule()));
             }
         });
     }
