@@ -3,11 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/ANdroid studio workspace/301 Project/My_part_301_project/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/create_habit_event.xml" value="0.2203125" />
-        <entry key="..\:/ANdroid studio workspace/301 Project/My_part_301_project/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habit_events.xml" value="0.67" />
+        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/drawable/ic_feed_foreground.xml" value="0.4451282051282051" />
+        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_login.xml" value="0.2608695652173913" />
+        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_main.xml" value="0.2608695652173913" />
+        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_feed.xml" value="0.2608695652173913" />
+        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habits.xml" value="0.2572463768115942" />
+        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_user.xml" value="0.4" />
         <entry key="app/src/main/res/drawable/ic_person_background.xml" value="0.23072916666666668" />
         <entry key="app/src/main/res/drawable/ic_person_foreground.xml" value="0.23072916666666668" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.32586424877261955" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.39828860197361105" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.20052083333333334" />
         <entry key="app/src/main/res/layout/fragment_habit_events.xml" value="0.20052083333333334" />
