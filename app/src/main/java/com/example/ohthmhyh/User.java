@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class User {
     private String username, password;
-    private ArrayList<Habit> habitList;
+    public static ArrayList<Habit> habitList;
     private ArrayList<User> friendList;
     // TODO: Some encryption features for the password?
     public User(String username, String password)  {
