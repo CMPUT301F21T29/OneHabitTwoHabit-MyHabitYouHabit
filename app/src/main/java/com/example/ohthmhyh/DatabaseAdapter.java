@@ -3,6 +3,7 @@ package com.example.ohthmhyh;
 import static android.content.ContentValues.TAG;
 
 import android.util.Log;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 
@@ -15,8 +16,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+import com.google.firestore.v1.WriteResult;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseAdapter{
 
@@ -46,9 +51,11 @@ public class DatabaseAdapter{
 //        void onFollowingCallback(ArrayList<String> following);
 //    }
 
+
 //    public interface HabitEventsCallback{
 //        void onHabitEventsCallback(ArrayList<HabitEvent> habitEvents);
 //    }
+
 
     private static FirebaseFirestore db;
     private static String UID;
@@ -102,21 +109,15 @@ public class DatabaseAdapter{
     /**
      * Call with a user profile to update it in the database. This should be called whenever a data
      * member is changed in a user profile.
-     * @param profile The user profile to push to / update in the database
+     * @param user The user profile to push to / update in the database
      */
-    public void updateUser(User profile){
-        // only update if the username is unique
-        // TODO: make sure username is unique and stuff
+    public void updateUser(User user){
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("username", user.getUsername());
+        userData.put("UHIDcounter", user.getUHIDCounter());
+        userData.put("UPIDcounter", user.getUPIDCounter());
 
-        db.collection("Profiles")
-                .document(UID)
-                .set(profile)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Error adding document", e);
-                    }
-                });
+        db.collection("Profiles").document(UID).set(userData);
     }
 
 
@@ -129,8 +130,11 @@ public class DatabaseAdapter{
         profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User profile = documentSnapshot.toObject(User.class);
-                callback.onProfileCallback(profile);
+                User user = new User();
+                user.setUsername(documentSnapshot.get("username", String.class));
+                user.setUHIDCounter(documentSnapshot.get("UHIDcounter", Integer.class));
+                user.setUPIDCounter(documentSnapshot.get("UPIDcounter", Integer.class));
+                callback.onProfileCallback(user);
             }
         });
     }

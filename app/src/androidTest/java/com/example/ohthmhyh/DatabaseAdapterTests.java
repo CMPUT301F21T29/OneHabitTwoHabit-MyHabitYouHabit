@@ -53,7 +53,6 @@ public class DatabaseAdapterTests{
     public void getUserTest_1() throws Exception{
         // make sure the user is in the DB
         pushUserTest_1();
-
         // get the user back from the DB
         dba.getUser(new DatabaseAdapter.ProfileCallback() {
             @Override

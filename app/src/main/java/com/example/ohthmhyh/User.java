@@ -60,7 +60,7 @@ public class User {
      * Set the habit ID counter for this user
      * @param UHIDCounter the number to set the counter to
      */
-    public void setUHID(int UHIDCounter) {
+    public void setUHIDCounter(int UHIDCounter) {
         this.UHIDCounter = UHIDCounter;
     }
 
@@ -87,7 +87,7 @@ public class User {
      * Set the picture ID counter for this user
      * @param UPIDCounter the number to set the counter to
      */
-    public void setUPID(int UPIDCounter) {
+    public void setUPIDCounter(int UPIDCounter) {
         this.UPIDCounter = UPIDCounter;
     }
 
