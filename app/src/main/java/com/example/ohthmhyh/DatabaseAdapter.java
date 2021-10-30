@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -106,18 +107,50 @@ public class DatabaseAdapter{
     }
 
 
+    private void pushHabits(User user, WriteBatch batch){
+        DocumentReference habits = db.collection("Habits").document(UID);
+
+        ArrayList<Map<String, Object>> allHabits = new ArrayList<>();
+        for(int i=0; i<user.getHabitList().size(); i++){
+            Map<String, Object> habitData = new HashMap<>();
+            habitData.put("name", user.getHabitList().get(i).getName());
+            habitData.put("description", user.getHabitList().get(i).getDescription());
+            habitData.put("startDate", user.getHabitList().get(i).getStartDate());
+            habitData.put("schedule", user.getHabitList().get(i).getSchedule());
+            allHabits.add(habitData);
+        }
+
+        HashMap<String, ArrayList<Map<String, Object>>> test = new HashMap<>();
+        test.put("habits", allHabits);
+
+        batch.set(habits, test);
+    }
+
+
+    private void pushHabitEvents(User user, WriteBatch batch){
+        //TODO: set up pushing habit events. Need Stu's code first tho.
+    }
+
     /**
      * Call with a user profile to update it in the database. This should be called whenever a data
      * member is changed in a user profile.
      * @param user The user profile to push to / update in the database
      */
     public void updateUser(User user){
+        WriteBatch batch = db.batch();
+        DocumentReference profile = db.collection("Profiles").document(UID);
+
         Map<String, Object> userData = new HashMap<>();
         userData.put("username", user.getUsername());
         userData.put("UHIDcounter", user.getUHIDCounter());
         userData.put("UPIDcounter", user.getUPIDCounter());
 
-        db.collection("Profiles").document(UID).set(userData);
+        //db.collection("Profiles").document(UID).set(userData);
+
+        batch.set(profile, userData);
+        pushHabits(user, batch);
+        pushHabitEvents(user, batch);
+        batch.commit();
     }
 
 
