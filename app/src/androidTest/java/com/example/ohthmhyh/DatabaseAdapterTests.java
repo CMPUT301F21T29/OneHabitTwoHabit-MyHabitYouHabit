@@ -39,7 +39,7 @@ public class DatabaseAdapterTests{
     @Test
     public void pushUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter("testUID4");
+        dba = new DatabaseAdapter("testUID1");
         // test pushing a user to the DB
         User user = new User("BobbyWasabi");
         dba.pushUser(user);
@@ -51,11 +51,10 @@ public class DatabaseAdapterTests{
     @Test
     public void pullUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter("testUID10");
+        dba = new DatabaseAdapter("testUID2");
         // push a user to the DB
         User user = new User("AdaLovelace");
         user.setUPIDCounter(1);
-        user.setUHIDCounter(2);
         dba.pushUser(user);
         // get the user back from the DB
         dba.pullUser(new DatabaseAdapter.ProfileCallback() {
@@ -64,7 +63,6 @@ public class DatabaseAdapterTests{
                 // make sure the stuff matches
                 assertTrue("AdaLovelace".equals(user.getUsername()));
                 assertTrue(user.getUPIDCounter()==1);
-                assertTrue(user.getUHIDCounter()==2);
             }
         });
     }
@@ -73,12 +71,11 @@ public class DatabaseAdapterTests{
     @Test
     public void pushHabitTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter("testUID4");
+        dba = new DatabaseAdapter("testUID3");
         // push habits into the DB
-        User user = new User("BobbyWasabi");
         HabitList habits = new HabitList();
-        habits.addHabit(user, Habit.makeDummyHabit());
-        habits.addHabit(user, Habit.makeDummyHabit());
+        habits.addHabit(Habit.makeDummyHabit());
+        habits.addHabit(Habit.makeDummyHabit());
         dba.pushHabits(habits);
         // you'll have to check this by looking in the Firestore console
         assert true;
@@ -88,13 +85,12 @@ public class DatabaseAdapterTests{
     @Test
     public void pullHabitsTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter("testUID11");
+        dba = new DatabaseAdapter("testUID4");
 
         // push habits into the DB
-        User user = new User("AustinPowers");
         HabitList habits = new HabitList();
-        habits.addHabit(user, Habit.makeDummyHabit());
-        habits.addHabit(user, Habit.makeDummyHabit());
+        habits.addHabit(Habit.makeDummyHabit());
+        habits.addHabit(Habit.makeDummyHabit());
         dba.pushHabits(habits);
         // make sure the habits we get back match
         dba.pullHabits(new DatabaseAdapter.HabitCallback() {
