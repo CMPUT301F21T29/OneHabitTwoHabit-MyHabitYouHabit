@@ -14,7 +14,7 @@ public class Habit {
     private String description;
     private long startDate;
     private ArrayList<Days> schedule = new ArrayList<Days>();
-    private int UHID = -1;
+    private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
 
 
     /**
