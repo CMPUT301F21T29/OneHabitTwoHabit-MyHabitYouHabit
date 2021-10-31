@@ -1,12 +1,5 @@
 package com.example.ohthmhyh;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -16,15 +9,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-
 public class DatabaseAdapter{
 
     /**
      * A callback used when retrieving the users profile from the database.
      */
     public interface ProfileCallback{
-        void onProfileCallback(User profile);
+        void onProfileCallback(User user);
     }
 
     /**
@@ -38,17 +29,14 @@ public class DatabaseAdapter{
      * A callback used when retrieving a users habits from the database.
      */
     public interface HabitCallback{
-        void onHabitCallback(ArrayList<Habit> habits);
+        void onHabitCallback(HabitList hList);
     }
 
 
-//    public interface FollowingCallback{
-//        void onFollowingCallback(ArrayList<String> following);
-//    }
+    public interface HabitEventCallback{
+        void onHabitEventCallback(HabitEventList habitEvents);
+    }
 
-//    public interface HabitEventsCallback{
-//        void onHabitEventsCallback(ArrayList<HabitEvent> habitEvents);
-//    }
 
     private static FirebaseFirestore db;
     private static String UID;
@@ -102,21 +90,28 @@ public class DatabaseAdapter{
     /**
      * Call with a user profile to update it in the database. This should be called whenever a data
      * member is changed in a user profile.
-     * @param profile The user profile to push to / update in the database
+     * @param user The user profile to push to / update in the database
      */
-    public void updateUser(User profile){
-        // only update if the username is unique
-        // TODO: make sure username is unique and stuff
+    public void pushUser(User user){
+        db.collection("Profiles").document(UID).set(user);
+    }
 
-        db.collection("Profiles")
-                .document(UID)
-                .set(profile)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Error adding document", e);
-                    }
-                });
+
+    /**
+     * Call this method to push the users habits into the database
+     * @param habits the list of habits to push into the DB
+     */
+    public void pushHabits(HabitList habits){
+        db.collection("Habits").document(UID).set(habits);
+    }
+
+
+    /**
+     * Call this method to push the users habit events into the database
+     * @param events The habit events to push into the DB
+     */
+    public void pushHabitEvents(HabitEventList events){
+        db.collection("HabitEvents").document(UID).set(events);
     }
 
 
@@ -124,61 +119,85 @@ public class DatabaseAdapter{
      * Call this when a user logs-on in order to retrieve their user profile from the database
      * @param callback A callback which will be used to update the user profile
      */
-    public void getUser(DatabaseAdapter.ProfileCallback callback){
+    public void pullUser(DatabaseAdapter.ProfileCallback callback){
         DocumentReference profile = db.collection("Profiles").document(UID);
         profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User profile = documentSnapshot.toObject(User.class);
-                callback.onProfileCallback(profile);
+                User user = documentSnapshot.toObject(User.class);
+                callback.onProfileCallback(user);
             }
         });
     }
 
 
+    /**
+     * Call this method to pull the users habits from the database
+     * @param callback A callback which is called when the query completes
+     */
+    public void pullHabits(HabitCallback callback){
+        DocumentReference habits = db.collection("Habits").document(UID);
+        // get the users habits
+        habits.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                HabitList hList = documentSnapshot.toObject(HabitList.class);
+                callback.onHabitCallback(hList);
+            }
+        });
+    }
 
 
-
-////////////////////////////////////////////////
-//// warning: stuff below is likely broken! ////
-////////////////////////////////////////////////
-
-//    // get the habits of another user by UID
-//    public void getHabits(String UID, DatabaseAdapter.HabitCallback callback){
-//        DocumentReference profile = db.collection("Profiles").document(UID);
-//        profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                User profile = documentSnapshot.toObject(User.class);
-//                callback.onHabitCallback(profile.getHabitList());
-//            }
-//        });
-//    }
-
-//    public void pushHabit(Habit habit){
-//        db.collection("Habits")
-//                .document(UID)
-//                .collection("Habits")
-//                .document(Integer.toString(habit.getUHID()))
-//                .set(habit)
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.e(TAG, "Error adding document", e);
-//                    }
-//                });
-//    }
+    /**
+     * Call this method to pull this users habit events from the database
+     * @param callback A callback which is called when the query completes
+     */
+    private void pullHabitEvents(HabitEventCallback callback){
+        pullHabitEvents(UID, callback);
+    }
 
 
-//    public void pushHabitEvent(HabitEvent habitEvent){
-//
-//    }
-//
-//
-//    public ArrayList<HabitEvent> pullHabitEvents(){
-//
-//        return new ArrayList<HabitEvent>();
-//    }
+    /**
+     * Call this method to pull another users habit events from the database
+     * @param UID The UID for which to pull the habits of
+     * @param callback A callback which is called when the query completes
+     */
+    private void pullHabitEvents(String UID, HabitEventCallback callback){
+        DocumentReference habitEvents = db.collection("HabitEvents").document(UID);
+        // get the users habits
+        habitEvents.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                HabitEventList HEList = documentSnapshot.toObject(HabitEventList.class);
+                callback.onHabitEventCallback(HEList);
+            }
+        });
+    }
 
+    
 }
+
+//////////////////////////////////////////////////////////////////
+// works, but probably not super efficient. Kept for posterity ///
+//////////////////////////////////////////////////////////////////
+
+//    private void pushHabits(User user, WriteBatch batch){
+//        DocumentReference habits = db.collection("Habits").document(UID);
+//        ArrayList<Map<String, Object>> allHabits = new ArrayList<>();
+//
+//        // make an arraylist with the essence of each habit
+//        for(int i=0; i<user.getHabitList().size(); i++){
+//            Map<String, Object> habitData = new HashMap<>();
+//            habitData.put("name", user.getHabitList().get(i).getName());
+//            habitData.put("description", user.getHabitList().get(i).getDescription());
+//            habitData.put("startDate", user.getHabitList().get(i).getStartDate());
+//            habitData.put("schedule", user.getHabitList().get(i).getSchedule());
+//            allHabits.add(habitData);
+//        }
+//
+//        // next line obtained through cosmic rituals
+//        HashMap<String, ArrayList<Map<String, Object>>> field = new HashMap<>();
+//        field.put("habits", allHabits);
+//        batch.set(habits, field);
+//    }
 
