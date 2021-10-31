@@ -2,11 +2,7 @@ package com.example.ohthmhyh;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 
 public class Habit {
@@ -18,7 +14,7 @@ public class Habit {
     private String description;
     private long startDate;
     private ArrayList<Days> schedule = new ArrayList<Days>();
-    private int UHID;
+    private int UHID = -1;
 
 
     /**

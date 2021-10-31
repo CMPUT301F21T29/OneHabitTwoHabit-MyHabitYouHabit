@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 public class User {
     private String username;
-    private ArrayList<Habit> habitList;
     private ArrayList<String> friendList;
     private int UHIDCounter, UPIDCounter;
 
@@ -15,44 +14,24 @@ public class User {
         this.UPIDCounter = 0;
         this.UHIDCounter = 0;
         this.username = username;
-        this.habitList = new ArrayList<Habit>();
         this.friendList = new ArrayList<String>();
     }
 
     /**
-     * Getter and Setter for username and password. In the future, users would
-     * want to change their password, or reset their password if they
-     * forget it. To do so we need access to the username as well.
+     * Get the users username
      * @return String.
      */
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-
-
-
-    // TODO: Implement setHabitList
-    public void setHabitList(ArrayList<Habit> habitList) {
-
-    }
-
-    public ArrayList<Habit> getHabitList() {
-        return habitList;
-    }
-
 
     /**
-     * Add a habit to the user
-     * @param habit The habit to add to the user
+     * Set the users username
+     * @return String.
      */
-    public void addHabit(Habit habit){
-        habit.setUHID(nextUHID());
-        habitList.add(habit);
+    public void setUsername(String username) {
+        this.username = username;
     }
 
 
@@ -107,6 +86,24 @@ public class User {
      */
     public int nextUPID() {
         return UPIDCounter++;
+    }
+
+
+    /**
+     * Set the users friend list as a list of UID's
+     * @param friends  The users friend list as UID's
+     */
+    public void setFriendList(ArrayList<String> friends){
+        this.friendList = friends;
+    }
+
+
+    /**
+     * Get the users friend list as a list of UID's
+     * @return  The users friend list as UID's
+     */
+    public ArrayList<String> getFriendList(){
+        return friendList;
     }
 
 }

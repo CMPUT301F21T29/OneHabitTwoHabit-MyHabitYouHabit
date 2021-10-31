@@ -41,33 +41,68 @@ public class DatabaseAdapterTests{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter("testUID4");
         // test pushing a user to the DB
-        User testUser = new User("BobbyWasabi");
-        testUser.addHabit(Habit.makeDummyHabit());
-        testUser.addHabit(Habit.makeDummyHabit());
-        dba.updateUser(testUser);
-
+        User user = new User("BobbyWasabi");
+        dba.pushUser(user);
         // you'll have to check this by looking in the Firestore console
         assert true;
     }
 
 
     @Test
-    public void getUserTest_1() throws Exception{
+    public void pullUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter("testUID10");
-        // test pushing a user to the DB
-        User testUser = new User("AdaLovelace");
-        testUser.addHabit(Habit.makeDummyHabit());
-        testUser.addHabit(Habit.makeDummyHabit());
-        dba.updateUser(testUser);
+        // push a user to the DB
+        User user = new User("AdaLovelace");
+        user.setUPIDCounter(1);
+        user.setUHIDCounter(2);
+        dba.pushUser(user);
         // get the user back from the DB
-        dba.getUser(new DatabaseAdapter.ProfileCallback() {
+        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
             @Override
-            public void onProfileCallback(User profile) {
+            public void onProfileCallback(User user) {
                 // make sure the stuff matches
-                assertTrue("AdaLovelace".equals(profile.getUsername()));
-                assertTrue(testUser.getHabitList().get(0).getName().equals(profile.getHabitList().get(0).getName()));
-                assertTrue(testUser.getHabitList().get(0).getSchedule().equals(profile.getHabitList().get(0).getSchedule()));
+                assertTrue("AdaLovelace".equals(user.getUsername()));
+                assertTrue(user.getUPIDCounter()==1);
+                assertTrue(user.getUHIDCounter()==2);
+            }
+        });
+    }
+
+
+    @Test
+    public void pushHabitTest_1() throws Exception{
+        // make a database adapter and force a UID because we're not logged in while testing
+        dba = new DatabaseAdapter("testUID4");
+        // push habits into the DB
+        User user = new User("BobbyWasabi");
+        HabitList habits = new HabitList();
+        habits.addHabit(user, Habit.makeDummyHabit());
+        habits.addHabit(user, Habit.makeDummyHabit());
+        dba.pushHabits(habits);
+        // you'll have to check this by looking in the Firestore console
+        assert true;
+    }
+
+
+    @Test
+    public void pullHabitsTest_1() throws Exception{
+        // make a database adapter and force a UID because we're not logged in while testing
+        dba = new DatabaseAdapter("testUID11");
+
+        // push habits into the DB
+        User user = new User("AustinPowers");
+        HabitList habits = new HabitList();
+        habits.addHabit(user, Habit.makeDummyHabit());
+        habits.addHabit(user, Habit.makeDummyHabit());
+        dba.pushHabits(habits);
+        // make sure the habits we get back match
+        dba.pullHabits(new DatabaseAdapter.HabitCallback() {
+            @Override
+            public void onHabitCallback(HabitList hList) {
+                assertEquals(habits.getHabitList().get(1).getName(), hList.getHabitList().get(1).getName());
+                assertEquals(habits.getHabitList().get(1).getDescription(), hList.getHabitList().get(1).getDescription());
+                assertEquals(habits.getHabitList().get(1).getSchedule(), hList.getHabitList().get(1).getSchedule());
             }
         });
     }
