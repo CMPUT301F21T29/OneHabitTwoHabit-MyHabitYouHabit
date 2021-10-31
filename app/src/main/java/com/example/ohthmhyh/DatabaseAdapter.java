@@ -110,8 +110,8 @@ public class DatabaseAdapter{
      * Call this method to push the users habit events into the database
      * @param events The habit events to push into the DB
      */
-    public void pushHabitEvents(){
-        //TODO: set up pushing habit events. Need Stu's code first tho.
+    public void pushHabitEvents(HabitEventList events){
+        db.collection("HabitEvents").document(UID).set(events);
     }
 
 
@@ -149,12 +149,32 @@ public class DatabaseAdapter{
 
 
     /**
-     * Call this method to pull the users habit events from the database
+     * Call this method to pull this users habit events from the database
      * @param callback A callback which is called when the query completes
      */
     private void pullHabitEvents(HabitEventCallback callback){
-        //TODO: set up pulling habit events. Need Stu's code first tho.
+        pullHabitEvents(UID, callback);
     }
+
+
+    /**
+     * Call this method to pull another users habit events from the database
+     * @param UID The UID for which to pull the habits of
+     * @param callback A callback which is called when the query completes
+     */
+    private void pullHabitEvents(String UID, HabitEventCallback callback){
+        DocumentReference habitEvents = db.collection("HabitEvents").document(UID);
+        // get the users habits
+        habitEvents.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                HabitEventList HEList = documentSnapshot.toObject(HabitEventList.class);
+                callback.onHabitEventCallback(HEList);
+            }
+        });
+    }
+
+    
 }
 
 //////////////////////////////////////////////////////////////////
