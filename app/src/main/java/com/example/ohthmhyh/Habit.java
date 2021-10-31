@@ -1,9 +1,8 @@
 package com.example.ohthmhyh;
 
 import java.time.LocalDate;
-import java.util.EnumSet;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Set;
 
 
 public class Habit {
@@ -13,8 +12,9 @@ public class Habit {
     // instance variables of the habit
     private String name;
     private String description;
-    private LocalDate startDate;
-    private EnumSet<Days> schedule = EnumSet.noneOf(Days.class);
+    private long startDate;
+    private ArrayList<Days> schedule = new ArrayList<Days>();
+    private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
 
 
     /**
@@ -31,10 +31,11 @@ public class Habit {
      * @param startDate The date this habit was started/created.
      * @param schedule The weekdays this habit should be completed on.
      */
-    public Habit(String name, String description, LocalDate startDate, EnumSet<Days> schedule){
+    public Habit(String name, String description, LocalDate startDate, ArrayList<Days> schedule, int UHID){
+        this.UHID = UHID;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
+        this.startDate = startDate.toEpochDay();
         this.schedule = schedule;
     }
 
@@ -44,6 +45,8 @@ public class Habit {
      * @return A randomly created Habit object.
      */
     public static Habit makeDummyHabit(){
+        Habit h = new Habit();
+
         // used for generating random stuff
         String SALTCHARS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ -_";
         Random myRNG = new Random();
@@ -54,6 +57,7 @@ public class Habit {
         while(name.length() < nameLength){
             name.append( SALTCHARS.charAt( (int)(myRNG.nextFloat() * SALTCHARS.length())));
         }
+        h.setName(name.toString());
 
         // build a random description up to 30 characters long
         StringBuilder desc = new StringBuilder();
@@ -61,37 +65,41 @@ public class Habit {
         while(desc.length() < descLength){
             desc.append( SALTCHARS.charAt( (int)(myRNG.nextFloat() * SALTCHARS.length())));
         }
+        h.setDescription(desc.toString());
 
         // build a random start date
         LocalDate startDate = LocalDate.ofEpochDay((long)(myRNG.nextFloat() * LocalDate.now().toEpochDay()));
+        h.setStartDate(startDate.toEpochDay());
 
         // build a random schedule
-        EnumSet schedule = EnumSet.noneOf(Days.class);
         int seed = myRNG.nextInt(128);
         if((seed & 1<<0) > 0){
-            schedule.add(Days.Sun);
+            h.scheduleAddDay(Days.Sun);
         }
         if((seed & 1<<1) > 0){
-            schedule.add(Days.Mon);
+            h.scheduleAddDay(Days.Mon);
         }
         if((seed & 1<<2) > 0){
-            schedule.add(Days.Tue);
+            h.scheduleAddDay(Days.Tue);
         }
         if((seed & 1<<3) > 0){
-            schedule.add(Days.Wed);
+            h.scheduleAddDay(Days.Wed);
         }
         if((seed & 1<<4) > 0){
-            schedule.add(Days.Thu);
+            h.scheduleAddDay(Days.Thu);
         }
         if((seed & 1<<5) > 0){
-            schedule.add(Days.Fri);
+            h.scheduleAddDay(Days.Fri);
         }
         if((seed & 1<<6) > 0){
-            schedule.add(Days.Sat);
+            h.scheduleAddDay(Days.Sat);
         }
 
-        // build and return the habit object
-        return new Habit(name.toString() ,desc.toString(), startDate, schedule);
+        int UHID = myRNG.nextInt(2000000000);
+        h.setUHID(UHID);
+
+        // return the habit object
+        return h;
     }
 
 
@@ -135,16 +143,26 @@ public class Habit {
      * Sets the start date of the habit.
      * @param startDate The start date of the habit.
      */
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(long startDate) {
         this.startDate = startDate;
     }
 
 
     /**
-     * Gets the start date of the habit.
-     * @return The start date of the habit.
+     * Gets the start date of the habit as a localDate. You probably want to be using this method.
+     * @return The start date of the habit as a LocalDate.
      */
-    public LocalDate getStartDate() {
+    public LocalDate StartDateAsLocalDate() {
+        return LocalDate.ofEpochDay(startDate);
+    }
+
+
+    /**
+     * Gets the start date of the habit as the number of days since the unix epoch. Needed for
+     * database reasons. You probably don't want to use this elsewhere.
+     * @return The start date of the habit as days since the unix epoch.
+     */
+    public long getStartDate() {
         return startDate;
     }
 
@@ -153,7 +171,7 @@ public class Habit {
      * Sets the intended completion schedule of the habit.
      * @param schedule The intended completion schedule of the habit.
      */
-    public void setSchedule(EnumSet<Days> schedule) {
+    public void setSchedule(ArrayList<Days> schedule) {
         this.schedule = schedule;
     }
 
@@ -162,7 +180,7 @@ public class Habit {
      * Gets the intended completion schedule of the habit.
      * @return  The intended completion schedule of the habit.
      */
-    public Set<Days> getSchedule() {
+    public ArrayList<Days> getSchedule() {
         return schedule;
     }
 
@@ -174,7 +192,11 @@ public class Habit {
      * @return True if the day was added to the schedule, false if the day was already in the schedule.
      */
     public boolean scheduleAddDay(Days day){
-        return schedule.add(day);
+        if(!schedule.contains(day)){
+            schedule.add(day);
+            return true;
+        }
+        return false;
     }
 
 
@@ -184,8 +206,26 @@ public class Habit {
      * @param day The day to remove from the schedule.
      * @return True if the day was removed, false if the day was not in the schedule.
      */
-    public void scheduleRemoveDay(Days day){
-        schedule.remove(day);
+    public boolean scheduleRemoveDay(Days day){
+        return schedule.remove(day);
+    }
+
+
+    /**
+     * Sets the habit ID for this user
+     * @param UHID the habit ID
+     */
+    public void setUHID(int UHID){
+        this.UHID = UHID;
+    }
+
+
+    /**
+     * Gets the habit ID for this user
+     * @return the ID fo this habit
+     */
+    public int getUHID(){
+        return this.UHID;
     }
 
 }
