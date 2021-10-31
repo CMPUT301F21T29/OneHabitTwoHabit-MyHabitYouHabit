@@ -31,8 +31,7 @@ public class Habit {
      * @param startDate The date this habit was started/created.
      * @param schedule The weekdays this habit should be completed on.
      */
-    public Habit(String name, String description, LocalDate startDate, ArrayList<Days> schedule, int UHID){
-        this.UHID = UHID;
+    public Habit(String name, String description, LocalDate startDate, ArrayList<Days> schedule){
         this.name = name;
         this.description = description;
         this.startDate = startDate.toEpochDay();

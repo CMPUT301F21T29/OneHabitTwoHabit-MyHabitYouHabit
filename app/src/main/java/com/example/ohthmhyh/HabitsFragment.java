@@ -38,7 +38,6 @@ public class HabitsFragment extends Fragment {
     private String mParam2;
 
 
-    //public enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
     private ArrayList<Habit> habitArrayList = new ArrayList<>();
 
 
@@ -74,8 +73,6 @@ public class HabitsFragment extends Fragment {
         }
     }
 
-    
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -102,8 +99,6 @@ public class HabitsFragment extends Fragment {
             ToggleButton satFrequency = v.findViewById(R.id.sat);
             ToggleButton sunFrequency = v.findViewById(R.id.sun);
 
-
-
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -127,7 +122,8 @@ public class HabitsFragment extends Fragment {
                             if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
                             if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
 
-                            habitArrayList.add(new Habit(habitName, habitDescription, startDate, schedule));
+                            habitArrayList.add(
+                                    new Habit(habitName, habitDescription, startDate, schedule));
                         }
                     });
 
