@@ -232,5 +232,15 @@ public class Habit {
         return this.UHID;
     }
 
+    //Added a thing to make a habit a string/ might change
+    @Override
+    public String toString() {
+        return "Habit{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", startDate=" + startDate +
+                ", schedule=" + schedule +
+                '}';
+    }
 }
 

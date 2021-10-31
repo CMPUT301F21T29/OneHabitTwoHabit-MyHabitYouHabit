@@ -38,6 +38,7 @@ public class DatabaseAdapterTests{
     public void pushUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter("testUID4");
+        
         // test pushing a user to the DB
         User testUser = new User("BobbyWasabi");
         testUser.addHabit(Habit.makeDummyHabit());
