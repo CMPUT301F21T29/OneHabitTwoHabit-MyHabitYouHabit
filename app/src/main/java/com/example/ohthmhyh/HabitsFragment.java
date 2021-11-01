@@ -11,6 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,9 +33,14 @@ public class HabitsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    private ArrayList<Habit> habitArrayList = new ArrayList<>();
+
 
     public HabitsFragment() {
         // Required empty public constructor
@@ -74,6 +88,22 @@ public class HabitsFragment extends Fragment {
 
             alertDialog.setTitle("Add a Habit");
             alertDialog.setMessage("ABC");
+            v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
+            alertDialog.setView(v);
+
+            alertDialog.setTitle("Add a Habit");
+
+            EditText habitNameET = v.findViewById(R.id.enter_habit_name);
+            EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
+            EditText habitDateET = v.findViewById(R.id.enter_date);
+
+            ToggleButton monFrequency = v.findViewById(R.id.mon);
+            ToggleButton tueFrequency = v.findViewById(R.id.tue);
+            ToggleButton wedFrequency = v.findViewById(R.id.wed);
+            ToggleButton thuFrequency = v.findViewById(R.id.thu);
+            ToggleButton friFrequency = v.findViewById(R.id.fri);
+            ToggleButton satFrequency = v.findViewById(R.id.sat);
+            ToggleButton sunFrequency = v.findViewById(R.id.sun);
 
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                     new DialogInterface.OnClickListener() {
@@ -85,7 +115,6 @@ public class HabitsFragment extends Fragment {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-
                         }
                     });
 
@@ -99,5 +128,15 @@ public class HabitsFragment extends Fragment {
 
     private void addHabit(Habit habit) {
 
+    private LocalDate handleDate(String dateAsString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+
+        //convert String to LocalDate
+        LocalDate localDate = LocalDate.parse(dateAsString, formatter);
+        return localDate;
+    }
+
+    public ArrayList<Habit> getHabitArrayList() {
+        return habitArrayList;
     }
 }
