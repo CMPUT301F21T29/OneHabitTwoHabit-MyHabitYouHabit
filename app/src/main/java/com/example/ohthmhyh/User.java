@@ -3,15 +3,11 @@ package com.example.ohthmhyh;
 import java.util.ArrayList;
 
 public class User {
-    private String username;
-    private ArrayList<String> friendList;
-    private int UPIDCounter;
-
-    // We need this for database reasons.
-    public User(){}
-
-    public User(String username)  {
-        this.UPIDCounter = 0;
+    private String username, password;
+    public static ArrayList<Habit> habitList;
+    private ArrayList<User> friendList;
+    // TODO: Some encryption features for the password?
+    public User(String username, String password)  {
         this.username = username;
         this.friendList = new ArrayList<String>();
     }

@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -39,9 +38,12 @@ public class HabitsFragment extends Fragment {
     private String mParam2;
 
 
+    //public enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
     private ArrayList<Habit> habitArrayList = new ArrayList<>();
-
-
+    private String habitName;
+    private String habitDescription;
+    private LocalDate startDate;
+    private EnumSet<Habit.Days> schedule = EnumSet.noneOf(Habit.Days.class);
     public HabitsFragment() {
         // Required empty public constructor
     }
@@ -85,9 +87,6 @@ public class HabitsFragment extends Fragment {
         Button addButton = view.findViewById(R.id.add_habit);
         addButton.setOnClickListener((v) -> {
             AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
-
-            alertDialog.setTitle("Add a Habit");
-            alertDialog.setMessage("ABC");
             v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
             alertDialog.setView(v);
 
@@ -105,6 +104,8 @@ public class HabitsFragment extends Fragment {
             ToggleButton satFrequency = v.findViewById(R.id.sat);
             ToggleButton sunFrequency = v.findViewById(R.id.sun);
 
+
+
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -115,6 +116,19 @@ public class HabitsFragment extends Fragment {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
+                            habitName = habitNameET.getText().toString();
+                            habitDescription = habitDescriptionET.getText().toString();
+                            startDate = handleDate(habitDateET.getText().toString());
+
+                            if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
+                            if (tueFrequency.isChecked()) schedule.add(Habit.Days.Tue);
+                            if (wedFrequency.isChecked()) schedule.add(Habit.Days.Wed);
+                            if (thuFrequency.isChecked()) schedule.add(Habit.Days.Thu);
+                            if (friFrequency.isChecked()) schedule.add(Habit.Days.Fri);
+                            if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
+                            if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
+
+                            habitArrayList.add(new Habit(habitName, habitDescription, startDate, schedule));
                         }
                     });
 
@@ -125,4 +139,16 @@ public class HabitsFragment extends Fragment {
         return view;
     }
 
+
+    private LocalDate handleDate(String dateAsString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+
+        //convert String to LocalDate
+        LocalDate localDate = LocalDate.parse(dateAsString, formatter);
+        return localDate;
+    }
+
+    public ArrayList<Habit> getHabitArrayList() {
+        return habitArrayList;
+    }
 }
