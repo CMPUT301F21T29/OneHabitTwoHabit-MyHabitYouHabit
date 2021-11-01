@@ -12,7 +12,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Html;
@@ -26,17 +25,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,9 +48,6 @@ public class CreateHabitEvent extends AppCompatActivity {
 
     //used for image
     public ImageView pick;
-    public static final int Camra_request = 100;
-    public static final int Storage_request = 101;
-    private Uri resultUri;
     int flag5=-1;
     String camraPermition[];
     String storagePermition[];
@@ -244,7 +237,6 @@ public class CreateHabitEvent extends AppCompatActivity {
             }
             //No image was givin
             if (!flag){
-                resultUri=null;
                 bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.lol_pic);
 
             }
@@ -275,7 +267,6 @@ public class CreateHabitEvent extends AppCompatActivity {
         }
         //No image was givin
         if (!flag){
-            resultUri=null;
             bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.lol_pic);
         }
         if (!flag3){
