@@ -60,7 +60,7 @@ dependencies {
 
     //This is for getting a user picture https://github.com/ArthurHub/Android-Image-Cropper and https://github.com/square/picasso
     //api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    //implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     //This is used for getting the day of week from user
     //https://androidexample365.com/an-elegant-day-of-the-week-picker-inspired-by-googles-clock-app/
@@ -73,5 +73,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.0'
     //Needed for location
     implementation 'com.google.android.gms:play-services-location:18.0.0'
+    //Needed for camra and image 30 api
+    implementation 'com.github.dhaval2404:imagepicker:2.1'
+
+
 }
 

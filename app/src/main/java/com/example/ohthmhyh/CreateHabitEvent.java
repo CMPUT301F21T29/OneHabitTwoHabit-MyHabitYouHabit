@@ -2,6 +2,7 @@ package com.example.ohthmhyh;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -30,12 +31,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.squareup.picasso.Picasso;
-import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -107,23 +108,13 @@ public class CreateHabitEvent extends AppCompatActivity {
 
 
         pick.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View v) {
-                int picd = 0;
-                if (picd == 0) {
-                    if (!checkCamraPermission()) {
-                        requestCameraPermission();
-                    } else {
-                        pickFromGallery();
-                    }
-                } else if (picd == 1) {
-                    if (!checkStoragePermition()) {
-                        requestStoragePermition();
-                    } else {
-                        pickFromGallery();
-                    }
-                }
+                ImagePicker.with(CreateHabitEvent.this)
+                        .crop()	//Crop image with 16:9 aspect ratio
+                        .compress(1024)			//Final image size will be less than 1 MB(Optional)
+                        .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
+                        .start();
 
             }
         });
@@ -156,86 +147,29 @@ public class CreateHabitEvent extends AppCompatActivity {
 
             autoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
             //reverse the changes above.
-    }
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermition() {
-        requestPermissions(storagePermition, Storage_request);
-    }
-
-    private boolean checkStoragePermition() {
-        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-
-    private void pickFromGallery() {
-        CropImage.activity().start(this);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(camraPermition, Camra_request);
-    }
-
-    private boolean checkCamraPermission() {
-        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
-        boolean result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result && result1;
-    }
+            }
+    }//End of on create
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-
-            if (resultCode == RESULT_OK) {
-                resultUri = result.getUri();
-                Picasso.with(this).load(resultUri).into(pick);
+        if (resultCode == Activity.RESULT_OK) {
+            Uri uri=data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                pick.setImageBitmap(bitmap);
                 flag=true;
-                //Should get the bitmap from the givin URL
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+//Image Uri will not be null for RESULT_OK
+        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case Camra_request: {
-                if (grantResults.length > 0) {
-                    boolean camra_accepted = grantResults[0] == (PackageManager.PERMISSION_GRANTED);
-                    boolean storage_accepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    if (camra_accepted && storage_accepted) {
-                        pickFromGallery();
-                    } else {
-                        Toast.makeText(this, "Please Enable camra and storage Permition", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-            break;
-            case Storage_request: {
-                if (grantResults.length > 0) {
-                    boolean storage_accepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    if (storage_accepted) {
-                        pickFromGallery();
-                    } else {
-                        Toast.makeText(this, "Please Enable storage Permition", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-            break;
-        }
-    }
 
 
 
