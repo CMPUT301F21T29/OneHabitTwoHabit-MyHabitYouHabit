@@ -251,6 +251,10 @@ public class LoginActivityTest {
         solo.finishOpenedActivities();
     }
 
+    /**
+     * Switch the LoginActivity to the login functionality by clicking on the button that switches
+     * the LoginActivity's functionality if it is not already in the login functionality.
+     */
     private void switchToLoginFunctionality() {
         // If the continue button is not letting us login, we must be using the sign up
         // functionality. Click the switch button to switch to the login functionality.
@@ -262,6 +266,10 @@ public class LoginActivityTest {
         solo.waitForText(login_text, 1, 1000);
     }
 
+    /**
+     * Switch the LoginActivity to the signup functionality by clicking on the button that switches
+     * the LoginActivity's functionality if it is not already in the signup functionality.
+     */
     private void switchToSignupFunctionality() {
         // If the continue button is not letting us signup, we must be using the login
         // functionality. Click the switch button to switch to the signup functionality.
