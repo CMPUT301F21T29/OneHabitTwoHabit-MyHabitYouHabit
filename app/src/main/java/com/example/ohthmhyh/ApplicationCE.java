@@ -8,7 +8,7 @@ public class ApplicationCE extends Application {
 
 
 private static ArrayList<HabitEvent> Habiteventlist=new ArrayList<HabitEvent>();
-private static ArrayList<Habit> Hablitlist=new ArrayList<Habit>();
+private static ArrayList<Habit> habitArrayList=new ArrayList<Habit>();
 
 
 private static int nextId=0;
@@ -23,12 +23,12 @@ public static ArrayList<HabitEvent> getHabiteventlist() {
         }
 
 
-    public static ArrayList<Habit> getHablitList() {
-        return Hablitlist;
+    public static ArrayList<Habit> getHablitArrayList() {
+        return habitArrayList;
     }
 
     public static void setHabitList(ArrayList<Habit> medbookList) {
-        ApplicationCE.Hablitlist = Hablitlist;
+        ApplicationCE.habitArrayList = habitArrayList;
     }
 
 
