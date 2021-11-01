@@ -47,9 +47,10 @@ public class LoginActivityTest {
     /**
      * Runs before all tests to create a usable Solo instance for the test and create the existing
      * user if they do not yet exist.
+     * @throws Exception
      */
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
 
         // Create the user that should be existing before each test begins. If the user already
@@ -63,17 +64,19 @@ public class LoginActivityTest {
 
     /**
      * Gets the LoginActivity from the rule.
+     * @throws Exception
      */
     @Test
-    public void testRuleActivity() {
+    public void testRuleActivity() throws Exception {
         Activity activity = rule.getActivity();
     }
 
     /**
      * Test the case where no input is given to the login screen.
+     * @throws Exception
      */
     @Test
-    public void testNoInput() {
+    public void testNoInput() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
 
@@ -89,9 +92,10 @@ public class LoginActivityTest {
 
     /**
      * Test the case where there is only an email inputted on the login screen.
+     * @throws Exception
      */
     @Test
-    public void testOnlyEmailInput() {
+    public void testOnlyEmailInput() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
 
@@ -108,9 +112,10 @@ public class LoginActivityTest {
 
     /**
      * Test the case where there is only a password inputted on the login screen.
+     * @throws Exception
      */
     @Test
-    public void testOnlyPasswordInput() {
+    public void testOnlyPasswordInput() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
 
@@ -127,9 +132,10 @@ public class LoginActivityTest {
 
     /**
      * Test the case where there is only a username inputted on the sign up screen.
+     * @throws Exception
      */
     @Test
-    public void testOnlyUsernameInput() {
+    public void testOnlyUsernameInput() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
 
@@ -146,9 +152,10 @@ public class LoginActivityTest {
 
     /**
      * Test invalid user login.
+     * @throws Exception
      */
     @Test
-    public void testInvalidUserLogin() {
+    public void testInvalidUserLogin() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
 
@@ -166,9 +173,10 @@ public class LoginActivityTest {
 
     /**
      * Test existing user login.
+     * @throws Exception
      */
     @Test
-    public void testExistingUserLogin() {
+    public void testExistingUserLogin() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
 
@@ -186,9 +194,10 @@ public class LoginActivityTest {
 
     /**
      * Test valid user sign up.
+     * @throws Exception
      */
     @Test
-    public void testValidUserSignUp() {
+    public void testValidUserSignUp() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
 
@@ -207,9 +216,10 @@ public class LoginActivityTest {
 
     /**
      * Test that a signed-in user goes automatically to the main activity.
+     * @throws Exception
      */
     @Test
-    public void testSignedInUser() {
+    public void testSignedInUser() throws Exception {
         // TODO: Can't think of a good way to do this right now. Thankfully, this is fairly easy to
         //       test and will be caught if it is not working since this is the usual use of the app
         //       (that is, the user usually does not login/signup when using the app, usually just
@@ -218,9 +228,10 @@ public class LoginActivityTest {
 
     /**
      * Close the LoginActivity after each test.
+     * @throws Exception
      */
     @After
-    public void tearDown() {
+    public void tearDown() throws Exception {
         // Delete the account of the valid user that may have been used.
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
