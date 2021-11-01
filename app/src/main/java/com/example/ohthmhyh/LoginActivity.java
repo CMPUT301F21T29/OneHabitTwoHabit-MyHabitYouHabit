@@ -176,7 +176,7 @@ public class LoginActivity extends AppCompatActivity {
     private void updateResponsibility() {
         if (loggingIn) {
             // We are currently using this activity to log in an existing.
-            greetingText.setText("To begin, please log in: ");
+            greetingText.setText(R.string.login_greeting_edittext_login_greeting);
 
             // Perform animations in a separate thread. This is for performance enhancement and also
             // to allow the animation to occur after the initial onCreate call.
@@ -196,11 +196,11 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }).start();
 
-            continueButton.setText("Login");
-            switchButton.setText("Don't have an account? Sign up!");
+            continueButton.setText(R.string.login_continue_button_login);
+            switchButton.setText(R.string.login_switch_button_option_to_signup);
         } else {
             // We are currently using this activity to sign up a non-existing user.
-            greetingText.setText("To sign up, please fill out the following fields: ");
+            greetingText.setText(R.string.login_greeting_edittext_signup_greeting);
 
             // Perform animations in a separate thread. This is for performance enhancement and also
             // to allow the animation to occur after the initial onCreate call.
@@ -219,8 +219,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }).start();
 
-            continueButton.setText("Sign up");
-            switchButton.setText("Already have an account? Login!");
+            continueButton.setText(R.string.login_continue_button_signup);
+            switchButton.setText(R.string.login_switch_button_option_to_login);
         }
     }
 }
