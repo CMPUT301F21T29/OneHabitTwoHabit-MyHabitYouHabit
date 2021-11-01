@@ -17,6 +17,7 @@ import com.robotium.solo.Solo;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -219,6 +220,7 @@ public class LoginActivityTest {
      * @throws Exception
      */
     @Test
+    @Ignore
     public void testSignedInUser() throws Exception {
         // TODO: Can't think of a good way to do this right now. Thankfully, this is fairly easy to
         //       test and will be caught if it is not working since this is the usual use of the app
