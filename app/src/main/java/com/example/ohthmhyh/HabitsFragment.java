@@ -125,18 +125,4 @@ public class HabitsFragment extends Fragment {
         return view;
     }
 
-
-    private void addHabit(Habit habit) {
-
-    private LocalDate handleDate(String dateAsString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-
-        //convert String to LocalDate
-        LocalDate localDate = LocalDate.parse(dateAsString, formatter);
-        return localDate;
-    }
-
-    public ArrayList<Habit> getHabitArrayList() {
-        return habitArrayList;
-    }
 }
