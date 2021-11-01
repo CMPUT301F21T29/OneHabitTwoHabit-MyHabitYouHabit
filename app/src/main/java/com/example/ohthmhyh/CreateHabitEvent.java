@@ -147,6 +147,10 @@ public class CreateHabitEvent extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
+            if (data == null){
+                Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Uri uri=data.getData();
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
@@ -212,10 +216,7 @@ public class CreateHabitEvent extends AppCompatActivity {
     }
 
     Boolean commentvalidater(String string){
-        if (string.length()>20){
-            return false;
-        }
-        return true;
+        return string.length() <= 20;
     }
 
     //Should work in maybe...
