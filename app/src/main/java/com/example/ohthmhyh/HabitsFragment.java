@@ -38,12 +38,9 @@ public class HabitsFragment extends Fragment {
     private String mParam2;
 
 
-    //public enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
     private ArrayList<Habit> habitArrayList = new ArrayList<>();
-    private String habitName;
-    private String habitDescription;
-    private LocalDate startDate;
-    private EnumSet<Habit.Days> schedule = EnumSet.noneOf(Habit.Days.class);
+
+
     public HabitsFragment() {
         // Required empty public constructor
     }
@@ -76,8 +73,6 @@ public class HabitsFragment extends Fragment {
         }
     }
 
-    
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -104,8 +99,6 @@ public class HabitsFragment extends Fragment {
             ToggleButton satFrequency = v.findViewById(R.id.sat);
             ToggleButton sunFrequency = v.findViewById(R.id.sun);
 
-
-
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -116,9 +109,10 @@ public class HabitsFragment extends Fragment {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            habitName = habitNameET.getText().toString();
-                            habitDescription = habitDescriptionET.getText().toString();
-                            startDate = handleDate(habitDateET.getText().toString());
+                            String habitName = habitNameET.getText().toString();
+                            String habitDescription = habitDescriptionET.getText().toString();
+                            LocalDate startDate = handleDate(habitDateET.getText().toString());
+                            ArrayList<Habit.Days> schedule = new ArrayList<>();
 
                             if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
                             if (tueFrequency.isChecked()) schedule.add(Habit.Days.Tue);
@@ -128,7 +122,8 @@ public class HabitsFragment extends Fragment {
                             if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
                             if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
 
-                            habitArrayList.add(new Habit(habitName, habitDescription, startDate, schedule));
+                            habitArrayList.add(
+                                    new Habit(habitName, habitDescription, startDate, schedule));
                         }
                     });
 
