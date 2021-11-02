@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Displayed_HabitEvent_list"
     android:layout_width="match_parent"
-    android:layout_height="175dp">
+    android:layout_height="135dp">
 
     <ImageView
         android:id="@+id/DisplayUserpicCE"

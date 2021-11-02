@@ -128,7 +128,10 @@ public class CreateHabitEvent extends AppCompatActivity {
                 localText.setText("");
             }else{
                 localText.setText(Html.fromHtml(habitEvent.getLocatoion().getAddressLine(0)));
+                flag3=true;
             }
+            bitmap=habitEvent.getBitmapPic();
+            address=habitEvent.getLocatoion();
             String temp= habitEvent.getHabit().getName();
             //pop item from string habit list take note of position
             //append it to the front
@@ -223,7 +226,6 @@ public class CreateHabitEvent extends AppCompatActivity {
     //todo
     //get everything running with data
     public void final_create_habit(View view) {
-
         if (flag4 >=0){//need to edit medicine
             comment=getComment.getText().toString();
 
@@ -236,11 +238,7 @@ public class CreateHabitEvent extends AppCompatActivity {
                 flag2=false;
                 return;
             }
-            //No image was givin
-            if (!flag){
-                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.lol_pic);
-
-            }
+            //Might not be needed, will have to think about later
             if (!flag3){
                 address=null;
             }
