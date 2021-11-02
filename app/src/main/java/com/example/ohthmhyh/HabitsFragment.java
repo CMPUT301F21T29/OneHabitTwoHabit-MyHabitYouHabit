@@ -2,10 +2,13 @@ package com.example.ohthmhyh;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +44,7 @@ public class HabitsFragment extends Fragment {
     private ArrayList<Habit> habitArrayList = new ArrayList<>();
 
 
-    public HabitsFragment() {
+    public HabitsFragment(){
         // Required empty public constructor
     }
 
@@ -89,9 +92,62 @@ public class HabitsFragment extends Fragment {
             alertDialog.setTitle("Add a Habit");
 
             EditText habitNameET = v.findViewById(R.id.enter_habit_name);
-            EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
-            EditText habitDateET = v.findViewById(R.id.enter_date);
+            habitNameET.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                }
 
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (habitNameET.getText().toString().length() > 20) {
+                        habitNameET.setError("Title is too long");
+                        habitNameET.requestFocus();
+                    }
+                    else if (habitNameET.getText().toString().length() <= 0) {
+                        habitNameET.setError("Title is empty");
+                        habitNameET.requestFocus();
+                    }
+                    else {
+                        habitNameET.setError(null);
+                    }
+                }
+            });
+
+
+            EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
+            habitDescriptionET.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+                    if (habitDescriptionET.getText().toString().length() > 30) {
+                        habitDescriptionET.setError("Description is too long");
+                        habitDescriptionET.requestFocus();
+                    }
+                    else if (habitDescriptionET.getText().toString().length() <= 0) {
+                        habitDescriptionET.setError("Description is empty");
+                        habitDescriptionET.requestFocus();
+                    }
+                    else {
+                        habitDescriptionET.setError(null);
+                    }
+                }
+            });
+            EditText habitDateET = v.findViewById(R.id.enter_date);
+            TextView errorSchedule = v.findViewById(R.id.choose_frequency_txtview);
             ToggleButton monFrequency = v.findViewById(R.id.mon);
             ToggleButton tueFrequency = v.findViewById(R.id.tue);
             ToggleButton wedFrequency = v.findViewById(R.id.wed);
@@ -110,26 +166,68 @@ public class HabitsFragment extends Fragment {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            String habitName = habitNameET.getText().toString();
-                            String habitDescription = habitDescriptionET.getText().toString();
-                            LocalDate startDate = handleDate(habitDateET.getText().toString());
-                            ArrayList<Habit.Days> schedule = new ArrayList<>();
-
-                            if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
-                            if (tueFrequency.isChecked()) schedule.add(Habit.Days.Tue);
-                            if (wedFrequency.isChecked()) schedule.add(Habit.Days.Wed);
-                            if (thuFrequency.isChecked()) schedule.add(Habit.Days.Thu);
-                            if (friFrequency.isChecked()) schedule.add(Habit.Days.Fri);
-                            if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
-                            if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
-
-                            habitArrayList.add(
-                                    new Habit(habitName, habitDescription, startDate, schedule));
+                            alertDialog.dismiss();
                         }
                     });
 
 
             alertDialog.show();
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean validated = false;
+                    String habitName = habitNameET.getText().toString();
+
+                    String habitDescription = habitDescriptionET.getText().toString();
+
+                    LocalDate startDate = handleDate(habitDateET.getText().toString());
+                    ArrayList<Habit.Days> schedule = new ArrayList<>();
+
+                    if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
+                    if (tueFrequency.isChecked()) schedule.add(Habit.Days.Tue);
+                    if (wedFrequency.isChecked()) schedule.add(Habit.Days.Wed);
+                    if (thuFrequency.isChecked()) schedule.add(Habit.Days.Thu);
+                    if (friFrequency.isChecked()) schedule.add(Habit.Days.Fri);
+                    if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
+                    if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
+
+                    if (habitName.length() > 0 && habitName.length() <= 20
+                    && habitDescription.length() > 0 && habitDescription.length() <= 30
+                    && schedule.size() > 0) {
+                        validated = true;
+                    }
+                    if (validated) {
+                        alertDialog.dismiss();
+                        habitArrayList.add(
+                                new Habit(habitName, habitDescription, startDate, schedule));
+                    }
+
+                    else {
+                        if (habitNameET.getText().toString().length() <= 0) {
+                            habitNameET.setError("Title is empty");
+                            habitNameET.requestFocus();
+                        }
+                        else if (habitNameET.getText().toString().length() > 20) {
+                            habitNameET.setError("Title is too long");
+                            habitNameET.requestFocus();
+                        }
+
+                        if (habitDescriptionET.getText().toString().length() > 30) {
+                            habitDescriptionET.setError("Description is too long");
+                            habitDescriptionET.requestFocus();
+                        }
+                        else if (habitDescriptionET.getText().toString().length() <= 0) {
+                            habitDescriptionET.setError("Description is empty");
+                            habitDescriptionET.requestFocus();
+                        }
+
+                        if (schedule.size() == 0) {
+                            errorSchedule.setText("Weekly Frequency  (Error: Choose a schedule)");
+                            errorSchedule.setTextColor(Color.RED);
+                        }
+                    }
+                }
+            });
         });
 
         return view;
