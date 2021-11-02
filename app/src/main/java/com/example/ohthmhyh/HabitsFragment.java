@@ -76,7 +76,8 @@ public class HabitsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        // Create a new alert dialog when Add a Habit button is clicked
+
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
 
         Button addButton = view.findViewById(R.id.add_habit);
