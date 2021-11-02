@@ -1,6 +1,7 @@
 package com.example.ohthmhyh;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,17 +10,21 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumSet;
 
@@ -28,19 +33,20 @@ import java.util.EnumSet;
  * Use the {@link HabitsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HabitsFragment extends Fragment {
+public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    int year, month, day;
 
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-
+    private TextView habitDateET;
     private ArrayList<Habit> habitArrayList = new ArrayList<>();
 
 
@@ -146,7 +152,26 @@ public class HabitsFragment extends Fragment {
                     }
                 }
             });
-            EditText habitDateET = v.findViewById(R.id.enter_date);
+            habitDateET = v.findViewById(R.id.enter_date);
+            habitDateET.setHint("Enter a date");
+            habitDateET.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(
+                            getContext(),
+                            HabitsFragment.this,
+                            Calendar.getInstance().get(Calendar.YEAR),
+                            Calendar.getInstance().get(Calendar.MONTH),
+                            Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+                    );
+                    datePickerDialog.show();
+                    System.out.println(year);
+
+                }
+            });
+
+
+
             TextView errorSchedule = v.findViewById(R.id.choose_frequency_txtview);
             ToggleButton monFrequency = v.findViewById(R.id.mon);
             ToggleButton tueFrequency = v.findViewById(R.id.tue);
@@ -180,7 +205,7 @@ public class HabitsFragment extends Fragment {
 
                     String habitDescription = habitDescriptionET.getText().toString();
 
-                    LocalDate startDate = handleDate(habitDateET.getText().toString());
+
                     ArrayList<Habit.Days> schedule = new ArrayList<>();
 
                     if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
@@ -193,11 +218,13 @@ public class HabitsFragment extends Fragment {
 
                     if (habitName.length() > 0 && habitName.length() <= 20
                     && habitDescription.length() > 0 && habitDescription.length() <= 30
-                    && schedule.size() > 0) {
+                    && schedule.size() > 0
+                    && habitDateET.getText().length() > 0) {
                         validated = true;
                     }
                     if (validated) {
                         alertDialog.dismiss();
+                        LocalDate startDate = handleDate(habitDateET.getText().toString());
                         habitArrayList.add(
                                 new Habit(habitName, habitDescription, startDate, schedule));
                     }
@@ -225,6 +252,11 @@ public class HabitsFragment extends Fragment {
                             errorSchedule.setText("Weekly Frequency  (Error: Choose a schedule)");
                             errorSchedule.setTextColor(Color.RED);
                         }
+
+                        if (habitDateET.getText().toString().equals("")) {
+                            habitDateET.setHint("ENTER A DATE");
+                            habitDateET.setHintTextColor(Color.RED);
+                        }
                     }
                 }
             });
@@ -246,7 +278,11 @@ public class HabitsFragment extends Fragment {
         return habitArrayList;
     }
 
-    public void addHabit(Habit habit) {
-
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        this.year=i;
+        this.month=i1+1;
+        this.day=i2;
+        habitDateET.setText(day + "/" + month + "/" + year);
     }
 }
