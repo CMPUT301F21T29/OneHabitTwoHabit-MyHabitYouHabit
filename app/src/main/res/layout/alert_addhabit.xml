@@ -204,12 +204,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/enter_date" />
 
             <ToggleButton
-                android:id="@+id/toggleButton3"
+                android:id="@+id/private_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ToggleButton"
-                android:textOff="PRIVATE"
-                android:textOn="PUBLIC" />
+                android:textOn="PRIVATE"
+                android:textOff="PUBLIC" />
         </LinearLayout>
 
     </LinearLayout>

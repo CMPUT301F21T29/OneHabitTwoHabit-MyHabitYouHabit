@@ -181,6 +181,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
             ToggleButton satFrequency = v.findViewById(R.id.sat);
             ToggleButton sunFrequency = v.findViewById(R.id.sun);
 
+            ToggleButton private_button = v.findViewById(R.id.private_button);
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -226,7 +227,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                         alertDialog.dismiss();
                         LocalDate startDate = handleDate(habitDateET.getText().toString());
                         habitArrayList.add(
-                                new Habit(habitName, habitDescription, startDate, schedule));
+                                new Habit(habitName, habitDescription, startDate, schedule, private_button.isChecked()));
                     }
 
                     else {
