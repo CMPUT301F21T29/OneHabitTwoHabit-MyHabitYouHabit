@@ -27,6 +27,14 @@ public class Habit {
     public Habit(){}
 
 
+    public boolean isPrivate_status() {
+        return private_status;
+    }
+
+    public void setPrivate_status(boolean private_status) {
+        this.private_status = private_status;
+    }
+
     /**
      * Construct an empty habit, supplying all instance variables at instantiation time (now).
      * @param name The name of this habit.

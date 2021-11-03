@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +20,12 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.EnumSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -114,12 +110,17 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
     }
 
 
-    private LocalDate handleDate(String dateAsString) {
+    private LocalDate stringToDate(String dateAsString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
         //convert String to LocalDate
         LocalDate localDate = LocalDate.parse(dateAsString, formatter);
         return localDate;
+    }
+    private String dateToString(LocalDate localDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+        String formattedString = localDate.format(formatter);
+        return formattedString;
     }
 
     public ArrayList<Habit> getHabitArrayList() {
@@ -136,8 +137,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
     @Override
     public void onItemClicked(int position) {
-        //TODO: Implement
-        editDialog(getView());
+        editDialog(getView(), position);
     }
 
     public void addDialog(View v) {
@@ -276,7 +276,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 }
                 if (validated) {
                     alertDialog.dismiss();
-                    LocalDate startDate = handleDate(habitDateET.getText().toString());
+                    LocalDate startDate = stringToDate(habitDateET.getText().toString());
                     habitArrayList.add(
                             new Habit(habitName, habitDescription, startDate, schedule, private_button.isChecked()));
                     //System.out.println(habitArrayList.size() + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -316,8 +316,8 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         });
     }
 
-    public void editDialog(View v) {
-
+    public void editDialog(View v, int position) {
+        Habit chosenHabit = habitArrayList.get(position);
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
         v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
         alertDialog.setView(v);
@@ -325,6 +325,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         alertDialog.setTitle("Add a Habit");
 
         EditText habitNameET = v.findViewById(R.id.enter_habit_name);
+        habitNameET.setText(chosenHabit.getName());
         habitNameET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -353,6 +354,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
         EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
+        habitDescriptionET.setText(chosenHabit.getDescription());
         habitDescriptionET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -380,6 +382,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
             }
         });
         habitDateET = v.findViewById(R.id.enter_date);
+        habitDateET.setText(dateToString(chosenHabit.StartDateAsLocalDate()));
         habitDateET.setHint("Enter a date");
         habitDateET.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -392,8 +395,6 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                         Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
                 );
                 datePickerDialog.show();
-                System.out.println(year);
-
             }
         });
 
@@ -408,13 +409,25 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         ToggleButton satFrequency = v.findViewById(R.id.sat);
         ToggleButton sunFrequency = v.findViewById(R.id.sun);
 
+        ArrayList<Habit.Days> existedSchedule = chosenHabit.getSchedule();
+        if (existedSchedule.contains(Habit.Days.Mon)) monFrequency.setChecked(true);
+        if (existedSchedule.contains(Habit.Days.Tue)) tueFrequency.setChecked(true);
+        if (existedSchedule.contains(Habit.Days.Wed)) wedFrequency.setChecked(true);
+        if (existedSchedule.contains(Habit.Days.Thu)) thuFrequency.setChecked(true);
+        if (existedSchedule.contains(Habit.Days.Fri)) friFrequency.setChecked(true);
+        if (existedSchedule.contains(Habit.Days.Sat)) satFrequency.setChecked(true);
+        if (existedSchedule.contains(Habit.Days.Sun)) sunFrequency.setChecked(true);
+
+
         ToggleButton private_button = v.findViewById(R.id.private_button);
+        private_button.setChecked(chosenHabit.isPrivate_status());
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Empty Listener as the Cancel button doesn't do anything.
                     }
                 });
+
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
                 new DialogInterface.OnClickListener() {
@@ -452,10 +465,13 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 }
                 if (validated) {
                     alertDialog.dismiss();
-                    LocalDate startDate = handleDate(habitDateET.getText().toString());
-                    habitArrayList.add(
-                            new Habit(habitName, habitDescription, startDate, schedule, private_button.isChecked()));
-                    //System.out.println(habitArrayList.size() + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                    LocalDate startDate = stringToDate(habitDateET.getText().toString());
+
+                    chosenHabit.setName(habitName);
+                    chosenHabit.setDescription(habitDescription);
+                    chosenHabit.setStartDate(startDate.toEpochDay());
+                    chosenHabit.setSchedule(schedule);
+                    chosenHabit.setPrivate_status(private_button.isChecked());
                     adapter.notifyDataSetChanged();
                 }
 
