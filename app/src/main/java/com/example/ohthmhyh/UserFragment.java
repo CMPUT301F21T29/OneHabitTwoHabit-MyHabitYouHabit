@@ -1,5 +1,7 @@
 package com.example.ohthmhyh;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -9,10 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -83,8 +90,33 @@ public class UserFragment extends Fragment {
         });
 
         // Display the user's email.
-        TextView userTextView = view.findViewById(R.id.text_view_user);
-        userTextView.setText(user.getEmail());
+        //TextView userTextView = view.findViewById(R.id.text_view_user);
+        //userTextView.setText(user.getEmail());
+
+        // Display the user's name
+        TextView userNameTextView = view.findViewById(R.id.user_name);
+        userNameTextView.setText(user.getDisplayName());
+
+        // Display the user's username
+        //TextView userUserNameTextView = view.findViewById(R.id.user_username);
+        //userUserNameTextView.setText(user.get);
+
+        // Display the user's biography.
+        //TextView userBioTextView = view.findViewById(R.id.user_biography);
+        //userBioTextView.setText(user.);
+
+        Button editProfileButton = view.findViewById(R.id.user_editprofile);
+        editProfileButton.setOnClickListener((v) -> {
+            AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
+            v = LayoutInflater.from(getContext()).inflate(R.layout.alert_editprofile, null);
+            alertDialog.setView(v);
+
+            alertDialog.setTitle("Edit Profile");
+
+
+            alertDialog.show();
+        });
+
 
         return view;
     }
