@@ -7,6 +7,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,7 +36,7 @@ import java.util.EnumSet;
  * Use the {@link HabitsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateSetListener{
+public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateSetListener, CustomAdapterHF.OntouchListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,6 +91,19 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         // Create a new alert dialog when Add a Habit button is clicked
 
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        CustomAdapterHF adapter = new CustomAdapterHF(getContext(), this, habitArrayList);
+        ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        adapter.setTouchhelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(adapter);
+
 
         Button addButton = view.findViewById(R.id.add_habit);
         addButton.setOnClickListener((v) -> {
@@ -228,6 +244,8 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                         LocalDate startDate = handleDate(habitDateET.getText().toString());
                         habitArrayList.add(
                                 new Habit(habitName, habitDescription, startDate, schedule, private_button.isChecked()));
+                        //System.out.println(habitArrayList.size() + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                        adapter.notifyDataSetChanged();
                     }
 
                     else {
@@ -285,5 +303,10 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         this.month=i1+1;
         this.day=i2;
         habitDateET.setText(day + "/" + month + "/" + year);
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        //TODO: Implement
     }
 }
