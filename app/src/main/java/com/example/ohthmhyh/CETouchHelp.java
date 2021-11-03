@@ -10,11 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class CETouchHelp extends ItemTouchHelper.Callback {
     private final CeitemHelpToucherAdapter madapter;
-
+    /**
+     *This is the creater for CEtouchHelp
+     */
     public CETouchHelp(CeitemHelpToucherAdapter adapter) {
         this.madapter = adapter;
     }
-
     @Override
     public boolean isLongPressDragEnabled() {
         return false;
@@ -24,7 +25,7 @@ public class CETouchHelp extends ItemTouchHelper.Callback {
     public boolean isItemViewSwipeEnabled() {
         return true;
     }
-    //Used when you let go of an item
+
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
@@ -40,7 +41,6 @@ public class CETouchHelp extends ItemTouchHelper.Callback {
             viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
         }
     }
-
 
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -59,6 +59,5 @@ public class CETouchHelp extends ItemTouchHelper.Callback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
     madapter.onItemSwiped(viewHolder.getAdapterPosition());
     }
-
 
 }

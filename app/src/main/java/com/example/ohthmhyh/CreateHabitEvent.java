@@ -48,29 +48,25 @@ public class CreateHabitEvent extends AppCompatActivity {
 
     //used for image
     public ImageView pick;
-    int flag5=-1;
     String camraPermition[];
     String storagePermition[];
     //used for location
     FusedLocationProviderClient fusedLocationProviderClient;
-    Address address;
+    Address address=null;
+
     //Used for drop down menu
     private AutoCompleteTextView autoCompleteTextView;
 
 
     //Used for comment
     EditText getComment;
+    String comment;
 
-    private String comment;
-    //Flags, Used to error check and see what optinal data the user used.
-    //flag=pic
-    //flag2=comment
-    //flag3=location
-     Boolean flag=false, flag2=false, flag3=false;
-     int flag4=-1;
+    //Used for editing
+    int flag4=-1;
     int position;
     TextView localText;
-//Only Needed if fragments happen
+//Used for the drop down menu
     @Override
     protected void onResume() {
         super.onResume();
@@ -99,7 +95,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         pick = (ImageView) findViewById(R.id.pickImage);
 
 
-
+       //Used to get a picture from the user
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,13 +118,13 @@ public class CreateHabitEvent extends AppCompatActivity {
             //edit medicine when clicked on in list
             //habitEvent=magichabitlist.get(position);
 
+            //This reads the clicked habit event and sets it for editing
             pick.setImageBitmap(habitEvent.getBitmapPic());
             getComment.setText(habitEvent.getComment());
             if (habitEvent.getLocatoion()==null){
                 localText.setText("");
             }else{
                 localText.setText(Html.fromHtml(habitEvent.getLocatoion().getAddressLine(0)));
-                flag3=true;
             }
             bitmap=habitEvent.getBitmapPic();
             address=habitEvent.getLocatoion();
@@ -145,7 +141,9 @@ public class CreateHabitEvent extends AppCompatActivity {
             //reverse the changes above.
             }
     }//End of on create
-
+    /**
+     * Call this method to get the camera from the user
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -158,7 +156,6 @@ public class CreateHabitEvent extends AppCompatActivity {
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
                 pick.setImageBitmap(bitmap);
-                flag=true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -171,7 +168,10 @@ public class CreateHabitEvent extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Call this method to get the user location permissions
+     *
+     */
 
     public void get_user_location(View view) {
         //Check Permitions
@@ -187,7 +187,10 @@ public class CreateHabitEvent extends AppCompatActivity {
         }
     }
 
-    //Does give an error but..........works, Does not see that I ask for Permission elsewhere I believe
+    /**
+     * Call this method to get the user location
+     *
+     */
     @SuppressLint("MissingPermission")
     private void getLocation() {
         //Simple tests
@@ -207,7 +210,6 @@ public class CreateHabitEvent extends AppCompatActivity {
                         List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                         //To get everything do addressList.get(0).getLatitude
                         //getLongatude, get(0).getCountry  getAddressLine
-                        flag3=true;
                         address=addressList.get(0);
                         testLocationthing.setText(Html.fromHtml(address.getAddressLine(0)));
                     } catch (IOException e) {
@@ -217,35 +219,34 @@ public class CreateHabitEvent extends AppCompatActivity {
             }
         });
     }
-
+    /**
+     * Call this method to get the user location
+     * @param string Takes a string and make sure to get a string less then 20
+     */
     Boolean commentvalidater(String string){
         return string.length() <= 20;
     }
 
-    //Should work in maybe...
-    //todo
-    //get everything running with data
+    /**
+     * Call this method to get read all the data from screen and make
+     * habit event
+     */
     public void final_create_habit(View view) {
         if (flag4 >=0){//need to edit medicine
             comment=getComment.getText().toString();
 
             if (commentvalidater(comment)){
                 getComment.setBackgroundColor(Color.rgb(0,255,0));
-                flag2=true;
+
             }
             else{
                 getComment.setBackgroundColor(Color.rgb(255,0,0));
-                flag2=false;
                 return;
-            }
-            //Might not be needed, will have to think about later
-            if (!flag3){
-                address=null;
             }
             String test;
             test=autoCompleteTextView.getText().toString();
             Toast.makeText(this, test, Toast.LENGTH_LONG).show();
-            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,flag5);
+            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
             //Magichabitlist.set.(position,updatehabitEvent);
             habiteventlist.set(position,updatehabitEvent);
             Intent intent =new Intent(CreateHabitEvent.this,MainActivity.class);
@@ -257,19 +258,14 @@ public class CreateHabitEvent extends AppCompatActivity {
 
         if (commentvalidater(comment)){
             getComment.setBackgroundColor(Color.rgb(0,255,0));
-            flag2=true;
         }
         else{
             getComment.setBackgroundColor(Color.rgb(255,0,0));
-            flag2=false;
             return;
         }
         //No image was givin
-        if (!flag){
+        if (bitmap==null){
             bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.lol_pic);
-        }
-        if (!flag3){
-            address=null;
         }
         String test;
         test=autoCompleteTextView.getText().toString();
@@ -278,32 +274,11 @@ public class CreateHabitEvent extends AppCompatActivity {
         //TODO
         //Get user info
         //Get a habit from user
-        HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,flag5);
+        HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
         //push habitEvent into data base
             habiteventlist.add(habitEvent);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
     }
-    /**
-     * https://stackoverflow.com/questions/16954109/reduce-the-size-of-a-bitmap-to-a-specified-size-in-android
-     * reduces the size of the image
-     * @param image
-     * @param maxSize
-     * @return
-     */
-    //public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
-      //  int width = image.getWidth();
-        //int height = image.getHeight();
-
-        //float bitmapRatio = (float)width / (float) height;
-        //if (bitmapRatio > 1) {
-          //  width = maxSize;
-           // height = (int) (width / bitmapRatio);
-        //} else {
-         //   height = maxSize;
-        //    width = (int) (height * bitmapRatio);
-        //}
-       // return Bitmap.createScaledBitmap(image, width, height, true);
-     //}
 }

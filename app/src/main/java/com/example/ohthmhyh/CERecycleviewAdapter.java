@@ -24,14 +24,19 @@
 
         import java.util.ArrayList;
 
-
+        /**
+         * A simple RecycleviewAdapter .
+         *
+         */
 public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder>
         implements CeitemHelpToucherAdapter{
     ArrayList<HabitEvent> habitEventsList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
-
+            /**
+             *The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+             */
     public  CERecycleviewAdapter(ArrayList<HabitEvent> habitEventsList, Context context,OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
         this.context=context;
@@ -61,12 +66,16 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         holder.DisplayUserpic.setImageBitmap(habitEventsList.get(position).getBitmapPic());
         //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
     }
-
+    /**
+    *Returns the amount of items in the Recycleview
+     */
     @Override
     public int getItemCount() {
         return habitEventsList.size();
     }
-
+    /**
+     *This is used for moving items in the Recycleview
+     */
     @Override
     public void onItemMove(int frompositon, int toposition) {
         HabitEvent fromHabitevent=habitEventsList.get(frompositon);
@@ -75,6 +84,9 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         notifyItemMoved(frompositon,toposition);
     }
 
+    /**
+     *This is used for deleting items in the Recycleview
+     */
     @Override
     public void onItemSwiped(int position) {
         habitEventsList.remove(position);
@@ -114,7 +126,9 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
             itemView.setOnTouchListener(this);
 
         }
-
+        /**
+         *These are all possible montions a user can do
+         */
         @Override
         public boolean onDown(MotionEvent motionEvent) {
             return false;
