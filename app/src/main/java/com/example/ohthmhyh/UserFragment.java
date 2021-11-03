@@ -112,7 +112,28 @@ public class UserFragment extends Fragment {
             alertDialog.setView(v);
 
             alertDialog.setTitle("Edit Profile");
+            // Setup the edit profile inputs
+            EditText name = v.findViewById(R.id.profile_enter_name);
+            EditText username = v.findViewById(R.id.profile_enter_username);
+            EditText bio = v.findViewById(R.id.profile_enter_bio);
 
+            name.setText(user.getDisplayName());
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Empty Listener as the Cancel button doesn't do anything.
+                        }
+                    });
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Submit",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            String profileName = name.getText().toString();
+                            String profileUserName = username.getText().toString();
+                            String profileBio = bio.getText().toString();
+                        }
+                    });
 
             alertDialog.show();
         });

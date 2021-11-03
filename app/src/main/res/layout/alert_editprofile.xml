@@ -124,7 +124,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/Friend"
             android:layout_alignParentRight="true"
-            android:enabled="false"
             android:text="Change Profile Photo"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
