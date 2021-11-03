@@ -118,7 +118,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return localDate;
     }
     private String dateToString(LocalDate localDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd LLLL yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String formattedString = localDate.format(formatter);
         return formattedString;
     }
