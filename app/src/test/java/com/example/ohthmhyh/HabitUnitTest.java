@@ -1,7 +1,9 @@
 package com.example.ohthmhyh;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 import com.google.gson.internal.Streams;
 
