@@ -2,6 +2,10 @@ package com.example.ohthmhyh;
 
 import java.util.ArrayList;
 
+/**
+ * The entity class for a the users habit events. This class represents all of the habit events
+ * created by the user. Make an instance of this class to represent a collection of habit events.
+ */
 public class HabitEventList {
 
     private ArrayList<HabitEvent> habitEventList;

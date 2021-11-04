@@ -2,12 +2,20 @@ package com.example.ohthmhyh;
 
 import java.util.ArrayList;
 
+/**
+ * The entity class for a the users habits. This class represents all of the habits created
+ * by the user. Make an instance of this class to represent a collection of habits.
+ */
 public class HabitList{
 
+    // instance variables
     private ArrayList<Habit> habitList;
     private int UHIDCounter;
     private DatabaseAdapter databaseAdapter = new DatabaseAdapter();
 
+    /**
+     * Construct a new HabitList for storing all of the users habits.
+     */
     public HabitList(){
         UHIDCounter = 0;
         habitList = new ArrayList<>();

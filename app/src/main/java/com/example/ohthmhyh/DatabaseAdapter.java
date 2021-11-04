@@ -9,6 +9,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+/**
+ * The class manages how data is put into and pulled out of the database. Make an instance
+ * of this class to be able to get or push the HabitList, HabitEventList, and User objects
+ * to/from firebase.
+ */
 public class DatabaseAdapter{
 
     /**
@@ -32,12 +37,14 @@ public class DatabaseAdapter{
         void onHabitCallback(HabitList hList);
     }
 
-
+    /**
+     * A callback used when retrieving a users habit events from the database.
+     */
     public interface HabitEventCallback{
         void onHabitEventCallback(HabitEventList habitEvents);
     }
 
-
+    // instance variables
     private static FirebaseFirestore db;
     private static String UID;
 
@@ -56,6 +63,7 @@ public class DatabaseAdapter{
     /**
      * Create an instance of the database adapter, specifying a UID. Ideally, this should only be
      * used while testing as specifying the wrong UID can cause database errors.
+     * @param UID force the database to use this UID for pushing/pulling data
      */
     public DatabaseAdapter(String UID){
         this.UID = UID;
