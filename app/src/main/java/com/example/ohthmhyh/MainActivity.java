@@ -63,8 +63,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
+        Intent intent= getIntent();
+        int flag=intent.getIntExtra("test",-1);
+        if (flag==1){bottomNavigationView.setSelectedItemId(R.id.habit_events_nav_item);}
+        else {
+            bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
+             }
 
-        bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
-
-    }
+        }
 }
