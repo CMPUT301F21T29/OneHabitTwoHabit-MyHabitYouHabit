@@ -277,8 +277,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
         //push habitEvent into data base
             habiteventlist.add(habitEvent);
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        finish();
     }
     }
 }

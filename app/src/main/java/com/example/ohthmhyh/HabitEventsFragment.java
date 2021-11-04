@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 /**
@@ -20,7 +22,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class HabitEventsFragment extends Fragment implements CERecycleviewAdapter.OntouchListener {
-
+      FloatingActionButton fab;
      RecyclerView recyclerView;
      CERecycleviewAdapter mAdapter;
     private ArrayList<HabitEvent> habitEventArrayList;
@@ -71,6 +73,15 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
+        fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton2);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =new Intent(getContext(),CreateHabitEvent.class);
+                startActivity(intent);
+            }
+        });
+
         habitEventArrayList= ApplicationCE.getHabiteventlist();
         recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
         LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
@@ -84,6 +95,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
         recyclerView.setAdapter(mAdapter);
         return view;
     }
+
+
 
 
     @Override
