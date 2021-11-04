@@ -1,5 +1,7 @@
 package com.example.ohthmhyh;
 
+import androidx.annotation.NonNull;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
@@ -11,6 +13,7 @@ public class Habit {
     public enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
     // instance variables of the habit
     private String name;
+    private boolean private_status;
     private String description;
     private long startDate;
     private ArrayList<Days> schedule = new ArrayList<Days>();
@@ -24,6 +27,14 @@ public class Habit {
     public Habit(){}
 
 
+    public boolean isPrivate_status() {
+        return private_status;
+    }
+
+    public void setPrivate_status(boolean private_status) {
+        this.private_status = private_status;
+    }
+
     /**
      * Construct an empty habit, supplying all instance variables at instantiation time (now).
      * @param name The name of this habit.
@@ -31,11 +42,12 @@ public class Habit {
      * @param startDate The date this habit was started/created.
      * @param schedule The weekdays this habit should be completed on.
      */
-    public Habit(String name, String description, LocalDate startDate, ArrayList<Days> schedule){
+    public Habit(String name, String description, LocalDate startDate, ArrayList<Days> schedule, boolean private_status){
         this.name = name;
         this.description = description;
         this.startDate = startDate.toEpochDay();
         this.schedule = schedule;
+        this.private_status = private_status;
     }
 
 
