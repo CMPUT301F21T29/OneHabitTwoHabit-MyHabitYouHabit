@@ -10,6 +10,8 @@ import java.util.ArrayList;
 public class User {
     // instance variables
     private String username;
+    private String name;
+    private String bio;
     private ArrayList<String> friendList;
     private int UPIDCounter;
 
@@ -93,4 +95,41 @@ public class User {
         return friendList;
     }
 
+
+    /**
+     * Get the biography of the user
+     * @return The user bio as string
+     */
+    public String getBio() {
+        return this.bio;
+    }
+
+
+    /**
+     * Set the biography of the user
+     * @param value Biography set by the user.
+     */
+    public void setBio(String value) {
+        this.bio = value;
+    }
+
+
+    /**
+     * Get the name of the user
+     * @return name of the user
+     */
+    public String getName() {
+        return this.name;
+    }
+
+
+    /**
+     * Set the name of the user
+     * @param name the name of the user
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
 }
+
