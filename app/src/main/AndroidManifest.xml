@@ -10,18 +10,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OneHabitTwoHabitMyHabitYouHabit">
         <activity
+            android:name=".EditProfile"
+            android:exported="true" />
+        <activity
             android:name=".LoginActivity"
-            android:exported="true" >
-            <!--Make the login activity the launcher activity.-->
+            android:exported="true">
+
+            <!-- Make the login activity the launcher activity. -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

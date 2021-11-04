@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 public class User {
     private String username;
+    private String name;
+    private String bio;
     private ArrayList<String> friendList;
     private int UPIDCounter;
 
@@ -76,6 +78,38 @@ public class User {
      */
     public ArrayList<String> getFriendList(){
         return friendList;
+    }
+
+    /**
+     * Get the biography of the user
+     * @return The user bio as string
+     */
+    public String getBio() {
+        return this.bio;
+    }
+
+    /**
+     * Set the biography of the user
+     * @param value Biography set by the user.
+     */
+    public void setBio(String value) {
+        this.bio = value;
+    }
+
+    /**
+     * Get the name of the user
+     * @return name of the user
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * SEt the name of the user
+     * @param value the name of the user
+     */
+    public void setName(String value) {
+        this.name = value;
     }
 
 }

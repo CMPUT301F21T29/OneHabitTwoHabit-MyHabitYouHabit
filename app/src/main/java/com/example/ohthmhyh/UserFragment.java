@@ -38,6 +38,7 @@ public class UserFragment extends Fragment {
     private String mParam2;
 
     private FirebaseUser user;
+    private User user_info;
 
     public UserFragment() {
         // Required empty public constructor
@@ -75,6 +76,8 @@ public class UserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Get the user that is currently signed in.
         user = FirebaseAuth.getInstance().getCurrentUser();
+        user_info = new User();
+
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user, container, false);
@@ -95,11 +98,11 @@ public class UserFragment extends Fragment {
 
         // Display the user's name
         TextView userNameTextView = view.findViewById(R.id.user_name);
-        userNameTextView.setText(user.getDisplayName());
+        userNameTextView.setText(user.getDisplayName().length() > 0 ? user.getDisplayName() : "Breadfish");
 
         // Display the user's username
-        //TextView userUserNameTextView = view.findViewById(R.id.user_username);
-        //userUserNameTextView.setText(user.get);
+        TextView userUserNameTextView = view.findViewById(R.id.user_username);
+        userUserNameTextView.setText(user_info.getUsername());
 
         // Display the user's biography.
         //TextView userBioTextView = view.findViewById(R.id.user_biography);
@@ -107,35 +110,10 @@ public class UserFragment extends Fragment {
 
         Button editProfileButton = view.findViewById(R.id.user_editprofile);
         editProfileButton.setOnClickListener((v) -> {
-            AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
-            v = LayoutInflater.from(getContext()).inflate(R.layout.alert_editprofile, null);
-            alertDialog.setView(v);
-
-            alertDialog.setTitle("Edit Profile");
-            // Setup the edit profile inputs
-            EditText name = v.findViewById(R.id.profile_enter_name);
-            EditText username = v.findViewById(R.id.profile_enter_username);
-            EditText bio = v.findViewById(R.id.profile_enter_bio);
-
-            name.setText(user.getDisplayName());
-
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Empty Listener as the Cancel button doesn't do anything.
-                        }
-                    });
-
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Submit",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            String profileName = name.getText().toString();
-                            String profileUserName = username.getText().toString();
-                            String profileBio = bio.getText().toString();
-                        }
-                    });
-
-            alertDialog.show();
+            Intent editProfile = new Intent(getActivity(), EditProfile.class);
+            editProfile.putExtra("NAME", user.getDisplayName());
+            //editProfile.putExtra("USERNAME", user.get)
+            getActivity().startActivity(editProfile);
         });
 
 
