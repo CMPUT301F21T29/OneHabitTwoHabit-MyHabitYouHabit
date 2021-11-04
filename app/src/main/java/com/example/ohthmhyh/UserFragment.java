@@ -1,7 +1,5 @@
 package com.example.ohthmhyh;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,15 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -110,7 +103,7 @@ public class UserFragment extends Fragment {
 
         Button editProfileButton = view.findViewById(R.id.user_editprofile);
         editProfileButton.setOnClickListener((v) -> {
-            Intent editProfile = new Intent(getActivity(), EditProfile.class);
+            Intent editProfile = new Intent(getActivity(), EditProfileActivity.class);
             editProfile.putExtra("NAME", user.getDisplayName());
             //editProfile.putExtra("USERNAME", user.get)
             getActivity().startActivity(editProfile);

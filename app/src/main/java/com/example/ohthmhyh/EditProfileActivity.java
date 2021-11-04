@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class EditProfile extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
     private ImageView pick;
     private Bitmap bitmap;
@@ -36,7 +36,7 @@ public class EditProfile extends AppCompatActivity {
         pickProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*ImagePicker.with(EditProfile.this)
+                /*ImagePicker.with(EditProfileActivity.this)
                         .crop()	//Crop image with 16:9 aspect ratio
                         .compress(1024)			//Final image size will be less than 1 MB(Optional)
                         .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)

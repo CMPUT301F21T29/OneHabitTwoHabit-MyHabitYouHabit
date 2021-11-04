@@ -95,6 +95,7 @@ public class User {
         return friendList;
     }
 
+
     /**
      * Get the biography of the user
      * @return The user bio as string
@@ -102,6 +103,7 @@ public class User {
     public String getBio() {
         return this.bio;
     }
+
 
     /**
      * Set the biography of the user
@@ -111,6 +113,7 @@ public class User {
         this.bio = value;
     }
 
+
     /**
      * Get the name of the user
      * @return name of the user
@@ -119,12 +122,13 @@ public class User {
         return this.name;
     }
 
+
     /**
-     * SEt the name of the user
-     * @param value the name of the user
+     * Set the name of the user
+     * @param name the name of the user
      */
-    public void setName(String value) {
-        this.name = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
