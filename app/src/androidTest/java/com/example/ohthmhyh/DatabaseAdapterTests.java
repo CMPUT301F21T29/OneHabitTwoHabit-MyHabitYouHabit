@@ -42,7 +42,6 @@ public class DatabaseAdapterTests{
      */
     @BeforeClass
     public static void setUp() throws Exception {
-        boolean isSignedIn = false;
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.createUserWithEmailAndPassword(
                 EXISTING_USER_EMAIL, EXISTING_USER_PASSWORD).addOnCompleteListener(
