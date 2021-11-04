@@ -1,5 +1,6 @@
 package com.example.ohthmhyh;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -30,8 +31,9 @@ public class UserFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private FirebaseUser user;
-    private User user_info;
+    private FirebaseUser fbUser;
+    private User user;
+    View view;
 
     public UserFragment() {
         // Required empty public constructor
@@ -67,14 +69,26 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Get the user that is currently signed in.
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        user_info = new User();
-
-
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        view = inflater.inflate(R.layout.fragment_user, container, false);
 
+
+        // TODO: pull the user from the database here!
+        user = new User();
+
+
+        // get the views
+        TextView nameTextView = view.findViewById(R.id.user_name);
+        TextView userNameTextView = view.findViewById(R.id.user_username);
+        TextView userBioTextView = view.findViewById(R.id.user_biography);
+
+        // Set the content of the views
+        nameTextView.setText(user.getName());
+        userNameTextView.setText(user.getUsername());
+        userBioTextView.setText(user.getBio());
+
+
+        // define what happens when sign-out is clicked
         Button signOutButton = view.findViewById(R.id.button_sign_out);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,34 +99,19 @@ public class UserFragment extends Fragment {
             }
         });
 
-        // Display the user's email.
-        //TextView userTextView = view.findViewById(R.id.text_view_user);
-        //userTextView.setText(user.getEmail());
 
-        // Display the user's name
-        TextView userNameTextView = view.findViewById(R.id.user_name);
-        userNameTextView.setText(user.getDisplayName().length() > 0 ? user.getDisplayName() : "Breadfish");
-
-        // Display the user's username
-        TextView userUserNameTextView = view.findViewById(R.id.user_username);
-        userUserNameTextView.setText(user_info.getUsername());
-
-        // Display the user's biography.
-        //TextView userBioTextView = view.findViewById(R.id.user_biography);
-        //userBioTextView.setText(user.);
-
+        // define what happens when the edit profile button is pressed
         Button editProfileButton = view.findViewById(R.id.user_editprofile);
         editProfileButton.setOnClickListener((v) -> {
-            Intent editProfile = new Intent(getActivity(), EditProfileActivity.class);
-            editProfile.putExtra("NAME", user.getDisplayName());
-            //editProfile.putExtra("USERNAME", user.get)
-            getActivity().startActivity(editProfile);
-        });
 
+           new EditProfileFragment(user).show(getActivity().getSupportFragmentManager(), "editUserProfile");
+
+        });
 
         return view;
     }
 
+    
     /**
      * Create an intent and start the login activity. (when sign out button pressed)
      */
