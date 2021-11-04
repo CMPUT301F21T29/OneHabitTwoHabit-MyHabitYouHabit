@@ -420,7 +420,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
         ToggleButton private_button = v.findViewById(R.id.private_button);
-        private_button.setChecked(chosenHabit.isPrivate_status());
+        private_button.setChecked(chosenHabit.getIsPrivate());
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -471,7 +471,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                     chosenHabit.setDescription(habitDescription);
                     chosenHabit.setStartDate(startDate.toEpochDay());
                     chosenHabit.setSchedule(schedule);
-                    chosenHabit.setPrivate_status(private_button.isChecked());
+                    chosenHabit.setIsPrivate(private_button.isChecked());
                     adapter.notifyDataSetChanged();
                 }
 

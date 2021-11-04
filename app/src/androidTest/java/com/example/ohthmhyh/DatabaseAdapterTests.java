@@ -4,21 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import android.util.Log;
-
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.robotium.solo.Solo;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.ArrayList;
 
-
+/**
+ * This class is used to run tests on the DatabaseAdapter class
+ */
 public class DatabaseAdapterTests{
 
     private DatabaseAdapter dba;
@@ -26,16 +19,12 @@ public class DatabaseAdapterTests{
     @Rule public ActivityScenarioRule<MainActivity> rule
             = new ActivityScenarioRule<>(MainActivity.class);
 
-//    /**
-//     * Close activity after each test
-//     * @throws Exception
-//     */
-//    @After
-//    public void tearDown () throws Exception{
-//        solo .finishOpenedActivities() ;
-//    }
 
-
+    /**
+     * Tests pushing a User object into the database. Check the firebase console to
+     * make sure that it worked.
+     * @throws Exception
+     */
     @Test
     public void pushUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
@@ -48,6 +37,10 @@ public class DatabaseAdapterTests{
     }
 
 
+    /**
+     * Tests pulling a user object from the Database.
+     * @throws Exception
+     */
     @Test
     public void pullUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
@@ -68,8 +61,13 @@ public class DatabaseAdapterTests{
     }
 
 
+    /**
+     * Tests pushing a HabitList object to the database. Check the firebase console to
+     * make sure that it worked.
+     * @throws Exception
+     */
     @Test
-    public void pushHabitTest_1() throws Exception{
+    public void pushHabitListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter("testUID3");
         // push habits into the DB
@@ -82,8 +80,12 @@ public class DatabaseAdapterTests{
     }
 
 
+    /**
+     * Test pulling a HabitList object from the database.
+     * @throws Exception
+     */
     @Test
-    public void pullHabitsTest_1() throws Exception{
+    public void pullHabitListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter("testUID4");
 
@@ -92,7 +94,8 @@ public class DatabaseAdapterTests{
         habits.addHabit(Habit.makeDummyHabit());
         habits.addHabit(Habit.makeDummyHabit());
         dba.pushHabits(habits);
-        // make sure the habits we get back match
+
+        // make sure the habits we get back from the db match what we pushed
         dba.pullHabits(new DatabaseAdapter.HabitCallback() {
             @Override
             public void onHabitCallback(HabitList hList) {
@@ -104,6 +107,11 @@ public class DatabaseAdapterTests{
     }
 
 
+    /**
+     * Tests the method to check if a username is already taken. This test checks a username
+     * which is already taken.
+     * @throws Exception
+     */
     @Test
     public void checkUsernameExists_1() throws Exception{
         // make sure the user is in the DB
@@ -119,6 +127,11 @@ public class DatabaseAdapterTests{
     }
 
 
+    /**
+     * Tests the method to check if a username is already taken. This test checks a username
+     * which is not already taken.
+     * @throws Exception
+     */
     @Test
     public void checkUsernameNotExists_1() throws Exception{
         // make sure the user is in the DB
@@ -133,36 +146,5 @@ public class DatabaseAdapterTests{
         });
     }
 
-//    @Test
-//    public void getHabitTest_1() throws Exception {
-//        // make a database adapter and force a UID because we're not logged in while testing
-//        dba = new DatabaseAdapter("testUID6");
-//
-//        User testUser = new User("FredFlintstone");
-//        testUser.
-//        dba.updateUser(testUser);
-//
-//        dba.getHabits(new DatabaseAdapter.HabitCallback() {
-//            @Override
-//            public void onHabitCallback(ArrayList<Habit> habits) {
-//                assertTrue(false);
-//            }
-//        });
-//
-//        assert false;
-//    }
-
-//    @Test
-//    public void pushHabitTest_1() throws Exception{
-//        // make a database adapter and force a UID because we're not logged in while testing
-//        dba = new DatabaseAdapter("testUID5");
-//        Habit h = Habit.makeDummyHabit();
-//        Habit h2 = Habit.makeDummyHabit();
-//
-//        dba.pushHabit(h);
-//        dba.pushHabit(h2);
-//    }
-
-
-
 }
+
