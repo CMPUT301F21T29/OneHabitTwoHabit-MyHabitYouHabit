@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
  * Use the {@link UserFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements EditProfileFragment.UpdateProfileListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -75,6 +75,9 @@ public class UserFragment extends Fragment {
 
         // TODO: pull the user from the database here!
         user = new User();
+        user.setUsername("asdf username");
+        user.setBio("this is a bio bruh");
+        user.setName("josh");
 
 
         // get the views
@@ -87,7 +90,6 @@ public class UserFragment extends Fragment {
         userNameTextView.setText(user.getUsername());
         userBioTextView.setText(user.getBio());
 
-
         // define what happens when sign-out is clicked
         Button signOutButton = view.findViewById(R.id.button_sign_out);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -99,19 +101,19 @@ public class UserFragment extends Fragment {
             }
         });
 
-
         // define what happens when the edit profile button is pressed
         Button editProfileButton = view.findViewById(R.id.user_editprofile);
         editProfileButton.setOnClickListener((v) -> {
+            // start the fragment for editing the user profile
 
-           new EditProfileFragment(user).show(getActivity().getSupportFragmentManager(), "editUserProfile");
+            new EditProfileFragment(user).show(getChildFragmentManager(), "editUserProfile");
 
         });
 
         return view;
     }
 
-    
+
     /**
      * Create an intent and start the login activity. (when sign out button pressed)
      */
@@ -120,4 +122,12 @@ public class UserFragment extends Fragment {
         Intent loginActivityIntent = new Intent(getActivity(), LoginActivity.class);
         startActivity(loginActivityIntent);
     }
+
+
+    @Override
+    public void updateUserCallback(User user) {
+        this.user = user;
+    }
+
 }
+

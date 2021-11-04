@@ -24,20 +24,16 @@ public class EditProfileFragment extends DialogFragment {
     UpdateProfileListener listener;
     User user;
 
-//    @Override
-//    public void onAttach(Context context){
-//        super.onAttach(context);
-//
-//        // make sure that the class starting this fragment implements the interface
-//        if(context instanceof UpdateProfileListener){
-//            // define listener so we can use its methods later
-//            Log.e("CONGRATS", "WE HERE!!!!!!!!!!!!!!");
-//        }
-//        else{
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.e("here", "here");
+
+
+        listener = (UpdateProfileListener) context;
+
+    }
 
     public EditProfileFragment(){}
 
@@ -56,7 +52,7 @@ public class EditProfileFragment extends DialogFragment {
         EditText nameET = view.findViewById(R.id.profile_enter_name);
         EditText usernameET = view.findViewById(R.id.profile_enter_username);
         EditText bioET = view.findViewById(R.id.profile_enter_bio);
-        Button pickProfile = view.findViewById(R.id.profile_button_image);
+        Button profPicBtn = view.findViewById(R.id.profile_button_image);
         Button saveBtn = view.findViewById(R.id.profile_button_submit);
 
         // prefill the edit texts with their current values
@@ -71,9 +67,9 @@ public class EditProfileFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         // TODO update the user object here
-//                        user.setUsername(usernameET.getText().toString());
-//                        user.setName(nameET.getText().toString());
-//                        user.setBio(bioET.getText().toString());
+                        user.setUsername(usernameET.getText().toString());
+                        user.setName(nameET.getText().toString());
+                        user.setBio(bioET.getText().toString());
 //                        listener.updateUserCallback(user);
                     }
                 })
