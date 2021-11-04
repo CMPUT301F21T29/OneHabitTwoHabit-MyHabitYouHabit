@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateHabitEvent">
+
+
+    <ImageView
+        android:id="@+id/pickImage"
+        android:layout_width="190dp"
+        android:layout_height="192dp"
+        android:src="@drawable/ic_launcher_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="final_create_habit"
+        android:text="CreateEvent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/Text_get_image_CE"
+        android:layout_width="190dp"
+        android:layout_height="53dp"
+        android:text="Click to add Image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pickImage" />
+
+    <EditText
+        android:id="@+id/Get_a_comment_CE"
+        android:layout_width="192dp"
+        android:layout_height="78dp"
+        android:hint="Enter a comment"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Text_get_image_CE" />
+
+    <TextView
+        android:id="@+id/Enter_a_comment_text"
+        android:layout_width="193dp"
+        android:layout_height="71dp"
+        android:text="Enter a comment^"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Get_a_comment_CE" />
+
+    <Button
+        android:id="@+id/Add_location_button"
+        android:layout_width="196dp"
+        android:layout_height="0dp"
+        android:onClick="get_user_location"
+        android:text="Add location button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Enter_a_comment_text" />
+
+    <TextView
+        android:id="@+id/Add_Location_text"
+        android:layout_width="196dp"
+        android:layout_height="70dp"
+        android:text="Add Location Optinal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Add_location_button" />
+
+    <TextView
+        android:id="@+id/testLocationthing"
+        android:layout_width="196dp"
+        android:layout_height="64dp"
+        android:text="sdadsa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Add_Location_text" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/PickHabitCE"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="188dp"
+        android:layout_height="104dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pickImage"
+        app:startIconDrawable="@drawable/ic_baseline_add_circle_outline_24"
+        android:hint="Select habit"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/AutoCompleteTextviewCE"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

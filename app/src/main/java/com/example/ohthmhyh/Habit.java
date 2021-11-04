@@ -253,5 +253,15 @@ public class Habit {
         this.isPrivate = isPrivate;
     }
 
+    //Added a thing to make a habit a string/ might change
+    @Override
+    public String toString() {
+        return "Habit{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", startDate=" + startDate +
+                ", schedule=" + schedule +
+                '}';
+    }
 }
 

@@ -2,12 +2,20 @@ package com.example.ohthmhyh;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be
         // shown as the "Habit Today" fragment.
@@ -56,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
+
         bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
+
     }
 }
