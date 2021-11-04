@@ -9,6 +9,10 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+/**
+ * The main activity of the app responsible for moving between fragments in the
+ * bottom navigation bar.
+ */
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
@@ -27,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be
         // shown as the "Habit Today" fragment.
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
+
         bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
+
     }
 }

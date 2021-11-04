@@ -21,6 +21,9 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 
+/**
+ * The LoginActivity UI test. Tests valid and invalid user logins and sign ups.
+ */
 public class LoginActivityTest {
 
     private Solo solo;
