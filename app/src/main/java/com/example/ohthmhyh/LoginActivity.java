@@ -108,7 +108,15 @@ public class LoginActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     // Sign up success! Go to the main activity.
                                                     Log.d("LoginActivity", "createUserEmail:success");
-                                                    // TODO: Get current user and set their username.
+
+                                                    // Create a new user with their username, and
+                                                    // also give them other data structures for
+                                                    // their data.
+                                                    DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+                                                    databaseAdapter.pushUser(new User(username));
+                                                    databaseAdapter.pushHabits(new HabitList());
+                                                    databaseAdapter.pushHabitEvents(new HabitEventList());
+
                                                     goToMainActivity();
                                                 } else {
                                                     Log.w("LoginActivity", "createUserEmail:failure", task.getException());

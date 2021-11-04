@@ -46,8 +46,9 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
     private String mParam2;
 
     private TextView habitDateET;
-    private ArrayList<Habit> habitArrayList = new ArrayList<>();
+    private HabitList habitList;
     private CustomAdapterHF adapter;
+    private DatabaseAdapter databaseAdapter;
 
     public HabitsFragment(){
         // Required empty public constructor
@@ -88,18 +89,27 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
 
+        HabitsFragment thisHabitsFragment = this;
+
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
 
+        // Get the HabitList from the database.
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
+            @Override
+            public void onHabitCallback(HabitList hList) {
+                habitList = hList;
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
-        adapter = new CustomAdapterHF(getContext(), this, habitArrayList);
-        ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        adapter.setTouchhelper(itemTouchHelper);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.setAdapter(adapter);
-
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setHasFixedSize(true);
+                adapter = new CustomAdapterHF(getContext(), thisHabitsFragment, habitList);
+                ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+                adapter.setTouchhelper(itemTouchHelper);
+                itemTouchHelper.attachToRecyclerView(recyclerView);
+                recyclerView.setAdapter(adapter);
+            }
+        });
 
         Button addButton = view.findViewById(R.id.add_habit);
         addButton.setOnClickListener((v) -> {
@@ -109,7 +119,6 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return view;
     }
 
-
     private LocalDate stringToDate(String dateAsString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
@@ -117,14 +126,11 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         LocalDate localDate = LocalDate.parse(dateAsString, formatter);
         return localDate;
     }
+
     private String dateToString(LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String formattedString = localDate.format(formatter);
         return formattedString;
-    }
-
-    public ArrayList<Habit> getHabitArrayList() {
-        return habitArrayList;
     }
 
     @Override
@@ -277,9 +283,8 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 if (validated) {
                     alertDialog.dismiss();
                     LocalDate startDate = stringToDate(habitDateET.getText().toString());
-                    habitArrayList.add(
+                    habitList.addHabit(
                             new Habit(habitName, habitDescription, startDate, schedule, private_button.isChecked()));
-                    //System.out.println(habitArrayList.size() + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                     adapter.notifyDataSetChanged();
                 }
 
@@ -317,7 +322,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
     }
 
     public void editDialog(View v, int position) {
-        Habit chosenHabit = habitArrayList.get(position);
+        Habit chosenHabit = habitList.getHabit(position);
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
         v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
         alertDialog.setView(v);

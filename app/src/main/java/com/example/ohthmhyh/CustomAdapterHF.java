@@ -26,16 +26,17 @@ import java.util.ArrayList;
 
 public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
         implements TouchingHandlingAdaptorHF{
-    ArrayList<Habit> habitList;
+    HabitList habitList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
 
-    public  CustomAdapterHF(Context context,OntouchListener mOntouchListener, ArrayList<Habit> habitList){
+    public CustomAdapterHF(Context context, OntouchListener mOntouchListener, HabitList habitList) {
         this.habitList = habitList;
         this.context = context;
         this.mOntouchListener = mOntouchListener;
     }
+
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,15 +45,14 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
         return holder;
     }
+
     //sets the things in display notebook
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.name.setText(habitList.get(position).getName());
-        holder.description.setText(habitList.get(position).getDescription());
-
-
+        holder.name.setText(habitList.getHabit(position).getName());
+        holder.description.setText(habitList.getHabit(position).getDescription());
     }
 
     @Override
@@ -61,23 +61,21 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     }
 
     @Override
-    public void onItemMoved(int frompositon, int toposition) {
-        Habit fromHabit = habitList.get(frompositon);
-        habitList.remove(fromHabit);
-        habitList.add(toposition,fromHabit);
-        notifyItemMoved(frompositon,toposition);
+    public void onItemMoved(int fromPosition, int toPosition) {
+        habitList.moveHabit(fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
     public void onItemSwiped(int position) {
         //TODO: Add confirmation alert dialog
-        habitList.remove(position);
+        habitList.removeHabit(position);
         notifyItemRemoved(position);
     }
 
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
-        this.mTouchhelper=touchhelper;
+        this.mTouchhelper = touchhelper;
     }
 
     public class Myviewholder extends RecyclerView.ViewHolder implements

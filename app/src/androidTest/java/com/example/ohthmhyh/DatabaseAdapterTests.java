@@ -96,9 +96,9 @@ public class DatabaseAdapterTests{
         dba.pullHabits(new DatabaseAdapter.HabitCallback() {
             @Override
             public void onHabitCallback(HabitList hList) {
-                assertEquals(habits.getHabitList().get(1).getName(), hList.getHabitList().get(1).getName());
-                assertEquals(habits.getHabitList().get(1).getDescription(), hList.getHabitList().get(1).getDescription());
-                assertEquals(habits.getHabitList().get(1).getSchedule(), hList.getHabitList().get(1).getSchedule());
+                assertEquals(habits.getHabit(1).getName(), hList.getHabit(1).getName());
+                assertEquals(habits.getHabit(1).getDescription(), hList.getHabit(1).getDescription());
+                assertEquals(habits.getHabit(1).getSchedule(), hList.getHabit(1).getSchedule());
             }
         });
     }
