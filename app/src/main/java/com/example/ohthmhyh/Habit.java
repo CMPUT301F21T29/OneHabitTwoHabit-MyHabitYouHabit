@@ -253,7 +253,11 @@ public class Habit {
         this.isPrivate = isPrivate;
     }
 
-    //Added a thing to make a habit a string/ might change
+
+    /**
+     * Gets the string representation of a habit. Useful for testing/debugging.
+     * @return The habit as a string
+     */
     @Override
     public String toString() {
         return "Habit{" +
@@ -263,5 +267,6 @@ public class Habit {
                 ", schedule=" + schedule +
                 '}';
     }
+    
 }
 
