@@ -1,19 +1,22 @@
 package com.example.ohthmhyh;
 
-import androidx.annotation.NonNull;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
 
-
+/**
+ * The entity class for a habit. This class represents a habit, and the parameters related
+ * to a habit (name, description, start date, etc.). Make an instance of this class to
+ * represent a habit.
+ */
 public class Habit {
 
     // define days with an enum to avoid mapping days to numbers
     public enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
     // instance variables of the habit
     private String name;
-    private boolean private_status;
+    private boolean isPrivate;
     private String description;
     private long startDate;
     private ArrayList<Days> schedule = new ArrayList<Days>();
@@ -27,14 +30,6 @@ public class Habit {
     public Habit(){}
 
 
-    public boolean isPrivate_status() {
-        return private_status;
-    }
-
-    public void setPrivate_status(boolean private_status) {
-        this.private_status = private_status;
-    }
-
     /**
      * Construct an empty habit, supplying all instance variables at instantiation time (now).
      * @param name The name of this habit.
@@ -42,12 +37,12 @@ public class Habit {
      * @param startDate The date this habit was started/created.
      * @param schedule The weekdays this habit should be completed on.
      */
-    public Habit(String name, String description, LocalDate startDate, ArrayList<Days> schedule, boolean private_status){
+    public Habit(String name, String description, LocalDate startDate, ArrayList<Days> schedule, boolean isPrivate){
         this.name = name;
         this.description = description;
         this.startDate = startDate.toEpochDay();
         this.schedule = schedule;
-        this.private_status = private_status;
+        this.isPrivate = isPrivate;
     }
 
 
@@ -106,6 +101,7 @@ public class Habit {
             h.scheduleAddDay(Days.Sat);
         }
 
+        // set a random habitID
         int UHID = myRNG.nextInt(2000000000);
         h.setUHID(UHID);
 
@@ -237,6 +233,24 @@ public class Habit {
      */
     public int getUHID(){
         return this.UHID;
+    }
+
+
+    /**
+     * Gets the private/public status of a habit.
+     * @return Returns true if a habit is private, false otherwise.
+     */
+    public boolean getIsPrivate() {
+        return isPrivate;
+    }
+
+
+    /**
+     * Sets the private/public status of a habit.
+     * @param isPrivate Set true for a private habit, false for a public habit.
+     */
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
 }
