@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,8 +33,22 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        Button pickProfile = findViewById(R.id.profile_button_image);
+        //TODO: pull the user from the database here
+        User user = new User();
 
+        // get the views in the activity
+        EditText nameET = findViewById(R.id.profile_enter_name);
+        EditText usernameET = findViewById(R.id.profile_enter_username);
+        EditText bioET = findViewById(R.id.profile_enter_bio);
+        Button pickProfile = findViewById(R.id.profile_button_image);
+        Button saveBtn = findViewById(R.id.profile_button_submit);
+
+        // prefill the edit texts with their current values
+        nameET.setText(user.getName());
+        usernameET.setText(user.getUsername());
+        bioET.setText(user.getBio());
+
+        // when the "update profile image" button is pressed
         pickProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -43,6 +59,38 @@ public class EditProfileActivity extends AppCompatActivity {
                         .start();*/
             }
         });
+
+        // when the save/submit button is pressed
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // make sure that the new username isn't already taken
+                DatabaseAdapter.checkUsernameExists(usernameET.getText().toString()
+                        , new DatabaseAdapter.UsernameCheckCallback() {
+                    @Override
+                    public void onUsernameCheckCallback(boolean usernameExists) {
+                        // tell user if username taken
+                        if(usernameExists){
+                            Toast.makeText(EditProfileActivity.this,
+                                    "Error: username already taken!", Toast.LENGTH_SHORT).show();
+                        }
+                        // otherwise update the user profile
+                        else{
+                            user.setUsername(usernameET.getText().toString());
+                            user.setName(nameET.getText().toString());
+                            user.setBio(bioET.getText().toString());
+
+                            //TODO: push the updated user to the database here
+
+                            finish();
+                        }
+                    }
+                });
+            }
+        });
+
+
+
     }
 
     // Commented out for future usage.
