@@ -35,7 +35,10 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
             /**
-             *The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+             * @param habitEventsList A array of habit event
+             * @param context Context from the activity
+             * @param mOntouchListener A thing that does touch actions
+             * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
              */
     public  CERecycleviewAdapter(ArrayList<HabitEvent> habitEventsList, Context context,OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
@@ -68,13 +71,18 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     }
     /**
     *Returns the amount of items in the Recycleview
+     * @return habitEventsList.size()
      */
     @Override
     public int getItemCount() {
         return habitEventsList.size();
     }
+
+
     /**
      *This is used for moving items in the Recycleview
+     * @peram frompositon When we move a item in the list this is the position
+     * @peram topostion This is where me wmove the item to
      */
     @Override
     public void onItemMove(int frompositon, int toposition) {
@@ -86,6 +94,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
     /**
      *This is used for deleting items in the Recycleview
+     * @peram position the item to delete
      */
     @Override
     public void onItemSwiped(int position) {
