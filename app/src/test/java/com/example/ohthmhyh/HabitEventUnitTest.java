@@ -2,20 +2,10 @@ package com.example.ohthmhyh;
 
 //@author Matt
 
-//import static org.junit.Assert.*;
-//import static org.junit.Assert.assertEquals;
-
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
 import android.graphics.Bitmap;
 import android.location.Address;
-
-//import androidx.test.runner.AndroidJUnit4;
-//
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-
 import java.time.LocalDate;
 import java.util.Locale;
 
