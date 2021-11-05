@@ -12,6 +12,9 @@ import com.example.ohthmhyh.HabitList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * The listener that is called to verify a new habit
+ */
 public class HabitAddListener extends HabitUpdateListener {
 
     public HabitAddListener(AlertDialog alertDialog, EditText habitDescriptionET, TextView habitDateET, EditText habitNameET, ToggleButton monFrequency, ToggleButton tueFrequency, ToggleButton wedFrequency, ToggleButton thuFrequency, ToggleButton friFrequency, ToggleButton satFrequency, ToggleButton sunFrequency, ToggleButton private_button, HabitList habitList, TextView errorSchedule, CustomAdapterHF adapter) {
@@ -23,4 +26,5 @@ public class HabitAddListener extends HabitUpdateListener {
         habitList.addHabit(
                 new Habit(habitName, habitDescription, startDate, schedule, private_button.isChecked()));
     }
+
 }

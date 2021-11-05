@@ -12,6 +12,9 @@ import com.example.ohthmhyh.HabitList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * The listener that is called to verify an edited habit
+ */
 public class HabitEditListener extends HabitUpdateListener {
 
     private Habit chosenHabit;
@@ -33,4 +36,5 @@ public class HabitEditListener extends HabitUpdateListener {
         chosenHabit.setIsPrivate(private_button.isChecked());
         habitList.replaceHabit(chosenHabitPosition, chosenHabit);
     }
+
 }

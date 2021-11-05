@@ -2,7 +2,6 @@ package com.example.ohthmhyh.listeners;
 
 import android.app.AlertDialog;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +15,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+/**
+ * Verifies that a new or edited habit is valid
+ */
 public abstract class HabitUpdateListener implements View.OnClickListener {
     protected AlertDialog alertDialog;
     protected EditText habitDescriptionET;
@@ -65,6 +67,10 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
         this.adapter = adapter;
     }
 
+    /**
+     * Verify that the new or edited habit is valid
+     * @param v The view that was clicked on to initiate verification
+     */
     @Override
     public void onClick(View v) {
         boolean validated = false;
@@ -89,8 +95,6 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
                 && habitDateET.getText().length() > 0) {
             validated = true;
         }
-
-        Log.d("asdf", validated ? "true" : "false");
 
         if (validated) {
             alertDialog.dismiss();
@@ -130,8 +134,21 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
         }
     }
 
+    /**
+     * Performs an action based on whether this update listener is responding to verify a new habit
+     * or an existing habit
+     * @param habitName The edited or new name for the habit
+     * @param habitDescription The edited or new description for the habit
+     * @param startDate The edited or new start date for the habit
+     * @param schedule The edited or new schedule for the habit
+     */
     protected abstract void action(String habitName, String habitDescription, LocalDate startDate, ArrayList<Habit.Days> schedule);
 
+    /**
+     * Coverts a String to a LocalDate object
+     * @param dateAsString The date string to convert in "d/MM/yyyy" format
+     * @return The LocalDate object created from the string
+     */
     private LocalDate stringToDate(String dateAsString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
