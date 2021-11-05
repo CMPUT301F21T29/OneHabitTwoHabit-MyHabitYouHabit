@@ -4,20 +4,25 @@ package com.example.ohthmhyh;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import android.content.Context;
-import androidx.test.core.app.ApplicationProvider;
 import androidx.test.runner.AndroidJUnit4;
 import static org.junit.Assert.*;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Address;
 import java.time.LocalDate;
 import java.util.Locale;
 
+
+/**
+ * This class is used to run tests on the HabitEvent class
+ */
 @RunWith(AndroidJUnit4.class)
 public class HabitEventUnitTest {
-    private Context context = ApplicationProvider.getApplicationContext();
+    //private Context context = ApplicationProvider.getApplicationContext();
 
+    /**
+     * A simple function to create a sample habit, to use for testing
+     * @return sample habit
+     */
     Habit createHabit() {
         //Initialize habit for testing purposes
         Habit h = new Habit();
@@ -33,6 +38,10 @@ public class HabitEventUnitTest {
         return h;
     }
 
+    /**
+     * simple function to create a sample address, to use for testing
+     * @return sample address
+     */
     Address createAddress() {
         Locale l = new Locale("en", "US");
         Address a = new Address(l);
@@ -40,12 +49,21 @@ public class HabitEventUnitTest {
 
     }
 
+    /**
+     * Test building a habitevent with predefined values. Also tests getters.
+     * @throws Exception
+     */
     @Test
     public void testConstrAndGetters() {
         Habit h = createHabit();
         String comment = "Testing the comment";
         Address a = createAddress();
-        Bitmap b = BitmapFactory.decodeResource(context.getResources(),R.drawable.lol_pic);
+
+        //create dummy bitmap
+        int w = 20, height = 30;
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+        Bitmap b = Bitmap.createBitmap(w, height, conf); // this creates a MUTABLE bitmap
+
         int flag = -1;
 
         HabitEvent event = new  HabitEvent(h, comment, a, b, flag);
@@ -57,13 +75,23 @@ public class HabitEventUnitTest {
         assertEquals(flag, event.getFlag());
     }
 
+    /**
+     * Test building a habitevent with predefined values. Then it changes those values with
+     * the setter methods, and verifies if they were set correctly using a getter method
+     * @throws Exception
+     */
     @Test
     public void testSetters() {
         //initialize the habbit event
         Habit h = createHabit();
         String comment = "Testing the comment";
         Address a = createAddress();
-        Bitmap b = BitmapFactory.decodeResource(context.getResources(),R.drawable.lol_pic);
+
+        //create dummy bitmap
+        int w = 20, height = 30;
+        Bitmap.Config conf = Bitmap.Config.ARGB_8888; // see other conf types
+        Bitmap b = Bitmap.createBitmap(w, height, conf); // this creates a MUTABLE bitmap
+
         int flag = -1;
         HabitEvent event = new  HabitEvent(h, comment, a, b, flag);
 
@@ -80,7 +108,12 @@ public class HabitEventUnitTest {
         String comment2 = "New comment?";
         Locale l = new Locale("fr", "US");
         Address a2 = new Address(l);
-        Bitmap b2 = BitmapFactory.decodeResource(context.getResources(),R.drawable.doge);
+
+        //create dummy bitmap
+        int w2 = 45, height2 = 25;
+        Bitmap.Config conf2 = Bitmap.Config.ARGB_8888; // see other conf types
+        Bitmap b2 = Bitmap.createBitmap(w2, height2, conf2); // this creates a MUTABLE bitmap
+
         int flag2 = 0;
 
         //set everything to it's new values
