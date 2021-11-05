@@ -25,7 +25,10 @@ public class CETouchHelp extends ItemTouchHelper.Callback {
     public boolean isItemViewSwipeEnabled() {
         return true;
     }
-
+    /**
+     *Overrides for the motion we allow in the views
+     *This corresponds the dragging and moving
+     */
     @Override
     public void clearView(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
@@ -33,7 +36,10 @@ public class CETouchHelp extends ItemTouchHelper.Callback {
                 ContextCompat.getColor(viewHolder.itemView.getContext(),R.color.white)
         );
     }
-
+    /**
+     *Overrides for the motion we allow in the views
+     *This changes the color when an item is selected to move
+     */
     @Override
     public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
@@ -41,20 +47,29 @@ public class CETouchHelp extends ItemTouchHelper.Callback {
             viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
         }
     }
-
+    /**
+     *Overrides for the motion we allow in the views
+     * what movements the user can actually do
+     */
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         final int dragFlags= ItemTouchHelper.UP |ItemTouchHelper.DOWN;
         final int swipeFlags= ItemTouchHelper.START | ItemTouchHelper.END;
         return makeMovementFlags(dragFlags,swipeFlags);
     }
-
+    /**
+     *Overrides for the motion we allow in the views
+     *Gives to to and from position
+     */
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
         madapter.onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
         return true;
     }
-
+    /**
+     *Overrides for the motion we allow in the views
+     * Gives the position to delete
+     */
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
     madapter.onItemSwiped(viewHolder.getAdapterPosition());

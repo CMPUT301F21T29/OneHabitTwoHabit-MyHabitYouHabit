@@ -53,7 +53,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         return holder;
     }
-    //sets the things in display notebook
+    //sets the things in the display
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
@@ -81,8 +81,8 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
     /**
      *This is used for moving items in the Recycleview
-     * @peram frompositon When we move a item in the list this is the position
-     * @peram topostion This is where me wmove the item to
+     * @param frompositon When we move a item in the list this is the position
+     * @param toposition This is where me wmove the item to
      */
     @Override
     public void onItemMove(int frompositon, int toposition) {
@@ -136,7 +136,8 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         }
         /**
-         *These are all possible montions a user can do
+         *These are all possible motions a user can do
+         * With the corresponding actions
          */
         @Override
         public boolean onDown(MotionEvent motionEvent) {
@@ -178,6 +179,10 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
     }
     public interface OntouchListener{
+     /**
+     *This method is used to goto the edit screen
+     * @param position the position of the list we want to edit
+     */
         void onItemclicked(int position);
     }
 }
