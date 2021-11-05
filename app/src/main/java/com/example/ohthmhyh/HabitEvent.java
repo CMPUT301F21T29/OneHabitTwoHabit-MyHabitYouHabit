@@ -25,7 +25,7 @@ public class HabitEvent {
      * Constructor to create a new habit event
      * @param habit The habit relating to this event
      * @param comment A comment regarding this event
-     * @param Location The location where the event took place
+     * @param location The location where the event took place
      * @param BitmapPic A photo attached to the habit event post
      * @param flag A status flag regarding editing
      */
@@ -77,15 +77,16 @@ public class HabitEvent {
      * @return The location of the event
      */
     public Address getLocation() {
-        return Location;
+        //return location;
+        return null;
     }
 
     /**
      * Set the location where for the event
-     * @param locatoion The location for the event
+     * @param location The location for the event
      */
     public void setLocation(Address location) {
-        Location = location;
+        //this.location = location;
     }
 
     /**
