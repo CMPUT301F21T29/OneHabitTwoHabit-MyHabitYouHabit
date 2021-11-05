@@ -1,6 +1,20 @@
 package com.example.ohthmhyh;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * The habitEvent class is used to define a habit event.
@@ -13,11 +27,19 @@ public class HabitEvent {
     private Habit habit;
     private String comment;
     private String location;
-    private Bitmap BitmapPic;
+    private int UPID;
     private int flag;
 
-    public HabitEvent(){
+    public interface BMPcallback{
+        void onBMPcallback(Bitmap bitmap);
+    }
 
+
+    /**
+     * Constructor to create a new habit event.
+     */
+    public HabitEvent(){
+        // need the empty constructor for database reasons
     }
 
     /**
@@ -27,15 +49,15 @@ public class HabitEvent {
      * @param location The location where the event took place
      * @param BitmapPic A photo attached to the habit event post
      * @param flag A status flag regarding editing
+     * @param UPID The id of the picture for this habit event
      */
-    public HabitEvent(Habit habit, String comment, String location, Bitmap BitmapPic, int flag) {
+    public HabitEvent(Habit habit, String comment, String location, Bitmap BitmapPic, int flag, int UPID) {
         this.habit = habit;
         this.comment = comment;
         this.location = location;
         this.flag=flag;
-
-        // TODO: figure out how to serialize this...
-        //this.BitmapPic=BitmapPic;
+        this.UPID = UPID;
+        setBitmapPic(BitmapPic);
     }
 
 
@@ -91,17 +113,60 @@ public class HabitEvent {
      * Get the photo attached to this event
      * @return The photo (in bitmap form) attached to this event
      */
-    public Bitmap getBitmapPic() {
-        return BitmapPic;
+    public Bitmap getBitmapPic(HabitEvent.BMPcallback callback) {
+
+        // set up the remote end
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String UID = user.getUid();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imgref = storageRef.child("images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imgref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // Data for "images/island.jpg" is returns, use this as needed
+                Log.e("SUCCESS", "WE DID IT!");
+
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                callback.onBMPcallback(bmp);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.e("Failure", "SADGE");
+            }
+        });
+
+        return null;
     }
 
     /**
      * Set the photo for this event
-     * @param bitmapPic The photo for this event
+     * @param pic The photo for this event
      */
-    public void setBitmapPic(Bitmap bitmapPic) {
-        // TODO: serialize this somehow
-        //BitmapPic = bitmapPic;
+    public void setBitmapPic(Bitmap pic) {
+        if(pic == null){
+            Log.e("NULL PIC", "NULL");
+            return;
+        }
+        // compress and format the image for uploading
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        pic.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] picBytes = baos.toByteArray();
+
+        // set up the remote end
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String UID = user.getUid();
+
+        // Create a storage reference for the image
+        StorageReference imgref = storage.getReference()
+                .child("images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
+
+        UploadTask uploadTask = imgref.putBytes(picBytes);
     }
 
     /**

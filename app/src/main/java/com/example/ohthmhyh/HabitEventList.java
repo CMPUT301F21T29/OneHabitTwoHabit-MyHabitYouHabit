@@ -10,9 +10,11 @@ public class HabitEventList {
 
     private ArrayList<HabitEvent> habitEventList;
     private DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+    private int UPIDCounter;
 
     public HabitEventList() {
         habitEventList = new ArrayList<>();
+        UPIDCounter = 0;
     }
 
     /**
@@ -90,5 +92,30 @@ public class HabitEventList {
      */
     public int size() {
         return habitEventList.size();
+    }
+
+
+    /**
+     * Set the habit event picture ID counter
+     * @param UPIDCounter the number to set the counter to
+     */
+    public void setUPIDCounter(int UPIDCounter) {
+        this.UPIDCounter = UPIDCounter;
+    }
+
+    /**
+     * Get the habit event picture ID counter for this user
+     * @return The value of the UPID counter
+     */
+    public int getUPIDCounter() {
+        return UPIDCounter;
+    }
+
+    /**
+     * Get the next available habit picture id for this user (auto-increments)
+     * @return The next available habit event picture id for the user
+     */
+    public int nextUPID() {
+        return UPIDCounter++;
     }
 }

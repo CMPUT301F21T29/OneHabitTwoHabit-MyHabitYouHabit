@@ -267,7 +267,7 @@ public class CreateHabitEvent extends AppCompatActivity {
             String test;
             test=autoCompleteTextView.getText().toString();
             Toast.makeText(this, test, Toast.LENGTH_LONG).show();
-            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
+            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,-1, habiteventlist.nextUPID());
             //Magichabitlist.set.(position,updatehabitEvent);
             habiteventlist.replaceHabitEvent(position,updatehabitEvent);
             Intent intent = new Intent(CreateHabitEvent.this,MainActivity.class);
@@ -295,7 +295,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         //TODO
         //Get user info
         //Get a habit from user
-        HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
+        HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,-1, habiteventlist.nextUPID());
         //push habitEvent into data base
             habiteventlist.addHabitEvent(habitEvent);
         Intent intent = new Intent(this, MainActivity.class);

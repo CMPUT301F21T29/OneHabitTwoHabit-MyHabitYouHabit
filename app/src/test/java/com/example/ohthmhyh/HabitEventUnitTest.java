@@ -59,7 +59,7 @@ public class HabitEventUnitTest {
 
         int flag = -1;
 
-        HabitEvent event = new  HabitEvent(h, comment, a, b, flag);
+        HabitEvent event = new  HabitEvent(h, comment, a, b, flag, 1);
 
         assertEquals(h, event.getHabit());
         assertEquals(comment, event.getComment());
@@ -83,7 +83,7 @@ public class HabitEventUnitTest {
         Bitmap b = Bitmap.createBitmap(2, 3, Bitmap.Config.ARGB_8888); //create dummy bitmap
 
         int flag = -1;
-        HabitEvent event = new  HabitEvent(h, comment, a, b, flag);
+        HabitEvent event = new  HabitEvent(h, comment, a, b, flag, 1);
 
         //create alternate parameters
         Habit h2 = new Habit();
