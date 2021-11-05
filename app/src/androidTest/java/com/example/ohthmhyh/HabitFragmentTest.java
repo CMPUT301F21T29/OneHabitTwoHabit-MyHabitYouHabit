@@ -33,8 +33,7 @@ public class HabitFragmentTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        // TODO: Use constants.
-        mAuth.signInWithEmailAndPassword("cjjans@ualberta.ca", "password");
+        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL, Constants.EXISTING_USER_PASSWORD);
         Thread.sleep(10000);  // Wait for sign in to occur.
     }
 
