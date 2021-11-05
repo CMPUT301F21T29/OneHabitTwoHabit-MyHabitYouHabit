@@ -43,7 +43,8 @@ public class CreateHabitEvent extends AppCompatActivity {
     //LOCAL VARIABLES
     Bitmap bitmap = null;
     Habit habit=Habit.makeDummyHabit();//This is temp
-    ArrayList<HabitEvent> habiteventlist;
+    HabitEventList habiteventlist;
+    DatabaseAdapter databaseAdapter;
     HabitEvent habitEvent;
 
     //used for image
@@ -80,7 +81,21 @@ public class CreateHabitEvent extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_habit_event);
-        habiteventlist= ApplicationCE.getHabiteventlist();
+
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+            @Override
+            public void onHabitEventCallback(HabitEventList habitEvents) {
+                habiteventlist = habitEvents;
+
+                makeAndEdit();
+            }
+        });
+    }//End of on create
+
+
+    private void makeAndEdit(){
+
         camraPermition = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermition = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
@@ -91,7 +106,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         pick = (ImageView) findViewById(R.id.pickImage);
 
 
-       //Used to get a picture from the user
+        //Used to get a picture from the user
         pick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +124,7 @@ public class CreateHabitEvent extends AppCompatActivity {
 
         //edit Habitevent when clicked on in list
         if (Edit>=0){
-            habitEvent=habiteventlist.get(position);
+            habitEvent=habiteventlist.getHabitEvent(position);
             //todo
             //edit medicine when clicked on in list
             //habitEvent=magichabitlist.get(position);
@@ -135,8 +150,12 @@ public class CreateHabitEvent extends AppCompatActivity {
 
             autoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
             //reverse the changes above.
-            }
-    }//End of on create
+        }
+
+    }
+
+
+
     /**
      * Call this method to get the camera from the user
      */
@@ -249,7 +268,7 @@ public class CreateHabitEvent extends AppCompatActivity {
             Toast.makeText(this, test, Toast.LENGTH_LONG).show();
             HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
             //Magichabitlist.set.(position,updatehabitEvent);
-            habiteventlist.set(position,updatehabitEvent);
+            habiteventlist.replaceHabitEvent(position,updatehabitEvent);
             Intent intent = new Intent(CreateHabitEvent.this,MainActivity.class);
             startActivity(intent);
 
@@ -277,7 +296,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         //Get a habit from user
         HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
         //push habitEvent into data base
-            habiteventlist.add(habitEvent);
+            habiteventlist.addHabitEvent(habitEvent);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

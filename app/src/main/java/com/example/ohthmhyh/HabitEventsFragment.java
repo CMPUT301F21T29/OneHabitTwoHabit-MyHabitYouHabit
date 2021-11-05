@@ -70,23 +70,13 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                //todo
-//                // add a check to make sure habit list is not empty (simple if)
-//                Intent intent =new Intent(getContext(),CreateHabitEvent.class);
-//                startActivity(intent);
+                //todo
+                // add a check to make sure habit list is not empty (simple if)
+                Intent intent =new Intent(getContext(),CreateHabitEvent.class);
+                startActivity(intent);
             }
         });
 
-//        recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
-//        LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
-//        recyclerView.setLayoutManager(Mmanager);
-//        recyclerView.setHasFixedSize(true);
-//        mAdapter=new CERecycleviewAdapter(habitEventList.getHabitEventList(),getActivity(),this);//Might error getActivity works?
-//        ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
-//        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
-//        mAdapter.setTouchhelper(itemTouchHelper);
-//        itemTouchHelper.attachToRecyclerView(recyclerView);
-//        recyclerView.setAdapter(mAdapter);
         return view;
     }
 
@@ -94,14 +84,16 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 
     /**
      * This is used for editing when called it adds an edit flag
-     * @param position the position hwere it needs to edit
+     * @param position the position where it needs to edit
      */
     @Override
     public void onItemclicked(int position) {
         habitEventList.getHabitEvent(position).setFlag(1);
         Intent intent = new Intent(getActivity(),CreateHabitEvent.class);
-//        intent.putExtra("flag", habitEvents.getHabitEvent(position).getFlag());
-//        intent.putExtra("position",position);
-//        getActivity().startActivity(intent);
+        intent.putExtra("flag", habitEventList.getHabitEvent(position).getFlag());
+        intent.putExtra("position",position);
+        getActivity().startActivity(intent);
     }
+
 }
+

@@ -49,6 +49,18 @@ public class HabitEventList {
         return habitEventList.get(index);
     }
 
+
+    /**
+     * Replace a habit event at a given position in the list
+     * @param index The index of the habit event to replace
+     * @param habitEvent The habit to replace the exitsting one
+     */
+    public void replaceHabitEvent(int index, HabitEvent habitEvent) {
+        habitEventList.set(index, habitEvent);
+        databaseAdapter.pushHabitEvents(this);
+    }
+
+
     /**
      * Removes a habit event from the list and updates the database with the changes
      * @param index The index of the habit event to remove
