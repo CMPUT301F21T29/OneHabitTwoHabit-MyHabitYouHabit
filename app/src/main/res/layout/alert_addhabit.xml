@@ -141,16 +141,6 @@
                 android:textSize="12sp" />
 
             <ToggleButton
-                android:id="@+id/thu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Thu"
-                android:textOn="Thu"
-                android:textSize="12sp" />
-
-            <ToggleButton
                 android:id="@+id/wed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -158,6 +148,16 @@
                 android:minWidth="40dip"
                 android:textOff="Wed"
                 android:textOn="Wed"
+                android:textSize="12sp" />
+
+            <ToggleButton
+                android:id="@+id/thu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="40dip"
+                android:textOff="Thu"
+                android:textOn="Thu"
                 android:textSize="12sp" />
 
             <ToggleButton
