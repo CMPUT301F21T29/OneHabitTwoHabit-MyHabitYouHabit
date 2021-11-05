@@ -32,31 +32,16 @@ public class DatabaseAdapterTests{
     @Rule public ActivityScenarioRule<MainActivity> rule
             = new ActivityScenarioRule<>(MainActivity.class);
 
-    private static final String EXISTING_USER_EMAIL = "bobby_wasabi@gmail.com";
-    private static final String EXISTING_USER_USERNAME = "bobby_wasabi";
-    private static final String EXISTING_USER_PASSWORD = "bobby_wasabi_password";
-
     /**
-     * Runs before all tests to create an existing Firebase user that can be used for the tests.
-     * This user will be the user that Firebase references.
+     * Sign in to the existing user before any tests run.
      * @throws Exception
      */
-//    @BeforeClass
-//    public static void setUp() throws Exception {
-//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//        mAuth.createUserWithEmailAndPassword(
-//                EXISTING_USER_EMAIL, EXISTING_USER_PASSWORD).addOnCompleteListener(
-//                        new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                Log.d("DatabaseAdapterTests", "Login succeeded");
-//            }
-//        });
-//        // TODO: Find a better way to wait until the user is authenticated.
-//        while (mAuth.getCurrentUser() == null) {
-//            Thread.sleep(100);
-//        }
-//    }
+    @BeforeClass
+    public static void setUp() throws Exception {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL, Constants.EXISTING_USER_PASSWORD);
+        Thread.sleep(10000);  // Wait for sign in to occur.
+    }
 
     /**
      * Tests pushing a User object into the database. Check the firebase console to
@@ -64,12 +49,11 @@ public class DatabaseAdapterTests{
      * @throws Exception
      */
     @Test
-    @Ignore
     public void pushUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter();
         // test pushing a user to the DB
-        User user = new User(EXISTING_USER_USERNAME);
+        User user = new User(Constants.EXISTING_USER_USERNAME);
         dba.pushUser(user);
         // you'll have to check this by looking in the Firestore console
         assert true;
@@ -81,12 +65,11 @@ public class DatabaseAdapterTests{
      * @throws Exception
      */
     @Test
-    @Ignore
     public void pullUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter();
         // push a user to the DB
-        User user = new User(EXISTING_USER_USERNAME);
+        User user = new User(Constants.EXISTING_USER_USERNAME);
         user.setUPIDCounter(1);
         dba.pushUser(user);
         // get the user back from the DB
@@ -94,7 +77,7 @@ public class DatabaseAdapterTests{
             @Override
             public void onProfileCallback(User user) {
                 // make sure the stuff matches
-                assertTrue(EXISTING_USER_USERNAME.equals(user.getUsername()));
+                assertTrue(Constants.EXISTING_USER_USERNAME.equals(user.getUsername()));
                 assertTrue(user.getUPIDCounter() == 1);
             }
         });
@@ -107,7 +90,6 @@ public class DatabaseAdapterTests{
      * @throws Exception
      */
     @Test
-    @Ignore
     public void pushHabitListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter();
@@ -126,7 +108,6 @@ public class DatabaseAdapterTests{
      * @throws Exception
      */
     @Test
-    @Ignore
     public void pullHabitListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter();
@@ -155,10 +136,9 @@ public class DatabaseAdapterTests{
      * @throws Exception
      */
     @Test
-    @Ignore
     public void checkUsernameExists_1() throws Exception{
         // verify that we can tell if their username is in the database
-        dba.checkUsernameExists(EXISTING_USER_USERNAME, new DatabaseAdapter.UsernameCheckCallback() {
+        dba.checkUsernameExists(Constants.EXISTING_USER_USERNAME, new DatabaseAdapter.UsernameCheckCallback() {
             @Override
             public void onUsernameCheckCallback(boolean usernameExists) {
                 assertTrue(usernameExists);
@@ -173,13 +153,12 @@ public class DatabaseAdapterTests{
      * @throws Exception
      */
     @Test
-    @Ignore
     public void checkUsernameNotExists_1() throws Exception{
         // make sure the user is in the DB
         pushUserTest_1();
 
         // verify that we can tell if their username is not in the database
-        dba.checkUsernameExists("asdf", new DatabaseAdapter.UsernameCheckCallback() {
+        dba.checkUsernameExists(Constants.NONEXISTENT_USER_USERNAME, new DatabaseAdapter.UsernameCheckCallback() {
             @Override
             public void onUsernameCheckCallback(boolean usernameExists) {
                 assertFalse(usernameExists);
@@ -188,23 +167,15 @@ public class DatabaseAdapterTests{
     }
 
     /**
-     * Sign Firebase out of the created test user and remove the created user from the database.
+     * Sign out of the existing user after all tests have run.
      * @throws Exception
      */
-//    @AfterClass
-//    public static void tearDown() throws Exception {
-//        // Delete the existing user.
-//        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//        if (user != null) {
-//            user.delete();
-//            // TODO: Find a better way to wait until the user is deleted.
-//            Thread.sleep(1000);
-//        }
-//
-//        // Sign out of the user.
-//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-//        mAuth.signOut();
-//    }
+    @AfterClass
+    public static void tearDown() throws Exception {
+        // Sign out of the user.
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+    }
 
 }
 

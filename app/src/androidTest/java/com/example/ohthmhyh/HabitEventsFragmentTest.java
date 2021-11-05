@@ -38,8 +38,7 @@ public class HabitEventsFragmentTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        // TODO: Use constants.
-        mAuth.signInWithEmailAndPassword("insung1@ualberta.ca", "Test123");
+        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL, Constants.EXISTING_USER_PASSWORD);
         Thread.sleep(10000);  // Wait for sign in to occur.
     }
 
@@ -82,7 +81,7 @@ public class HabitEventsFragmentTest {
         assertTrue(solo.searchText("Enter a comment"));
         assertTrue(solo.searchText("Click to add Image"));
         assertTrue(solo.searchText("Add location button"));
-        assertTrue(solo.searchText("CreateEvent"));
+        assertTrue(solo.searchText("Create Event"));
     }
 
     /**

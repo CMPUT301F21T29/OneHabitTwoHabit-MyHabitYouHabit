@@ -10,9 +10,11 @@ public class HabitEventList {
 
     private ArrayList<HabitEvent> habitEventList;
     private DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+    private int UPIDCounter;
 
     public HabitEventList() {
         habitEventList = new ArrayList<>();
+        UPIDCounter = 0;
     }
 
     /**
@@ -49,6 +51,18 @@ public class HabitEventList {
         return habitEventList.get(index);
     }
 
+
+    /**
+     * Replace a habit event at a given position in the list
+     * @param index The index of the habit event to replace
+     * @param habitEvent The habit to replace the exitsting one
+     */
+    public void replaceHabitEvent(int index, HabitEvent habitEvent) {
+        habitEventList.set(index, habitEvent);
+        databaseAdapter.pushHabitEvents(this);
+    }
+
+
     /**
      * Removes a habit event from the list and updates the database with the changes
      * @param index The index of the habit event to remove
@@ -58,11 +72,50 @@ public class HabitEventList {
         databaseAdapter.pushHabitEvents(this);
     }
 
+
+    /**
+     * Moves a habit event from one position to another position in the list and updates the
+     * database with the changes
+     * @param fromIndex The index of the habit
+     * @param toIndex The index to put the habit
+     */
+    public void moveHabit(int fromIndex, int toIndex) {
+        HabitEvent habitEventToMove = habitEventList.remove(fromIndex);
+        habitEventList.add(toIndex, habitEventToMove);
+        databaseAdapter.pushHabitEvents(this);
+    }
+
+
     /**
      * Returns the number of habit events in the list
      * @return The number of habit events in the list
      */
     public int size() {
         return habitEventList.size();
+    }
+
+
+    /**
+     * Set the habit event picture ID counter
+     * @param UPIDCounter the number to set the counter to
+     */
+    public void setUPIDCounter(int UPIDCounter) {
+        this.UPIDCounter = UPIDCounter;
+    }
+
+    /**
+     * Get the habit event picture ID counter for this user
+     * @return The value of the UPID counter
+     */
+    public int getUPIDCounter() {
+        return UPIDCounter;
+    }
+
+    /**
+     * Get the next available habit picture id for this user (auto-increments)
+     * @return The next available habit event picture id for the user
+     */
+    public int nextUPID() {
+        return UPIDCounter++;
     }
 }
