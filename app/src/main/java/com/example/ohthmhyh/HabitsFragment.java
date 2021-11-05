@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.ohthmhyh.listeners.DatePickerListener;
 import com.example.ohthmhyh.listeners.HabitAddListener;
 import com.example.ohthmhyh.listeners.HabitEditListener;
 import com.example.ohthmhyh.watchers.LengthTextWatcher;
@@ -26,7 +27,6 @@ import com.example.ohthmhyh.watchers.LengthTextWatcher;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,6 +55,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         // Required empty public constructor
     }
 
+    // TODO: Remove all the created todos.
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -136,6 +137,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return formattedString;
     }
 
+    // TODO: Should be moved to the alert dialog responisble for spawning the date picker.
     /**
      * Sets the date of the edit text
      * @param i this is the year
@@ -165,7 +167,6 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
      * @param v this is a view object
      */
     public void addDialog(View v) {
-
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
         v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
         alertDialog.setView(v);
@@ -180,23 +181,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
         habitDateET = v.findViewById(R.id.enter_date);
         habitDateET.setHint("Enter a date");
-        habitDateET.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        getContext(),
-                        HabitsFragment.this,
-                        Calendar.getInstance().get(Calendar.YEAR),
-                        Calendar.getInstance().get(Calendar.MONTH),
-                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-                );
-                datePickerDialog.show();
-                System.out.println(year);
-
-            }
-        });
-
-
+        habitDateET.setOnClickListener(new DatePickerListener(getContext(), HabitsFragment.this));
 
         TextView errorSchedule = v.findViewById(R.id.choose_frequency_txtview);
         ToggleButton monFrequency = v.findViewById(R.id.mon);
@@ -270,21 +255,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         habitDateET = v.findViewById(R.id.enter_date);
         habitDateET.setText(dateToString(chosenHabit.StartDateAsLocalDate()));
         habitDateET.setHint("Enter a date");
-        habitDateET.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        getContext(),
-                        HabitsFragment.this,
-                        Calendar.getInstance().get(Calendar.YEAR),
-                        Calendar.getInstance().get(Calendar.MONTH),
-                        Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-                );
-                datePickerDialog.show();
-            }
-        });
-
-
+        habitDateET.setOnClickListener(new DatePickerListener(getContext(), HabitsFragment.this));
 
         TextView errorSchedule = v.findViewById(R.id.choose_frequency_txtview);
         ToggleButton monFrequency = v.findViewById(R.id.mon);
