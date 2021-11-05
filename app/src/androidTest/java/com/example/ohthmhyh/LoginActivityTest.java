@@ -180,6 +180,7 @@ public class LoginActivityTest {
      * @throws Exception
      */
     @Test
+    @Ignore
     public void testExistingUserLogin() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -201,6 +202,7 @@ public class LoginActivityTest {
      * @throws Exception
      */
     @Test
+    @Ignore
     public void testValidUserSignUp() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);

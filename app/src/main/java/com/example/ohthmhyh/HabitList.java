@@ -11,36 +11,34 @@ public class HabitList{
     // instance variables
     private ArrayList<Habit> habitList;
     private int UHIDCounter;
+    private DatabaseAdapter databaseAdapter = new DatabaseAdapter();
 
     /**
      * Construct a new HabitList for storing all of the users habits.
      */
     public HabitList(){
         UHIDCounter = 0;
-        this.habitList = new ArrayList<>();
+        habitList = new ArrayList<>();
     }
-
 
     /**
      * Replaces the entire habit list held by this class
-     * @param habitList The habit habit list
+     * @param habitList The entire habit array list
      */
     public void setHabitList(ArrayList<Habit> habitList) {
         this.habitList = habitList;
     }
 
-
     /**
      * Gets the entire habit list held by this class
-     * @return the entire habit array list
+     * @return The entire habit array list
      */
     public ArrayList<Habit> getHabitList() {
         return habitList;
     }
 
-
     /**
-     * Add a habit to the user
+     * Add a habit to the user and update the database with the changes
      * @param habit The habit to add to the user
      */
     public void addHabit(Habit habit){
@@ -48,25 +46,46 @@ public class HabitList{
             habit.setUHID(nextUHID());
         }
         habitList.add(habit);
+        databaseAdapter.pushHabits(this);
     }
-
 
     /**
      * Get a specific habit from the list
-     * @param index the habit index to retrieve
+     * @param index The index of the habit to retrieve
+     * @return The habit at the specified index
      */
     public Habit getHabit(int index) {
         return habitList.get(index);
     }
 
-
     /**
-     * Sorts the list of habits
+     * Removes a habit from the list and updates the database with the changes
+     * @param index The index of the habit to remove
      */
-    public void sort() {
-        //TODO: In the future, we need to be able to reorder our habits... I think.
+    public void removeHabit(int index) {
+        habitList.remove(index);
+        databaseAdapter.pushHabits(this);
     }
 
+    /**
+     * Moves a habit from one position to another position in the list and updates the database with
+     * the changes
+     * @param fromIndex The index of the habit
+     * @param toIndex The index to put the habit
+     */
+    public void moveHabit(int fromIndex, int toIndex) {
+        Habit habitToMove = habitList.remove(fromIndex);
+        habitList.add(toIndex, habitToMove);
+        databaseAdapter.pushHabits(this);
+    }
+
+    /**
+     * Returns the number of habits in the list
+     * @return The number of habits in the list
+     */
+    public int size() {
+        return habitList.size();
+    }
 
     /**
      * Set the habit ID counter
@@ -76,19 +95,17 @@ public class HabitList{
         this.UHIDCounter = UHIDCounter;
     }
 
-
     /**
      * Get the habit ID counter for this user
-     * @return  the value of the UHID counter
+     * @return The value of the UHID counter
      */
     public int getUHIDCounter() {
         return UHIDCounter;
     }
 
-
     /**
      * Get the next available habit id for this user (auto-increments)
-     * @return  the next available habit id for the user
+     * @return The next available habit id for the user
      */
     public int nextUHID() {
         return UHIDCounter++;

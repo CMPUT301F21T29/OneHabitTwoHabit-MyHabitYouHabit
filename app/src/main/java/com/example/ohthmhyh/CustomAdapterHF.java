@@ -1,5 +1,3 @@
-
-
 package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
@@ -24,26 +22,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 /**
- * A simple RecycleviewAdapter .
- *
+ * A simple RecycleviewAdapter for the Habit list.
  */
 public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
         implements TouchingHandlingAdaptorHF{
-    ArrayList<Habit> habitList;
+    HabitList habitList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
+
     /**
-     * @param habitList A array of habit
+     * Creates the custom adapter instance
+     * @param habitList The HabitList containing the habits
      * @param context Context from the activity
      * @param mOntouchListener A thing that does touch actions
      * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
      */
-    public  CustomAdapterHF(Context context,OntouchListener mOntouchListener, ArrayList<Habit> habitList){
+    public CustomAdapterHF(Context context, OntouchListener mOntouchListener, HabitList habitList) {
         this.habitList = habitList;
         this.context = context;
         this.mOntouchListener = mOntouchListener;
     }
+
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,16 +52,16 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
         return holder;
     }
+
     //sets the things in the display
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.name.setText(habitList.get(position).getName());
-        holder.description.setText(habitList.get(position).getDescription());
-
-
+        holder.name.setText(habitList.getHabit(position).getName());
+        holder.description.setText(habitList.getHabit(position).getDescription());
     }
+
     /**
      *Returns the amount of items in the Recycleview
      * @return habitList.size()
@@ -70,18 +70,18 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     public int getItemCount() {
         return habitList.size();
     }
+
     /**
      *This is used for moving items in the Recycleview
-     * @param frompositon When we move a item in the list this is the position
-     * @param toposition This is where me wmove the item to
+     * @param fromPosition When we move a item in the list this is the position
+     * @param toPosition This is where me wmove the item to
      */
     @Override
-    public void onItemMoved(int frompositon, int toposition) {
-        Habit fromHabit = habitList.get(frompositon);
-        habitList.remove(fromHabit);
-        habitList.add(toposition,fromHabit);
-        notifyItemMoved(frompositon,toposition);
+    public void onItemMoved(int fromPosition, int toPosition) {
+        habitList.moveHabit(fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
     }
+
     /**
      *This is used for deleting items in the Recycleview
      * @param  position the item to delete
@@ -89,13 +89,12 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     @Override
     public void onItemSwiped(int position) {
         //TODO: Add confirmation alert dialog
-        habitList.remove(position);
+        habitList.removeHabit(position);
         notifyItemRemoved(position);
     }
 
-
     public void setTouchhelper(ItemTouchHelper touchhelper){
-        this.mTouchhelper=touchhelper;
+        this.mTouchhelper = touchhelper;
     }
 
     public class Myviewholder extends RecyclerView.ViewHolder implements
@@ -122,6 +121,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             itemView.setOnTouchListener(this);
 
         }
+
         /**
          *These are all possible motions a user can do
          * With the corresponding actions
@@ -165,6 +165,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
 
     }
+
     public interface OntouchListener{
         /**
          *This method is used to goto the edit screen
