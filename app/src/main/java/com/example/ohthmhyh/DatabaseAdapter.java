@@ -160,8 +160,19 @@ public class DatabaseAdapter{
      * Call this method to pull this users habit events from the database
      * @param callback A callback which is called when the query completes
      */
-    private void pullHabitEvents(HabitEventCallback callback){
-        pullHabitEvents(UID, callback);
+    public void pullHabitEvents(HabitEventCallback callback){
+        //pullHabitEvents(UID, callback);
+
+        DocumentReference habitEvents = db.collection("HabitEvents").document(UID);
+        // get the users habits
+        habitEvents.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                HabitEventList HEList = documentSnapshot.toObject(HabitEventList.class);
+                callback.onHabitEventCallback(HEList);
+            }
+        });
+
     }
 
 
@@ -170,7 +181,7 @@ public class DatabaseAdapter{
      * @param UID The UID for which to pull the habits of
      * @param callback A callback which is called when the query completes
      */
-    private void pullHabitEvents(String UID, HabitEventCallback callback){
+    public void pullHabitEvents(String UID, HabitEventCallback callback){
         DocumentReference habitEvents = db.collection("HabitEvents").document(UID);
         // get the users habits
         habitEvents.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

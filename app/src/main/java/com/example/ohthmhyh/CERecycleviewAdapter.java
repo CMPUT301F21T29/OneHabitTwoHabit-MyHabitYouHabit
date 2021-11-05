@@ -1,50 +1,43 @@
+package com.example.ohthmhyh;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-        package com.example.ohthmhyh;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import android.annotation.SuppressLint;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.location.Address;
-        import android.text.Html;
-        import android.view.GestureDetector;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ImageView;
-        import android.widget.TextView;
-
-        import androidx.annotation.NonNull;
-        import androidx.constraintlayout.widget.ConstraintLayout;
-        import androidx.recyclerview.widget.ItemTouchHelper;
-        import androidx.recyclerview.widget.RecyclerView;
-
-        import com.squareup.picasso.Picasso;
-
-        import java.util.ArrayList;
-
-        /**
-         * A simple RecycleviewAdapter .
-         *
-         */
+/**
+ * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
+ */
 public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder>
         implements CeitemHelpToucherAdapter{
-    ArrayList<HabitEvent> habitEventsList;
+    HabitEventList habitEventsList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
-            /**
-             * @param habitEventsList A array of habit event
-             * @param context Context from the activity
-             * @param mOntouchListener A thing that does touch actions
-             * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
-             */
-    public  CERecycleviewAdapter(ArrayList<HabitEvent> habitEventsList, Context context,OntouchListener mOntouchListener){
+
+    /**
+     * @param habitEventsList A array of habit event
+     * @param context Context from the activity
+     * @param mOntouchListener A thing that does touch actions
+     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+     */
+    public  CERecycleviewAdapter(HabitEventList habitEventsList, Context context,OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
         this.context=context;
         this.mOntouchListener=mOntouchListener;
     }
+
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,22 +46,32 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         return holder;
     }
+
     //sets the things in the display
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.Displaycomment.setText("Comment: "+habitEventsList.get(position).getComment());
-        holder.DisplayHabit.setText((habitEventsList.get(position).getHabit().toString()));
+        holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
+        holder.DisplayHabit.setText((habitEventsList.getHabitEvent(position).getHabit().toString()));
         holder.ExtraDisplay.setText("Extra: ");
-        if (habitEventsList.get(position).getLocatoion()==null){
+        if (habitEventsList.getHabitEvent(position).getLocation()==null){
             holder.DisplayLocation.setText("Location: Na");
-        } else{        holder.DisplayLocation.setText("Location: "+(Html.fromHtml(habitEventsList.get(position).getLocatoion().getAddressLine(0))));
+        } else{
+            holder.DisplayLocation.setText("Location: "+ habitEventsList.getHabitEvent(position).getLocation());
         }
 
-        holder.DisplayUserpic.setImageBitmap(habitEventsList.get(position).getBitmapPic());
+
+        habitEventsList.getHabitEvent(position).getBitmapPic(new HabitEvent.BMPcallback() {
+            @Override
+            public void onBMPcallback(Bitmap bitmap) {
+                holder.DisplayUserpic.setImageBitmap(bitmap);
+            }
+        });
+
         //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
     }
+
     /**
     *Returns the amount of items in the Recycleview
      * @return habitEventsList.size()
@@ -80,25 +83,23 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
 
     /**
-     *This is used for moving items in the Recycleview
-     * @param frompositon When we move a item in the list this is the position
-     * @param toposition This is where me wmove the item to
+     * This is used for moving items in the RecyclerView
+     * @param fromPosition When we move a item in the list this is the position
+     * @param toPosition This is where we move the item to
      */
     @Override
-    public void onItemMove(int frompositon, int toposition) {
-        HabitEvent fromHabitevent=habitEventsList.get(frompositon);
-        habitEventsList.remove(fromHabitevent);
-        habitEventsList.add(toposition,fromHabitevent);
-        notifyItemMoved(frompositon,toposition);
+    public void onItemMove(int fromPosition, int toPosition) {
+        habitEventsList.moveHabit(fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     /**
-     *This is used for deleting items in the Recycleview
-     * @peram position the item to delete
+     * This is used for deleting items in the RecyclerView
+     * @param position the item to delete
      */
     @Override
     public void onItemSwiped(int position) {
-        habitEventsList.remove(position);
+        habitEventsList.removeHabitEvent(position);
         notifyItemRemoved(position);
     }
 
@@ -109,8 +110,8 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
     public class Myviewholder extends RecyclerView.ViewHolder implements
             View.OnTouchListener,
-            GestureDetector.OnGestureListener
-    {
+            GestureDetector.OnGestureListener {
+
         TextView Displaycomment;
         TextView DisplayHabit;
         TextView ExtraDisplay;

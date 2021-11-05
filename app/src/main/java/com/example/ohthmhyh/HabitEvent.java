@@ -1,10 +1,20 @@
 package com.example.ohthmhyh;
 
 import android.graphics.Bitmap;
-import android.location.Address;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
-import java.util.Date;
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * The habitEvent class is used to define a habit event.
@@ -16,26 +26,41 @@ import java.util.Date;
 public class HabitEvent {
     private Habit habit;
     private String comment;
-    private Address Locatoion;
-    private Bitmap BitmapPic;
+    private String location;
+    private int UPID;
     private int flag;
+
+    /**
+     * A callback used when retrieving images from the database for this habit event
+     */
+    public interface BMPcallback{
+        void onBMPcallback(Bitmap bitmap);
+    }
+
+
+    /**
+     * Constructor to create a new habit event.
+     */
+    public HabitEvent(){
+        // need the empty constructor for database reasons
+    }
 
     /**
      * Constructor to create a new habit event
      * @param habit The habit relating to this event
      * @param comment A comment regarding this event
-     * @param Locatoion The location where the event took place
+     * @param location The location where the event took place
      * @param BitmapPic A photo attached to the habit event post
      * @param flag A status flag regarding editing
+     * @param UPID The id of the picture for this habit event
      */
-    public HabitEvent(Habit habit, String comment,
-                      Address Locatoion, Bitmap BitmapPic,int flag) {
+    public HabitEvent(Habit habit, String comment, String location, Bitmap BitmapPic, int flag, int UPID) {
         this.habit = habit;
         this.comment = comment;
-
-        this.Locatoion = Locatoion;
-        this.BitmapPic=BitmapPic;
+        this.location = location;
         this.flag=flag;
+        this.UPID = UPID;
+        setBitmapPic(BitmapPic);
     }
 
 
@@ -75,32 +100,73 @@ public class HabitEvent {
      * Get the location where this event occured
      * @return The location of the event
      */
-    public Address getLocatoion() {
-        return Locatoion;
+    public String getLocation() {
+        return location;
     }
 
     /**
      * Set the location where for the event
-     * @param locatoion The location for the event
+     * @param location The location for the event
      */
-    public void setLocatoion(Address locatoion) {
-        Locatoion = locatoion;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     /**
-     * Get the photo attached to this event
+     * Get the photo attached to this habit event from online storage
      * @return The photo (in bitmap form) attached to this event
      */
-    public Bitmap getBitmapPic() {
-        return BitmapPic;
+    public Bitmap getBitmapPic(HabitEvent.BMPcallback callback) {
+        // set up the remote end
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String UID = user.getUid();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference imgref = storage.getReference().child("images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
+
+        // pull the image
+        final long ONE_MEGABYTE = 1024 * 1024;
+        imgref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                // when we get the image, send it to the caller
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                callback.onBMPcallback(bmp);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+                Log.e("Failure", "No picture found. Sadge.");
+            }
+        });
+        return null;
     }
 
     /**
-     * Set the photo for this event
-     * @param bitmapPic The photo for this event
+     * Set the photo for this habit event, and puts it into online storage
+     * @param pic The photo for this event
      */
-    public void setBitmapPic(Bitmap bitmapPic) {
-        BitmapPic = bitmapPic;
+    public void setBitmapPic(Bitmap pic) {
+        // handle the event where the picture is null
+        if(pic == null){
+            Log.e("NULL PIC", "NULL");
+            return;
+        }
+        // compress and format the image for uploading
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        pic.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] picBytes = baos.toByteArray();
+
+        // set up the remote end
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String UID = user.getUid();
+
+        // Create a storage reference for the image
+        StorageReference imgref = storage.getReference()
+                .child("images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
+
+        UploadTask uploadTask = imgref.putBytes(picBytes);
     }
 
     /**
@@ -118,4 +184,22 @@ public class HabitEvent {
     public void setFlag(int flag) {
         this.flag = flag;
     }
+
+
+    /**
+     * Get the picture ID of this habit event
+     * @return The UPID of this habit event
+     */
+    public int getUPID() {
+        return UPID;
+    }
+
+    /**
+     * Set the UPID for this habit event
+     * @param UPID the UPID
+     */
+    public void setUPID(int UPID) {
+        this.UPID = UPID;
+    }
+
 }
