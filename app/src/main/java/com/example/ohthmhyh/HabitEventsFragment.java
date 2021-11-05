@@ -25,7 +25,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
     FloatingActionButton fab;
     RecyclerView recyclerView;
     CERecycleviewAdapter mAdapter;
-    private HabitEventList habitEvents;
+    private HabitEventList habitEventList;
+    private DatabaseAdapter databaseAdapter;
 
     public HabitEventsFragment() {
         // Required empty public constructor
@@ -36,16 +37,35 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
      *
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-
-        //TODO: pull the habit event list from the DB
-        habitEvents = new HabitEventList();
-
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
+
+        // pull the habit events from the database
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+            @Override
+            public void onHabitEventCallback(HabitEventList habitEvents) {
+                habitEventList = habitEvents;
+
+                // put the habit events into the recycler view
+                recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+                LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(Mmanager);
+                recyclerView.setHasFixedSize(true);
+                mAdapter=new CERecycleviewAdapter(habitEventList.getHabitEventList(),getActivity(),HabitEventsFragment.this);//Might error getActivity works?
+                ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
+                ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+                mAdapter.setTouchhelper(itemTouchHelper);
+                itemTouchHelper.attachToRecyclerView(recyclerView);
+                recyclerView.setAdapter(mAdapter);
+
+            }
+        });
+
+
+
+
         fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,16 +77,16 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
             }
         });
 
-        recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
-        LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(Mmanager);
-        recyclerView.setHasFixedSize(true);
-        mAdapter=new CERecycleviewAdapter(habitEvents.getHabitEventList(),getActivity(),this);//Might error getActivity works?
-        ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
-        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
-        mAdapter.setTouchhelper(itemTouchHelper);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.setAdapter(mAdapter);
+//        recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+//        LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
+//        recyclerView.setLayoutManager(Mmanager);
+//        recyclerView.setHasFixedSize(true);
+//        mAdapter=new CERecycleviewAdapter(habitEventList.getHabitEventList(),getActivity(),this);//Might error getActivity works?
+//        ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
+//        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+//        mAdapter.setTouchhelper(itemTouchHelper);
+//        itemTouchHelper.attachToRecyclerView(recyclerView);
+//        recyclerView.setAdapter(mAdapter);
         return view;
     }
 
@@ -78,7 +98,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
      */
     @Override
     public void onItemclicked(int position) {
-        habitEvents.getHabitEvent(position).setFlag(1);
+        habitEventList.getHabitEvent(position).setFlag(1);
         Intent intent = new Intent(getActivity(),CreateHabitEvent.class);
 //        intent.putExtra("flag", habitEvents.getHabitEvent(position).getFlag());
 //        intent.putExtra("position",position);
