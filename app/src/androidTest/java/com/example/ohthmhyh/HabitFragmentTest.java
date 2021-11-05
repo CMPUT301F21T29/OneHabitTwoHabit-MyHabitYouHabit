@@ -18,7 +18,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-public class UITestHabitFragment {
+public class HabitFragmentTest {
     private Solo solo;
     @Rule
     public ActivityTestRule<MainActivity> rule = new ActivityTestRule<>(
