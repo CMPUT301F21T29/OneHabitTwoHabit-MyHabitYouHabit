@@ -66,7 +66,10 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    /**
+     * This is used for setting up the view and creating the fragment
+     *
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,6 +80,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //todo
+                // add a check to make sure habit list is not empty (simple if)
                 Intent intent =new Intent(getContext(),CreateHabitEvent.class);
                 startActivity(intent);
             }
@@ -98,7 +103,10 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 
 
 
-
+    /**
+     * This is used for editing when called it adds an edit flag
+     * @param position the position hwere it needs to edit
+     */
     @Override
     public void onItemclicked(int position) {
         habitEventArrayList= ApplicationCE.getHabiteventlist();
