@@ -119,16 +119,14 @@ public class HabitEvent {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String UID = user.getUid();
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
-        StorageReference imgref = storageRef.child("images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
+        StorageReference imgref = storage.getReference().child("images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
 
+        // pull the image
         final long ONE_MEGABYTE = 1024 * 1024;
         imgref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                // Data for "images/island.jpg" is returns, use this as needed
-                Log.e("SUCCESS", "WE DID IT!");
-
+                // when we get the image, send it to the caller
                 Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 callback.onBMPcallback(bmp);
             }
@@ -136,10 +134,9 @@ public class HabitEvent {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle any errors
-                Log.e("Failure", "SADGE");
+                Log.e("Failure", "No picture found. Sadge.");
             }
         });
-
         return null;
     }
 
@@ -148,6 +145,7 @@ public class HabitEvent {
      * @param pic The photo for this event
      */
     public void setBitmapPic(Bitmap pic) {
+        // handle the event where the picture is null
         if(pic == null){
             Log.e("NULL PIC", "NULL");
             return;
@@ -184,4 +182,22 @@ public class HabitEvent {
     public void setFlag(int flag) {
         this.flag = flag;
     }
+
+
+    /**
+     * Get the picture ID of this habit event
+     * @return The UPID of this habit event
+     */
+    public int getUPID() {
+        return UPID;
+    }
+
+    /**
+     * Set the UPID for this habit event
+     * @param UPID the UPID
+     */
+    public void setUPID(int UPID) {
+        this.UPID = UPID;
+    }
+
 }

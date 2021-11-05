@@ -4,6 +4,7 @@
 
         import android.annotation.SuppressLint;
         import android.content.Context;
+        import android.graphics.Bitmap;
         import android.text.Html;
         import android.view.GestureDetector;
         import android.view.LayoutInflater;
@@ -66,8 +67,13 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         }
 
 
-        // TODO: use bitmaps, but not from the database
-        holder.DisplayUserpic.setImageBitmap(habitEventsList.getHabitEvent(position).getBitmapPic());
+        habitEventsList.getHabitEvent(position).getBitmapPic(new HabitEvent.BMPcallback() {
+            @Override
+            public void onBMPcallback(Bitmap bitmap) {
+                holder.DisplayUserpic.setImageBitmap(bitmap);
+            }
+        });
+
         //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
     }
     /**

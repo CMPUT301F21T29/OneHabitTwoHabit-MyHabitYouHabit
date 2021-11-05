@@ -34,7 +34,6 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 
     /**
      * This is used for setting up the view and creating the fragment
-     *
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

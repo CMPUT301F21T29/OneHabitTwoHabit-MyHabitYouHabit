@@ -129,14 +129,24 @@ public class CreateHabitEvent extends AppCompatActivity {
             //habitEvent=magichabitlist.get(position);
 
             //This reads the clicked habit event and sets it for editing
-            pick.setImageBitmap(habitEvent.getBitmapPic());
+            habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
+                @Override
+                public void onBMPcallback(Bitmap bitmap) {
+                    pick.setImageBitmap(bitmap);
+                }
+            });
+
             getComment.setText(habitEvent.getComment());
             if (habitEvent.getLocation()==null){
                 localText.setText("");
             }else{
                 localText.setText(address);
             }
-            bitmap=habitEvent.getBitmapPic();
+
+            //TODO: I dont think this is needed here
+            //bitmap=habitEvent.getBitmapPic();
+
+
             address=habitEvent.getLocation();
             String temp= habitEvent.getHabit().getName();
             //pop item from string habit list take note of position
