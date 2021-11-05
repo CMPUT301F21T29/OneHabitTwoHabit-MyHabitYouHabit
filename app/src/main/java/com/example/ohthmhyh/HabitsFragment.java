@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -137,7 +138,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return formattedString;
     }
 
-    // TODO: Should be moved to the alert dialog responisble for spawning the date picker.
+    // TODO: Should be moved to the alert dialog responsible for spawning the date picker.
     /**
      * Sets the date of the edit text
      * @param i this is the year
@@ -200,16 +201,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                     }
                 });
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-
-        alertDialog.show();
-        View.OnClickListener habitUpdateListener = new HabitAddListener(
+        DialogInterface.OnClickListener habitUpdateListener = new HabitAddListener(
                 alertDialog,
                 habitDescriptionET,
                 habitDateET,
@@ -226,7 +218,9 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 errorSchedule,
                 adapter
         );
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(habitUpdateListener);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Done", habitUpdateListener);
+
+        alertDialog.show();
     }
 
     /**
@@ -285,17 +279,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                     }
                 });
 
-
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.dismiss();
-                    }
-                });
-
-
-        alertDialog.show();
-        View.OnClickListener habitEditListener = new HabitEditListener(
+        DialogInterface.OnClickListener habitEditListener = new HabitEditListener(
                 alertDialog,
                 habitDescriptionET,
                 habitDateET,
@@ -314,6 +298,8 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 chosenHabit,
                 position
         );
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(habitEditListener);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Done", habitEditListener);
+
+        alertDialog.show();
     }
 }

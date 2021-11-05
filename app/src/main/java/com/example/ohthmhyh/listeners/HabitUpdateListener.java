@@ -1,8 +1,8 @@
 package com.example.ohthmhyh.listeners;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -11,13 +11,11 @@ import com.example.ohthmhyh.CustomAdapterHF;
 import com.example.ohthmhyh.Habit;
 import com.example.ohthmhyh.HabitList;
 
-import org.w3c.dom.Text;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public abstract class HabitUpdateListener implements View.OnClickListener {
+public abstract class HabitUpdateListener implements DialogInterface.OnClickListener {
     protected AlertDialog alertDialog;
     protected EditText habitDescriptionET;
     protected TextView habitDateET;
@@ -67,7 +65,7 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(DialogInterface dialog, int which) {
         boolean validated = false;
         String habitName = habitNameET.getText().toString();
 
