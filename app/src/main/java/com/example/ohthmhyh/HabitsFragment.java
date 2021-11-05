@@ -22,6 +22,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.ohthmhyh.listeners.HabitAddListener;
+import com.example.ohthmhyh.listeners.HabitEditListener;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -109,14 +112,6 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return view;
     }
 
-
-    private LocalDate stringToDate(String dateAsString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
-
-        //convert String to LocalDate
-        LocalDate localDate = LocalDate.parse(dateAsString, formatter);
-        return localDate;
-    }
     private String dateToString(LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String formattedString = localDate.format(formatter);
@@ -249,71 +244,24 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean validated = false;
-                String habitName = habitNameET.getText().toString();
-
-                String habitDescription = habitDescriptionET.getText().toString();
-
-
-                ArrayList<Habit.Days> schedule = new ArrayList<>();
-
-                if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
-                if (tueFrequency.isChecked()) schedule.add(Habit.Days.Tue);
-                if (wedFrequency.isChecked()) schedule.add(Habit.Days.Wed);
-                if (thuFrequency.isChecked()) schedule.add(Habit.Days.Thu);
-                if (friFrequency.isChecked()) schedule.add(Habit.Days.Fri);
-                if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
-                if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
-
-                if (habitName.length() > 0 && habitName.length() <= 20
-                        && habitDescription.length() > 0 && habitDescription.length() <= 30
-                        && schedule.size() > 0
-                        && habitDateET.getText().length() > 0) {
-                    validated = true;
-                }
-                if (validated) {
-                    alertDialog.dismiss();
-                    LocalDate startDate = stringToDate(habitDateET.getText().toString());
-                    habitArrayList.add(
-                            new Habit(habitName, habitDescription, startDate, schedule, private_button.isChecked()));
-                    //System.out.println(habitArrayList.size() + "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                    adapter.notifyDataSetChanged();
-                }
-
-                else {
-                    if (habitNameET.getText().toString().length() <= 0) {
-                        habitNameET.setError("Title is empty");
-                        habitNameET.requestFocus();
-                    }
-                    else if (habitNameET.getText().toString().length() > 20) {
-                        habitNameET.setError("Title is too long");
-                        habitNameET.requestFocus();
-                    }
-
-                    if (habitDescriptionET.getText().toString().length() > 30) {
-                        habitDescriptionET.setError("Description is too long");
-                        habitDescriptionET.requestFocus();
-                    }
-                    else if (habitDescriptionET.getText().toString().length() <= 0) {
-                        habitDescriptionET.setError("Description is empty");
-                        habitDescriptionET.requestFocus();
-                    }
-
-                    if (schedule.size() == 0) {
-                        errorSchedule.setText("Weekly Frequency  (Error: Choose a schedule)");
-                        errorSchedule.setTextColor(Color.RED);
-                    }
-
-                    if (habitDateET.getText().toString().equals("")) {
-                        habitDateET.setHint("ENTER A DATE");
-                        habitDateET.setHintTextColor(Color.RED);
-                    }
-                }
-            }
-        });
+        View.OnClickListener habitUpdateListener = new HabitAddListener(
+                alertDialog,
+                habitDescriptionET,
+                habitDateET,
+                habitNameET,
+                monFrequency,
+                tueFrequency,
+                wedFrequency,
+                thuFrequency,
+                friFrequency,
+                satFrequency,
+                sunFrequency,
+                private_button,
+                habitArrayList,
+                errorSchedule,
+                adapter
+        );
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(habitUpdateListener);
     }
 
     public void editDialog(View v, int position) {
@@ -438,73 +386,24 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
         alertDialog.show();
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean validated = false;
-                String habitName = habitNameET.getText().toString();
-
-                String habitDescription = habitDescriptionET.getText().toString();
-
-
-                ArrayList<Habit.Days> schedule = new ArrayList<>();
-
-                if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
-                if (tueFrequency.isChecked()) schedule.add(Habit.Days.Tue);
-                if (wedFrequency.isChecked()) schedule.add(Habit.Days.Wed);
-                if (thuFrequency.isChecked()) schedule.add(Habit.Days.Thu);
-                if (friFrequency.isChecked()) schedule.add(Habit.Days.Fri);
-                if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
-                if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
-
-                if (habitName.length() > 0 && habitName.length() <= 20
-                        && habitDescription.length() > 0 && habitDescription.length() <= 30
-                        && schedule.size() > 0
-                        && habitDateET.getText().length() > 0) {
-                    validated = true;
-                }
-                if (validated) {
-                    alertDialog.dismiss();
-                    LocalDate startDate = stringToDate(habitDateET.getText().toString());
-
-                    chosenHabit.setName(habitName);
-                    chosenHabit.setDescription(habitDescription);
-                    chosenHabit.setStartDate(startDate.toEpochDay());
-                    chosenHabit.setSchedule(schedule);
-                    chosenHabit.setIsPrivate(private_button.isChecked());
-                    adapter.notifyDataSetChanged();
-                }
-
-                else {
-                    if (habitNameET.getText().toString().length() <= 0) {
-                        habitNameET.setError("Title is empty");
-                        habitNameET.requestFocus();
-                    }
-                    else if (habitNameET.getText().toString().length() > 20) {
-                        habitNameET.setError("Title is too long");
-                        habitNameET.requestFocus();
-                    }
-
-                    if (habitDescriptionET.getText().toString().length() > 30) {
-                        habitDescriptionET.setError("Description is too long");
-                        habitDescriptionET.requestFocus();
-                    }
-                    else if (habitDescriptionET.getText().toString().length() <= 0) {
-                        habitDescriptionET.setError("Description is empty");
-                        habitDescriptionET.requestFocus();
-                    }
-
-                    if (schedule.size() == 0) {
-                        errorSchedule.setText("Weekly Frequency  (Error: Choose a schedule)");
-                        errorSchedule.setTextColor(Color.RED);
-                    }
-
-                    if (habitDateET.getText().toString().equals("")) {
-                        habitDateET.setHint("ENTER A DATE");
-                        habitDateET.setHintTextColor(Color.RED);
-                    }
-                }
-            }
-        });
+        View.OnClickListener habitEditListener = new HabitEditListener(
+                alertDialog,
+                habitDescriptionET,
+                habitDateET,
+                habitNameET,
+                monFrequency,
+                tueFrequency,
+                wedFrequency,
+                thuFrequency,
+                friFrequency,
+                satFrequency,
+                sunFrequency,
+                private_button,
+                habitArrayList,
+                errorSchedule,
+                adapter,
+                chosenHabit
+        );
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(habitEditListener);
     }
 }
