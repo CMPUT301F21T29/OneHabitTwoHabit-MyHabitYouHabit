@@ -2,25 +2,25 @@ package com.example.ohthmhyh;
 
 import android.graphics.Bitmap;
 import android.location.Address;
-import android.net.Uri;
-
-import java.util.Date;
 
 public class HabitEvent {
     private Habit habit;
     private String comment;
-    private Address Locatoion;
+    private Address location;
     private Bitmap BitmapPic;
     private int flag;
 
+    public HabitEvent(){
+
+    }
 
     public HabitEvent(Habit habit, String comment,
-                      Address Locatoion, Bitmap BitmapPic,int flag) {
+                      Address location, Bitmap BitmapPic, int flag) {
         this.habit = habit;
         this.comment = comment;
 
-        this.Locatoion = Locatoion;
-        this.BitmapPic=BitmapPic;
+        this.location = location;
+        //this.BitmapPic=BitmapPic;
         this.flag=flag;
     }
 
@@ -40,21 +40,21 @@ public class HabitEvent {
         this.comment = comment;
     }
 
-    public Address getLocatoion() {
-        return Locatoion;
+    public Address getLocation() {
+        return location;
     }
 
-    public void setLocatoion(Address locatoion) {
-        Locatoion = locatoion;
+    public void setLocation(Address location) {
+        this.location = location;
     }
 
     public Bitmap getBitmapPic() {
         return BitmapPic;
     }
 
-    public void setBitmapPic(Bitmap bitmapPic) {
-        BitmapPic = bitmapPic;
-    }
+//    public void setBitmapPic(Bitmap bitmapPic) {
+//        BitmapPic = bitmapPic;
+//    }
 
     public int getFlag() {
         return flag;

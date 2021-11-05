@@ -53,7 +53,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
                 LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
                 recyclerView.setLayoutManager(Mmanager);
                 recyclerView.setHasFixedSize(true);
-                mAdapter=new CERecycleviewAdapter(habitEventList.getHabitEventList(),getActivity(),HabitEventsFragment.this);//Might error getActivity works?
+                mAdapter=new CERecycleviewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
                 ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
                 ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
                 mAdapter.setTouchhelper(itemTouchHelper);
@@ -62,8 +62,6 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 
             }
         });
-
-
 
 
         fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton2);

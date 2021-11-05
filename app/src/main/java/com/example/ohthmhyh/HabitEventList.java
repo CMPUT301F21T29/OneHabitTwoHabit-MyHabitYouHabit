@@ -70,6 +70,20 @@ public class HabitEventList {
         databaseAdapter.pushHabitEvents(this);
     }
 
+
+    /**
+     * Moves a habit event from one position to another position in the list and updates the
+     * database with the changes
+     * @param fromIndex The index of the habit
+     * @param toIndex The index to put the habit
+     */
+    public void moveHabit(int fromIndex, int toIndex) {
+        HabitEvent habitEventToMove = habitEventList.remove(fromIndex);
+        habitEventList.add(toIndex, habitEventToMove);
+        databaseAdapter.pushHabitEvents(this);
+    }
+
+
     /**
      * Returns the number of habit events in the list
      * @return The number of habit events in the list

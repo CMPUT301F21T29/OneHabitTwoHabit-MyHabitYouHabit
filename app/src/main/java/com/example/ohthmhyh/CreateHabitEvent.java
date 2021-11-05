@@ -35,7 +35,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -132,13 +131,13 @@ public class CreateHabitEvent extends AppCompatActivity {
             //This reads the clicked habit event and sets it for editing
             pick.setImageBitmap(habitEvent.getBitmapPic());
             getComment.setText(habitEvent.getComment());
-            if (habitEvent.getLocatoion()==null){
+            if (habitEvent.getLocation()==null){
                 localText.setText("");
             }else{
-                localText.setText(Html.fromHtml(habitEvent.getLocatoion().getAddressLine(0)));
+                localText.setText(Html.fromHtml(habitEvent.getLocation().getAddressLine(0)));
             }
             bitmap=habitEvent.getBitmapPic();
-            address=habitEvent.getLocatoion();
+            address=habitEvent.getLocation();
             String temp= habitEvent.getHabit().getName();
             //pop item from string habit list take note of position
             //append it to the front
