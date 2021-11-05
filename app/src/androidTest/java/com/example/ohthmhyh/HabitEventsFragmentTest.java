@@ -17,6 +17,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.robotium.solo.Solo;
 
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -123,9 +125,10 @@ public class HabitEventsFragmentTest {
 
         // Check to see if comments is proper
         assertTrue(solo.searchText("TESTING COMMENT"));
+        assertTrue(solo.searchText("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA"));
 
         // Delete
-        View row = solo.getText("TESTING COMMENT");
+        View row = solo.getText("Comment: TESTING COMMENT");
         row.getLocationInWindow(location);
 
         // fail if the view with text cannot be located in the window
@@ -138,7 +141,21 @@ public class HabitEventsFragmentTest {
 
         solo.drag(fromX, toX, fromY, toY, 2);
 
-        assertFalse(solo.searchText("TESTING COMMENT"));
+        solo.sleep(1000);
+
+        assertFalse(solo.searchText("Comment: TESTING COMMENT"));
     }
+
+    @After
+    public void tearDown() throws Exception {
+        solo.finishOpenedActivities();
+    }
+
+    @AfterClass
+    public static void tearDownClass() throws Exception {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
+    }
+
 
 }
