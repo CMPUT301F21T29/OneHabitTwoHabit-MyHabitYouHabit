@@ -81,6 +81,16 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         }
     }
 
+    /**
+     * Where all the magic happens. The recyclerView, the addbutton is in here.
+     * When clicked, the button creates a new alert dialog to add
+     * When an item in recyclerView is clicked, edit dialog shows up
+     * Swipe an item to delete it. There will be a confirmation dialog.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return view (Android stuff)
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -88,9 +98,8 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
 
+        //RecyclerView stuff
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
-
-
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         adapter = new CustomAdapterHF(getContext(), this, habitArrayList);
@@ -102,6 +111,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
 
         Button addButton = view.findViewById(R.id.add_habit);
+        //If the button is clicked
         addButton.setOnClickListener((v) -> {
             addDialog(v);
         });
@@ -109,7 +119,11 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return view;
     }
 
-
+    /**
+     * Convert a string in pattern "dd/mm/yyyy" into LocalDate
+     * @param dateAsString for example "16/02/2021"
+     * @return the start date as LocalDate
+     */
     private LocalDate stringToDate(String dateAsString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
@@ -117,22 +131,40 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         LocalDate localDate = LocalDate.parse(dateAsString, formatter);
         return localDate;
     }
+
+    /**
+     * convert a LocalDate into a String for displaying purposes.
+     * @param localDate the startDate as LocalDate
+     * @return the String representation in "dd/mm/yyyy"
+     */
     private String dateToString(LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String formattedString = localDate.format(formatter);
         return formattedString;
     }
 
+    /**
+     * getter for habitArrayList for database handling later on
+     * @return ArrayList<Habit>
+     */
     public ArrayList<Habit> getHabitArrayList() {
         return habitArrayList;
     }
 
+    /**
+     * Override method from datePicker dialog interface. Parameters from this method allow us to
+     * set the start date.
+     * @param datePicker
+     * @param year will be set to class-wide year variable
+     * @param month will be set to class-wide month variable
+     * @param day will be set to class-wide day variable
+     */
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        this.year=i;
-        this.month=i1+1;
-        this.day=i2;
-        habitDateET.setText(day + "/" + month + "/" + year);
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        this.year=year;
+        this.month=month+1;
+        this.day=day;
+        habitDateET.setText(this.day + "/" + this.month + "/" + this.year);
     }
 
     @Override
@@ -322,7 +354,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
         alertDialog.setView(v);
 
-        alertDialog.setTitle("Add a Habit");
+        alertDialog.setTitle("Edit your Habit");
 
         EditText habitNameET = v.findViewById(R.id.enter_habit_name);
         habitNameET.setText(chosenHabit.getName());
@@ -429,7 +461,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 });
 
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add",
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Confirm",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         alertDialog.dismiss();
@@ -507,4 +539,5 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
             }
         });
     }
+
 }
