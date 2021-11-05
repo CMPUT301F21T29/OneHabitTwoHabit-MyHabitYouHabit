@@ -23,14 +23,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-
+/**
+ * A simple RecycleviewAdapter .
+ *
+ */
 public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
         implements TouchingHandlingAdaptorHF{
     ArrayList<Habit> habitList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
-
+    /**
+     * @param habitList A array of habit
+     * @param context Context from the activity
+     * @param mOntouchListener A thing that does touch actions
+     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+     */
     public  CustomAdapterHF(Context context,OntouchListener mOntouchListener, ArrayList<Habit> habitList){
         this.habitList = habitList;
         this.context = context;
@@ -44,7 +52,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
         return holder;
     }
-    //sets the things in display notebook
+    //sets the things in the display
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
@@ -54,12 +62,19 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
 
     }
-
+    /**
+     *Returns the amount of items in the Recycleview
+     * @return habitList.size()
+     */
     @Override
     public int getItemCount() {
         return habitList.size();
     }
-
+    /**
+     *This is used for moving items in the Recycleview
+     * @param frompositon When we move a item in the list this is the position
+     * @param toposition This is where me wmove the item to
+     */
     @Override
     public void onItemMoved(int frompositon, int toposition) {
         Habit fromHabit = habitList.get(frompositon);
@@ -67,7 +82,10 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         habitList.add(toposition,fromHabit);
         notifyItemMoved(frompositon,toposition);
     }
-
+    /**
+     *This is used for deleting items in the Recycleview
+     * @peram position the item to delete
+     */
     @Override
     public void onItemSwiped(int position) {
         //TODO: Add confirmation alert dialog
@@ -104,7 +122,10 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             itemView.setOnTouchListener(this);
 
         }
-
+        /**
+         *These are all possible motions a user can do
+         * With the corresponding actions
+         */
         @Override
         public boolean onDown(MotionEvent motionEvent) {
             return false;
@@ -145,6 +166,10 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
     }
     public interface OntouchListener{
+        /**
+         *This method is used to goto the edit screen
+         * @param position the position of the list we want to edit
+         */
         void onItemClicked(int position);
     }
 }

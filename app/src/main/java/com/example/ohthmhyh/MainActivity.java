@@ -63,8 +63,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
+
+        //this is used in createhabitevent so that when the activity ends it goes back to the right screen
         Intent intent= getIntent();
-        int flag=intent.getIntExtra("test",-1);
+        int flag=intent.getIntExtra("gotofragmentedit",-1);
         if (flag==1){bottomNavigationView.setSelectedItemId(R.id.habit_events_nav_item);}
         else {
             bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.

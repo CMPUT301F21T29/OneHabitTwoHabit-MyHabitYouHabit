@@ -40,9 +40,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class CreateHabitEvent extends AppCompatActivity {
+    //LOCAL VARIABLES
     Bitmap bitmap = null;
-
-    Habit habit=Habit.makeDummyHabit();
+    Habit habit=Habit.makeDummyHabit();//This is temp
     ArrayList<HabitEvent> habiteventlist;
     HabitEvent habitEvent;
 
@@ -53,17 +53,13 @@ public class CreateHabitEvent extends AppCompatActivity {
     //used for location
     FusedLocationProviderClient fusedLocationProviderClient;
     Address address=null;
-
     //Used for drop down menu
     private AutoCompleteTextView autoCompleteTextView;
-
-
     //Used for comment
     EditText getComment;
     String comment;
-
     //Used for editing
-    int flag4=-1;
+    int Edit=-1;
     int position;
     TextView localText;
 //Used for the drop down menu
@@ -108,11 +104,11 @@ public class CreateHabitEvent extends AppCompatActivity {
             }
         });
         Intent intent= getIntent();
-        flag4=intent.getIntExtra("flag",-1);
+        Edit=intent.getIntExtra("flag",-1);
         position=intent.getIntExtra("position",69);
 
         //edit Habitevent when clicked on in list
-        if (flag4>=0){
+        if (Edit>=0){
             habitEvent=habiteventlist.get(position);
             //todo
             //edit medicine when clicked on in list
@@ -131,7 +127,7 @@ public class CreateHabitEvent extends AppCompatActivity {
             String temp= habitEvent.getHabit().getName();
             //pop item from string habit list take note of position
             //append it to the front
-            String [] habitList={"Habit one", "Habit two", "Habit three"};
+            String [] habitList={"Habit one", "Habit two", "Habit three"};//This is temport untill I can get the user habit list
             autoCompleteTextView=findViewById(R.id.AutoCompleteTextviewCE);
             ArrayAdapter arrayAdapter=new ArrayAdapter(this,R.layout.create_habit_habit_drop_down_menu,habitList);
             autoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
@@ -189,7 +185,8 @@ public class CreateHabitEvent extends AppCompatActivity {
 
     /**
      * Call this method to get the user location
-     *
+     * Note there is a  @SuppressLint("MissingPermission") I assume this happens because
+     * it does not see me asking for permitions else where
      */
     @SuppressLint("MissingPermission")
     private void getLocation() {
@@ -198,6 +195,10 @@ public class CreateHabitEvent extends AppCompatActivity {
         testLocationthing = findViewById(R.id.testLocationthing);
 
         fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            /**
+             *Simple method that when called gets user location
+             *
+             */
             @Override
             public void onComplete(@NonNull Task<Location> task) {
                 //Initalize location
@@ -232,7 +233,7 @@ public class CreateHabitEvent extends AppCompatActivity {
      * habit event
      */
     public void final_create_habit(View view) {
-        if (flag4 >=0){//need to edit medicine
+        if (Edit >=0){//need to edit medicine
             comment=getComment.getText().toString();
 
             if (commentvalidater(comment)){
@@ -249,7 +250,8 @@ public class CreateHabitEvent extends AppCompatActivity {
             HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
             //Magichabitlist.set.(position,updatehabitEvent);
             habiteventlist.set(position,updatehabitEvent);
-            Intent intent =new Intent(CreateHabitEvent.this,MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("gotofragmentedit", 1);
             startActivity(intent);
 
         }else{
@@ -278,7 +280,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         //push habitEvent into data base
             habiteventlist.add(habitEvent);
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("test", 1);
+        intent.putExtra("gotofragmentedit", 1);
         startActivity(intent);
     }
     }

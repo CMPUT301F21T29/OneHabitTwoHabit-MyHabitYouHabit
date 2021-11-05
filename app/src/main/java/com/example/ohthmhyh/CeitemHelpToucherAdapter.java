@@ -1,6 +1,5 @@
 package com.example.ohthmhyh;
 
-import androidx.fragment.app.Fragment;
 
 /**
  * A simple Interface .
