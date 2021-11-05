@@ -80,6 +80,17 @@ public class HabitList{
     }
 
     /**
+     * Replace a habit at an index with a new habit instance
+     * @param index The index of the habit to replace
+     * @param newHabit The habit to replace the old habit with
+     */
+    public void replaceHabit(int index, Habit newHabit) {
+        habitList.remove(index);
+        habitList.add(index, newHabit);
+        databaseAdapter.pushHabits(this);
+    }
+
+    /**
      * Returns the number of habits in the list
      * @return The number of habits in the list
      */
