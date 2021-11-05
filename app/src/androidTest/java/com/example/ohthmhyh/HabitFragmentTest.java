@@ -103,10 +103,10 @@ public class HabitFragmentTest {
         Thread.sleep(3000);  // Wait for everything to load.
 
         // Define a (relatively) unique name for this habit. It doesn't have to be unique.
-        String habitName = String.valueOf(System.currentTimeMillis() % 10000000);
+        final String HABIT_NAME = String.valueOf(System.currentTimeMillis() % 10000000);
 
         solo.clickOnButton("Add a Habit");
-        solo.enterText((EditText) solo.getView(R.id.enter_habit_name), habitName);
+        solo.enterText((EditText) solo.getView(R.id.enter_habit_name), HABIT_NAME);
         solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "HabitDescription");
         solo.clickOnView(solo.getView(R.id.enter_date));
         solo.clickOnButton("OK");
@@ -114,11 +114,11 @@ public class HabitFragmentTest {
         solo.clickOnButton("Tue");
         solo.clickOnButton("PUBLIC");
         solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Done" button in the AlertDialog.
-        assertTrue(solo.searchText("ToBeDeleted"));
+        assertTrue(solo.searchText(HABIT_NAME));
         assertTrue(solo.searchText("HabitDescription"));
         assertTrue(solo.searchText("Done"));
 
-        View row = solo.getText(habitName);
+        View row = solo.getText(HABIT_NAME);
         row.getLocationInWindow(location);
 
         // fail if the view with text cannot be located in the window
@@ -131,7 +131,7 @@ public class HabitFragmentTest {
 
         solo.drag(fromX, toX, fromY, toY, 2);
 
-        assertFalse(solo.searchText(habitName));
+        assertFalse(solo.searchText(HABIT_NAME));
     }
 
     @After
