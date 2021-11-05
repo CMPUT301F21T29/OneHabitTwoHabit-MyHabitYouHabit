@@ -221,6 +221,7 @@ public class CreateHabitEvent extends AppCompatActivity {
         });
     }
     /**
+     * Verify the string is less than 20 characters long.
      * @param string Takes a string and make sure to get a string less then 20
      */
     Boolean commentvalidater(String string){
@@ -249,8 +250,7 @@ public class CreateHabitEvent extends AppCompatActivity {
             HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,-1);
             //Magichabitlist.set.(position,updatehabitEvent);
             habiteventlist.set(position,updatehabitEvent);
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("gotofragmentedit", 1);
+            Intent intent = new Intent(CreateHabitEvent.this,MainActivity.class);
             startActivity(intent);
 
         }else{
@@ -279,7 +279,6 @@ public class CreateHabitEvent extends AppCompatActivity {
         //push habitEvent into data base
             habiteventlist.add(habitEvent);
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("gotofragmentedit", 1);
         startActivity(intent);
     }
     }
