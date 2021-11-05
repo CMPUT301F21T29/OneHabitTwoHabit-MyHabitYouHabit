@@ -3,7 +3,6 @@ package com.example.ohthmhyh;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,8 +10,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +21,7 @@ import android.widget.ToggleButton;
 
 import com.example.ohthmhyh.listeners.HabitAddListener;
 import com.example.ohthmhyh.listeners.HabitEditListener;
+import com.example.ohthmhyh.watchers.LengthTextWatcher;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -175,60 +173,11 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         alertDialog.setTitle("Add a Habit");
 
         EditText habitNameET = v.findViewById(R.id.enter_habit_name);
-        habitNameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (habitNameET.getText().toString().length() > 20) {
-                    habitNameET.setError("Title is too long");
-                    habitNameET.requestFocus();
-                }
-                else if (habitNameET.getText().toString().length() <= 0) {
-                    habitNameET.setError("Title is empty");
-                    habitNameET.requestFocus();
-                }
-                else {
-                    habitNameET.setError(null);
-                }
-            }
-        });
-
+        habitNameET.addTextChangedListener(new LengthTextWatcher(habitNameET, 1, 20));
 
         EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
-        habitDescriptionET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        habitDescriptionET.addTextChangedListener(new LengthTextWatcher(habitDescriptionET, 1, 30));
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (habitDescriptionET.getText().toString().length() > 30) {
-                    habitDescriptionET.setError("Description is too long");
-                    habitDescriptionET.requestFocus();
-                }
-                else if (habitDescriptionET.getText().toString().length() <= 0) {
-                    habitDescriptionET.setError("Description is empty");
-                    habitDescriptionET.requestFocus();
-                }
-                else {
-                    habitDescriptionET.setError(null);
-                }
-            }
-        });
         habitDateET = v.findViewById(R.id.enter_date);
         habitDateET.setHint("Enter a date");
         habitDateET.setOnClickListener(new View.OnClickListener() {
@@ -312,62 +261,12 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
         EditText habitNameET = v.findViewById(R.id.enter_habit_name);
         habitNameET.setText(chosenHabit.getName());
-        habitNameET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        habitNameET.addTextChangedListener(new LengthTextWatcher(habitNameET, 1, 20));
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (habitNameET.getText().toString().length() > 20) {
-                    habitNameET.setError("Title is too long");
-                    habitNameET.requestFocus();
-                }
-                else if (habitNameET.getText().toString().length() <= 0) {
-                    habitNameET.setError("Title is empty");
-                    habitNameET.requestFocus();
-                }
-                else {
-                    habitNameET.setError(null);
-                }
-            }
-        });
-
-
-        // TODO: Make listeners for these.
         EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
         habitDescriptionET.setText(chosenHabit.getDescription());
-        habitDescriptionET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        habitDescriptionET.addTextChangedListener(new LengthTextWatcher(habitDescriptionET, 1, 30));
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (habitDescriptionET.getText().toString().length() > 30) {
-                    habitDescriptionET.setError("Description is too long");
-                    habitDescriptionET.requestFocus();
-                }
-                else if (habitDescriptionET.getText().toString().length() <= 0) {
-                    habitDescriptionET.setError("Description is empty");
-                    habitDescriptionET.requestFocus();
-                }
-                else {
-                    habitDescriptionET.setError(null);
-                }
-            }
-        });
         habitDateET = v.findViewById(R.id.enter_date);
         habitDateET.setText(dateToString(chosenHabit.StartDateAsLocalDate()));
         habitDateET.setHint("Enter a date");
