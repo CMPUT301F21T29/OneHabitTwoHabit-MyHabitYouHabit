@@ -84,7 +84,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     }
     /**
      *This is used for deleting items in the Recycleview
-     * @peram position the item to delete
+     * @param  position the item to delete
      */
     @Override
     public void onItemSwiped(int position) {

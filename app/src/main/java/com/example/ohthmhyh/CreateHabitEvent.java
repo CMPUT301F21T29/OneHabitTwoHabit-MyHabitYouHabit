@@ -221,7 +221,6 @@ public class CreateHabitEvent extends AppCompatActivity {
         });
     }
     /**
-     * Call this method to get the user location
      * @param string Takes a string and make sure to get a string less then 20
      */
     Boolean commentvalidater(String string){
