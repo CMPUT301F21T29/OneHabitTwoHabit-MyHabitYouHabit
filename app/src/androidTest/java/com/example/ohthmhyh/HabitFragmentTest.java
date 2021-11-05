@@ -100,8 +100,13 @@ public class HabitFragmentTest {
         int fromX, toX, fromY, toY;
         int[] location = new int[2];
 
+        Thread.sleep(3000);  // Wait for everything to load.
+
+        // Define a (relatively) unique name for this habit. It doesn't have to be unique.
+        String habitName = String.valueOf(System.currentTimeMillis() % 10000000);
+
         solo.clickOnButton("Add a Habit");
-        solo.enterText((EditText) solo.getView(R.id.enter_habit_name), "ToBeDeleted");
+        solo.enterText((EditText) solo.getView(R.id.enter_habit_name), habitName);
         solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "HabitDescription");
         solo.clickOnView(solo.getView(R.id.enter_date));
         solo.clickOnButton("OK");
@@ -113,7 +118,7 @@ public class HabitFragmentTest {
         assertTrue(solo.searchText("HabitDescription"));
         assertTrue(solo.searchText("Done"));
 
-        View row = solo.getText("ToBeDeleted");
+        View row = solo.getText(habitName);
         row.getLocationInWindow(location);
 
         // fail if the view with text cannot be located in the window
@@ -126,7 +131,7 @@ public class HabitFragmentTest {
 
         solo.drag(fromX, toX, fromY, toY, 2);
 
-        assertFalse(solo.searchText("ToBeDeleted"));
+        assertFalse(solo.searchText(habitName));
     }
 
     @After
