@@ -70,28 +70,8 @@ public class HabitFragmentTest {
         assertTrue(solo.searchText("Enter descriptions"));
         assertTrue(solo.searchText("Enter a date"));
         assertTrue(solo.searchText("This habit is"));
-        assertTrue(solo.searchText("Add"));
-        assertTrue(solo.searchText("Cancel"));
-    }
-
-    /**
-     * Ensure adding a habit works.
-     * @throws Exception
-     */
-    @Test
-    public void testAddingHabit() throws Exception {
-        solo.clickOnButton("Add a Habit");
-        solo.enterText((EditText) solo.getView(R.id.enter_habit_name), "HabitTitle");
-        solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "HabitDescription");
-        solo.clickOnView(solo.getView(R.id.enter_date));
-        solo.clickOnButton("OK");
-        solo.clickOnButton("Sun");
-        solo.clickOnButton("Tue");
-        solo.clickOnButton("PUBLIC");
-        solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Add" button in the AlertDialog.
-        assertTrue(solo.searchText("HabitTitle"));
-        assertTrue(solo.searchText("HabitDescription"));
         assertTrue(solo.searchText("Done"));
+        assertTrue(solo.searchText("Cancel"));
     }
 
     /**
@@ -102,20 +82,21 @@ public class HabitFragmentTest {
     public void testFormValidation() throws Exception {
         solo.clickOnButton("Add a Habit");
         solo.enterText((EditText) solo.getView(R.id.enter_habit_name), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        assertTrue(solo.searchText("Title is too long"));
+        assertTrue(solo.searchText("Too long!"));
         solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        assertTrue(solo.searchText("Description is too long"));
-        solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Add" button in the AlertDialog.
+        assertTrue(solo.searchText("Too long!"));
+        solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Done" button in the AlertDialog.
         assertTrue(solo.searchText("ENTER A DATE"));
         assertTrue(solo.searchText("(Error: Choose a schedule)"));
     }
 
     /**
-     * Ensure that a user can delete a habit.
+     * Ensure that a user can add and delete a habit. Add and delete so our test user will keep a
+     * small amount of actual habits.
      * @throws Exception
      */
     @Test
-    public void testDeleteHabit() throws Exception {
+    public void testAddAndDeleteHabit() throws Exception {
         int fromX, toX, fromY, toY;
         int[] location = new int[2];
 
@@ -127,9 +108,11 @@ public class HabitFragmentTest {
         solo.clickOnButton("Sun");
         solo.clickOnButton("Tue");
         solo.clickOnButton("PUBLIC");
-        solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Add" button in the AlertDialog.
-
+        solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Done" button in the AlertDialog.
         assertTrue(solo.searchText("ToBeDeleted"));
+        assertTrue(solo.searchText("HabitDescription"));
+        assertTrue(solo.searchText("Done"));
+
         View row = solo.getText("ToBeDeleted");
         row.getLocationInWindow(location);
 
