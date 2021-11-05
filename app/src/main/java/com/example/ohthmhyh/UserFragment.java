@@ -1,25 +1,25 @@
 package com.example.ohthmhyh;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import static android.app.Activity.RESULT_OK;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,6 +32,11 @@ public class UserFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int EDITPROFILE = 1;
+
+    private TextView userNameTextView;
+    private TextView userUserNameTextView;
+    private TextView userBioTextView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -92,32 +97,62 @@ public class UserFragment extends Fragment {
             }
         });
 
+        user_info.setName("Test");
+        user_info.setBio("test");
+        user_info.setName("test");
+
         // Display the user's email.
         //TextView userTextView = view.findViewById(R.id.text_view_user);
         //userTextView.setText(user.getEmail());
 
         // Display the user's name
-        TextView userNameTextView = view.findViewById(R.id.user_name);
+        userNameTextView = view.findViewById(R.id.user_name);
         userNameTextView.setText(user.getDisplayName().length() > 0 ? user.getDisplayName() : "Breadfish");
 
         // Display the user's username
-        TextView userUserNameTextView = view.findViewById(R.id.user_username);
+        userUserNameTextView = view.findViewById(R.id.user_username);
         userUserNameTextView.setText(user_info.getUsername());
 
         // Display the user's biography.
-        //TextView userBioTextView = view.findViewById(R.id.user_biography);
-        //userBioTextView.setText(user.);
+        userBioTextView = view.findViewById(R.id.user_biography);
+        userBioTextView.setText(user_info.getBio());
 
         Button editProfileButton = view.findViewById(R.id.user_editprofile);
         editProfileButton.setOnClickListener((v) -> {
-            Intent editProfile = new Intent(getActivity(), EditProfile.class);
+            Intent editProfile = new Intent(getActivity(), EditProfileActivity.class);
             editProfile.putExtra("NAME", user.getDisplayName());
-            //editProfile.putExtra("USERNAME", user.get)
-            getActivity().startActivity(editProfile);
+            editProfile.putExtra("USERNAME", user_info.getUsername());
+            editProfile.putExtra("BIO", user_info.getBio());
+            someActivityResultLauncher.launch(editProfile);
         });
 
 
         return view;
+    }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent intent = result.getData();
+                        String name = intent.getStringExtra("NAME");
+                        String user_name = intent.getStringExtra("USERNAME");
+                        String biography = intent.getStringExtra("BIO");
+
+                        user_info.setName(name);
+                        user_info.setUsername(user_name);
+                        user_info.setBio(biography);
+
+                        //doSomeOperations();
+                    }
+                }
+            });
+
+    private void doSomeOperations() {
+
     }
 
     /**
@@ -127,5 +162,9 @@ public class UserFragment extends Fragment {
         // Go to the login activity from this fragment.
         Intent loginActivityIntent = new Intent(getActivity(), LoginActivity.class);
         startActivity(loginActivityIntent);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
     }
 }

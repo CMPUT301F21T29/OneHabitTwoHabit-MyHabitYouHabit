@@ -1,145 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/profile_layout"
+
+    <ImageView
+        android:id="@+id/user_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_person_foreground"
+        android:background="@drawable/ic_person_background"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        ></ImageView>
+
+    <Button
+        android:id="@+id/profile_button_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Change Profile Photo"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/user_image"
+        android:textSize="10dp"></Button>
+
+    <TextView
+        android:id="@+id/profile_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Name"
+        android:textSize="16sp"
+        android:layout_below="@+id/profile_button_image" />
+
+
+    <EditText
+        android:id="@+id/profile_enter_name"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/profile_title_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Name"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/enter_habit_name"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:hint="Enter your name"
+        android:textSize="16sp"
+        android:layout_below="@+id/profile_title_name"
+         />
 
 
-        <EditText
-            android:id="@+id/profile_enter_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:hint="Enter your name"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/habit_tittle" />
+    <TextView
+        android:id="@+id/profile_title_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Username"
+        android:textSize="16sp"
+        android:layout_below="@+id/profile_enter_name"
+         />
 
 
-        <TextView
-            android:id="@+id/profile_title_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Username"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_habit_name" />
+    <EditText
+        android:id="@+id/profile_enter_username"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Enter your username"
+        android:inputType="textMultiLine"
+        android:textSize="16sp"
+        android:layout_below="@+id/profile_title_username"
+        />
+
+    <TextView
+        android:id="@+id/profile_title_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="Bio"
+        android:textSize="16sp"
+        android:layout_below="@+id/profile_enter_username"
+        />
 
 
-        <EditText
-            android:id="@+id/profile_enter_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="Enter your username"
-            android:inputType="textMultiLine"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/habit_des_txtview" />
+    <EditText
+        android:id="@+id/profile_enter_bio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="Enter your bio"
+        android:inputType="textMultiLine"
+        android:textSize="16sp"
+        android:layout_below="@+id/profile_title_bio"
+        />
 
-        <TextView
-            android:id="@+id/profile_title_bio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Bio"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_habit_name" />
+    <Button
+        android:id="@+id/profile_button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_enter_bio"
+        android:layout_toLeftOf="@id/profile_button_submit"
+        android:text="Cancel"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="10dp"></Button>
 
+    <Button
+        android:id="@+id/profile_button_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profile_enter_bio"
+        android:layout_alignParentRight="true"
+        android:text="Submit"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="5dp"
+        android:textSize="10dp"></Button>
 
-        <EditText
-            android:id="@+id/profile_enter_bio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="Enter your bio"
-            android:inputType="textMultiLine"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/habit_des_txtview" />
-
-        <TextView
-            android:id="@+id/profile_title_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Profile Photo"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/enter_habit_name" />
-
-        <ImageView
-            android:id="@+id/user_image"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_person_foreground"
-            android:background="@drawable/ic_person_background"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            ></ImageView>
-
-        <Button
-            android:id="@+id/profile_button_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/Friend"
-            android:layout_alignParentRight="true"
-            android:text="Change Profile Photo"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:textSize="10dp"></Button>
-
-        <Button
-            android:id="@+id/profile_button_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/Friend"
-            android:layout_alignParentRight="true"
-            android:text="Submit"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:textSize="10dp"></Button>
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

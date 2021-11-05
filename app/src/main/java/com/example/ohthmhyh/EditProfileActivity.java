@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,10 +19,17 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class EditProfile extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity {
 
     private ImageView pick;
     private Bitmap bitmap;
+
+    private Button pickProfile;
+    private Button submitButton;
+    private Button cancelButton;
+    private EditText name_edit;
+    EditText username_edit;
+    EditText bio_edit;
 
     String camraPermition[];
     String storagePermition[];
@@ -31,7 +39,24 @@ public class EditProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        Button pickProfile = findViewById(R.id.profile_button_image);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        String name = (String) bundle.get("NAME");
+        String user_name = bundle.getString("USERNAME");
+        String biography = bundle.getString("BIO");
+
+        pickProfile = findViewById(R.id.profile_button_image);
+        submitButton = findViewById(R.id.profile_button_submit);
+        cancelButton = findViewById(R.id.profile_button_cancel);
+
+        name_edit = findViewById(R.id.profile_enter_name);
+        name_edit.setText(name);
+
+        username_edit = findViewById(R.id.profile_enter_username);
+        name_edit.setText(user_name);
+
+        bio_edit = findViewById(R.id.profile_enter_bio);
+        bio_edit.setText(biography);
 
         pickProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +68,27 @@ public class EditProfile extends AppCompatActivity {
                         .start();*/
             }
         });
+
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.putExtra("NAME", name_edit.getText().toString());
+                intent.putExtra("USERNAME", username_edit.getText().toString());
+                intent.putExtra("BIO", bio_edit.getText().toString());
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+        });
+
     }
 
     // Commented out for future usage.
