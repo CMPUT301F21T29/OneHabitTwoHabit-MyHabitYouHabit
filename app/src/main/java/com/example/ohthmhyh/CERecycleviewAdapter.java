@@ -61,7 +61,8 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         holder.ExtraDisplay.setText("Extra: ");
         if (habitEventsList.getHabitEvent(position).getLocation()==null){
             holder.DisplayLocation.setText("Location: Na");
-        } else{        holder.DisplayLocation.setText("Location: "+(Html.fromHtml(habitEventsList.getHabitEvent(position).getLocation().getAddressLine(0))));
+        } else{
+            holder.DisplayLocation.setText("Location: "+ habitEventsList.getHabitEvent(position).getLocation());
         }
 
 

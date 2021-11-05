@@ -1,7 +1,6 @@
 package com.example.ohthmhyh;
 
 import android.graphics.Bitmap;
-import android.location.Address;
 
 /**
  * The habitEvent class is used to define a habit event.
@@ -13,7 +12,7 @@ import android.location.Address;
 public class HabitEvent {
     private Habit habit;
     private String comment;
-    private Address location;
+    private String location;
     private Bitmap BitmapPic;
     private int flag;
 
@@ -29,14 +28,14 @@ public class HabitEvent {
      * @param BitmapPic A photo attached to the habit event post
      * @param flag A status flag regarding editing
      */
-    public HabitEvent(Habit habit, String comment,
-                      Address location, Bitmap BitmapPic, int flag) {
+    public HabitEvent(Habit habit, String comment, String location, Bitmap BitmapPic, int flag) {
         this.habit = habit;
         this.comment = comment;
-
         this.location = location;
-        //this.BitmapPic=BitmapPic;
         this.flag=flag;
+
+        // TODO: figure out how to serialize this...
+        //this.BitmapPic=BitmapPic;
     }
 
 
@@ -76,17 +75,16 @@ public class HabitEvent {
      * Get the location where this event occured
      * @return The location of the event
      */
-    public Address getLocation() {
-        //return location;
-        return null;
+    public String getLocation() {
+        return location;
     }
 
     /**
      * Set the location where for the event
      * @param location The location for the event
      */
-    public void setLocation(Address location) {
-        //this.location = location;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     /**
@@ -101,9 +99,10 @@ public class HabitEvent {
      * Set the photo for this event
      * @param bitmapPic The photo for this event
      */
-//    public void setBitmapPic(Bitmap bitmapPic) {
-//        BitmapPic = bitmapPic;
-//    }
+    public void setBitmapPic(Bitmap bitmapPic) {
+        // TODO: serialize this somehow
+        //BitmapPic = bitmapPic;
+    }
 
     /**
      * Get the flag for this habitEvent

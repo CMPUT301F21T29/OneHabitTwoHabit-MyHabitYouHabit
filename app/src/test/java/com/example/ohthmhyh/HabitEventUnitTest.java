@@ -38,10 +38,10 @@ public class HabitEventUnitTest {
      * simple function to create a sample address, to use for testing
      * @return sample address
      */
-    Address createAddress() {
+    String createAddress() {
         Locale l = new Locale("en", "US");
         Address a = new Address(l);
-        return a;
+        return a.getAddressLine(0);
 
     }
 
@@ -53,7 +53,7 @@ public class HabitEventUnitTest {
     public void testConstrAndGetters() {
         Habit h = createHabit();
         String comment = "Testing the comment";
-        Address a = createAddress();
+        String a = createAddress();
 
         Bitmap b = Bitmap.createBitmap(2, 3, Bitmap.Config.ARGB_8888); //create dummy bitmap
 
@@ -63,7 +63,7 @@ public class HabitEventUnitTest {
 
         assertEquals(h, event.getHabit());
         assertEquals(comment, event.getComment());
-        assertEquals(a, event.getLocatoion());
+        assertEquals(a, event.getLocation());
         assertEquals(b, event.getBitmapPic());
         assertEquals(flag, event.getFlag());
     }
@@ -75,10 +75,10 @@ public class HabitEventUnitTest {
      */
     @Test
     public void testSetters() {
-        //initialize the habbit event
+        //initialize the habit event
         Habit h = createHabit();
         String comment = "Testing the comment";
-        Address a = createAddress();
+        String a = createAddress();
 
         Bitmap b = Bitmap.createBitmap(2, 3, Bitmap.Config.ARGB_8888); //create dummy bitmap
 
@@ -97,7 +97,7 @@ public class HabitEventUnitTest {
             h2.scheduleAddDay(Habit.Days.Fri);
         String comment2 = "New comment?";
         Locale l = new Locale("fr", "US");
-        Address a2 = new Address(l);
+        String a2 = new Address(l).getAddressLine(0);
 
         //create dummy bitmap
         Bitmap b2 = Bitmap.createBitmap(3, 4, Bitmap.Config.ARGB_8888);
@@ -107,13 +107,13 @@ public class HabitEventUnitTest {
         //set everything to it's new values
         event.setHabit(h2);
         event.setComment(comment2);
-        event.setLocatoion(a2);
+        event.setLocation(a2);
         event.setBitmapPic(b2);
         event.setFlag(flag2);
 
         assertEquals(h2, event.getHabit());
         assertEquals(comment2, event.getComment());
-        assertEquals(a2, event.getLocatoion());
+        assertEquals(a2, event.getLocation());
         assertEquals(b2, event.getBitmapPic());
         assertEquals(flag2, event.getFlag());
     }

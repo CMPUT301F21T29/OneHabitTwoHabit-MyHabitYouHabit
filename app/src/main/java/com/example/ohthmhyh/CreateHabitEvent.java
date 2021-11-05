@@ -52,7 +52,7 @@ public class CreateHabitEvent extends AppCompatActivity {
     String storagePermition[];
     //used for location
     FusedLocationProviderClient fusedLocationProviderClient;
-    Address address=null;
+    String address=null;
     //Used for drop down menu
     private AutoCompleteTextView autoCompleteTextView;
     //Used for comment
@@ -134,7 +134,7 @@ public class CreateHabitEvent extends AppCompatActivity {
             if (habitEvent.getLocation()==null){
                 localText.setText("");
             }else{
-                localText.setText(Html.fromHtml(habitEvent.getLocation().getAddressLine(0)));
+                localText.setText(address);
             }
             bitmap=habitEvent.getBitmapPic();
             address=habitEvent.getLocation();
@@ -229,8 +229,10 @@ public class CreateHabitEvent extends AppCompatActivity {
                         List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
                         //To get everything do addressList.get(0).getLatitude
                         //getLongatude, get(0).getCountry  getAddressLine
-                        address=addressList.get(0);
-                        testLocationthing.setText(Html.fromHtml(address.getAddressLine(0)));
+
+                        address= addressList.get(0).getAddressLine(0);
+
+                        testLocationthing.setText(address);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
