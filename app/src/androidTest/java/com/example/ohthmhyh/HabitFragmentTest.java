@@ -96,7 +96,6 @@ public class HabitFragmentTest {
      * @throws Exception
      */
     @Test
-    @Ignore  // TODO: Why is this failing on GitHub but not on the local machines?
     public void testAddAndDeleteHabit() throws Exception {
         int fromX, toX, fromY, toY;
         int[] location = new int[2];
