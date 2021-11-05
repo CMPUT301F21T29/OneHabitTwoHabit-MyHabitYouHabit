@@ -1,49 +1,43 @@
+package com.example.ohthmhyh;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.view.GestureDetector;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-        package com.example.ohthmhyh;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
-        import android.annotation.SuppressLint;
-        import android.content.Context;
-        import android.graphics.Bitmap;
-        import android.text.Html;
-        import android.view.GestureDetector;
-        import android.view.LayoutInflater;
-        import android.view.MotionEvent;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ImageView;
-        import android.widget.TextView;
-
-        import androidx.annotation.NonNull;
-        import androidx.constraintlayout.widget.ConstraintLayout;
-        import androidx.recyclerview.widget.ItemTouchHelper;
-        import androidx.recyclerview.widget.RecyclerView;
-
-        import com.squareup.picasso.Picasso;
-
-        import java.util.ArrayList;
-
-        /**
-         * A simple RecycleviewAdapter .
-         *
-         */
+/**
+ * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
+ */
 public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder>
         implements CeitemHelpToucherAdapter{
     HabitEventList habitEventsList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
-            /**
-             * @param habitEventsList A array of habit event
-             * @param context Context from the activity
-             * @param mOntouchListener A thing that does touch actions
-             * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
-             */
+
+    /**
+     * @param habitEventsList A array of habit event
+     * @param context Context from the activity
+     * @param mOntouchListener A thing that does touch actions
+     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+     */
     public  CERecycleviewAdapter(HabitEventList habitEventsList, Context context,OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
         this.context=context;
         this.mOntouchListener=mOntouchListener;
     }
+
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -52,6 +46,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         return holder;
     }
+
     //sets the things in the display
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
@@ -76,6 +71,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
     }
+
     /**
     *Returns the amount of items in the Recycleview
      * @return habitEventsList.size()
@@ -114,8 +110,8 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
     public class Myviewholder extends RecyclerView.ViewHolder implements
             View.OnTouchListener,
-            GestureDetector.OnGestureListener
-    {
+            GestureDetector.OnGestureListener {
+
         TextView Displaycomment;
         TextView DisplayHabit;
         TextView ExtraDisplay;

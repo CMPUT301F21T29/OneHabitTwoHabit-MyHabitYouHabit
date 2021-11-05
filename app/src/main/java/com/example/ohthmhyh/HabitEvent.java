@@ -30,6 +30,9 @@ public class HabitEvent {
     private int UPID;
     private int flag;
 
+    /**
+     * A callback used when retrieving images from the database for this habit event
+     */
     public interface BMPcallback{
         void onBMPcallback(Bitmap bitmap);
     }
@@ -110,11 +113,10 @@ public class HabitEvent {
     }
 
     /**
-     * Get the photo attached to this event
+     * Get the photo attached to this habit event from online storage
      * @return The photo (in bitmap form) attached to this event
      */
     public Bitmap getBitmapPic(HabitEvent.BMPcallback callback) {
-
         // set up the remote end
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String UID = user.getUid();
@@ -141,7 +143,7 @@ public class HabitEvent {
     }
 
     /**
-     * Set the photo for this event
+     * Set the photo for this habit event, and puts it into online storage
      * @param pic The photo for this event
      */
     public void setBitmapPic(Bitmap pic) {
