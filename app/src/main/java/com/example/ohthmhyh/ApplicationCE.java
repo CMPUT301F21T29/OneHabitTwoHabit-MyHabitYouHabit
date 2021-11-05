@@ -4,6 +4,11 @@ import android.app.Application;
 
 import java.util.ArrayList;
 
+/**
+ * !!This is a temporary class untill we start to use habitevent list and the database!!
+ *
+ */
+
 public class ApplicationCE extends Application {
 
 

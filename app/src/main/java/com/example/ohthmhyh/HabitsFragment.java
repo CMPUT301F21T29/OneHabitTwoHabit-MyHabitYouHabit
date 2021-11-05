@@ -49,8 +49,9 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
     private String mParam2;
 
     private TextView habitDateET;
-    private ArrayList<Habit> habitArrayList = new ArrayList<>();
+    private HabitList habitList;
     private CustomAdapterHF adapter;
+    private DatabaseAdapter databaseAdapter;
 
     public HabitsFragment(){
         // Required empty public constructor
@@ -84,6 +85,10 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         }
     }
 
+    /**
+     * this creates the fragment
+     * this also sets the recyclerView
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,18 +96,27 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
 
+        HabitsFragment thisHabitsFragment = this;
+
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
 
+        // Get the HabitList from the database.
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
+            @Override
+            public void onHabitCallback(HabitList hList) {
+                habitList = hList;
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setHasFixedSize(true);
-        adapter = new CustomAdapterHF(getContext(), this, habitArrayList);
-        ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        adapter.setTouchhelper(itemTouchHelper);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.setAdapter(adapter);
-
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setHasFixedSize(true);
+                adapter = new CustomAdapterHF(getContext(), thisHabitsFragment, habitList);
+                ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+                adapter.setTouchhelper(itemTouchHelper);
+                itemTouchHelper.attachToRecyclerView(recyclerView);
+                recyclerView.setAdapter(adapter);
+            }
+        });
 
         Button addButton = view.findViewById(R.id.add_habit);
         addButton.setOnClickListener((v) -> {
@@ -112,16 +126,24 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return view;
     }
 
+    // TODO: Move this somewhere else (like the stringToDate method).
+    /**
+     * Converts a local date object to a string
+     * @param localDate this takes a date time object
+     * @return string object in the form of a date
+     */
     private String dateToString(LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String formattedString = localDate.format(formatter);
         return formattedString;
     }
 
-    public ArrayList<Habit> getHabitArrayList() {
-        return habitArrayList;
-    }
-
+    /**
+     * Sets the date of the edit text
+     * @param i this is the year
+     * @param i1 this is the month
+     * @param i2 this is the day
+     */
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         this.year=i;
@@ -130,11 +152,20 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         habitDateET.setText(day + "/" + month + "/" + year);
     }
 
+    /**
+     * Calls the edit dialog
+     * @param position the position we need to edit
+     */
     @Override
     public void onItemClicked(int position) {
         editDialog(getView(), position);
     }
 
+    /**
+     * When clicked it will read all the user data and perform an error check
+     * If it is good it will become a habit if not it will give an error message to the user
+     * @param v this is a view object
+     */
     public void addDialog(View v) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
@@ -257,15 +288,22 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 satFrequency,
                 sunFrequency,
                 private_button,
-                habitArrayList,
+                habitList,
                 errorSchedule,
                 adapter
         );
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(habitUpdateListener);
     }
 
+    /**
+     * This sets the data from the habit we want to edit (Copy of addDialog)
+     * When clicked it will read all the user data and perform an error check
+     * If it is good it will become a habit if not it will give a message to the user
+     * @param v this is a view object
+     * @param position this is the position we need to edit
+     */
     public void editDialog(View v, int position) {
-        Habit chosenHabit = habitArrayList.get(position);
+        Habit chosenHabit = habitList.getHabit(position);
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
         v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
         alertDialog.setView(v);
@@ -301,6 +339,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         });
 
 
+        // TODO: Make listeners for these.
         EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
         habitDescriptionET.setText(chosenHabit.getDescription());
         habitDescriptionET.addTextChangedListener(new TextWatcher() {
@@ -366,7 +405,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         if (existedSchedule.contains(Habit.Days.Sat)) satFrequency.setChecked(true);
         if (existedSchedule.contains(Habit.Days.Sun)) sunFrequency.setChecked(true);
 
-
+        // TODO: Make listeners for these.
         ToggleButton private_button = v.findViewById(R.id.private_button);
         private_button.setChecked(chosenHabit.getIsPrivate());
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
@@ -399,10 +438,11 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                 satFrequency,
                 sunFrequency,
                 private_button,
-                habitArrayList,
+                habitList,
                 errorSchedule,
                 adapter,
-                chosenHabit
+                chosenHabit,
+                position
         );
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(habitEditListener);
     }

@@ -9,6 +9,7 @@ import android.widget.ToggleButton;
 
 import com.example.ohthmhyh.CustomAdapterHF;
 import com.example.ohthmhyh.Habit;
+import com.example.ohthmhyh.HabitList;
 
 import org.w3c.dom.Text;
 
@@ -29,7 +30,7 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
     protected ToggleButton satFrequency;
     protected ToggleButton sunFrequency;
     protected ToggleButton private_button;
-    protected ArrayList<Habit> habitArrayList;
+    protected HabitList habitList;
     protected TextView errorSchedule;
     protected CustomAdapterHF adapter;
 
@@ -45,7 +46,7 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
             ToggleButton satFrequency,
             ToggleButton sunFrequency,
             ToggleButton private_button,
-            ArrayList<Habit> habitArrayList,
+            HabitList habitList,
             TextView errorSchedule,
             CustomAdapterHF adapter) {
         this.alertDialog = alertDialog;
@@ -60,7 +61,7 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
         this.satFrequency = satFrequency;
         this.sunFrequency = sunFrequency;
         this.private_button = private_button;
-        this.habitArrayList = habitArrayList;
+        this.habitList = habitList;
         this.errorSchedule = errorSchedule;
         this.adapter = adapter;
     }
