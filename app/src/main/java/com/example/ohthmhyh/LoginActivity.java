@@ -41,6 +41,10 @@ public class LoginActivity extends AppCompatActivity {
     private TextView greetingText;
     private EditText usernameEditText;
 
+    /**
+     * The method used to create the LoginActivity.
+     * @param savedInstanceState The previous instance state of this activity.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,6 +144,11 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.edit_text_password);
     }
 
+    /**
+     * The method that is called when the window changes focus. If this LoginActivity has the focus,
+     * then it needs to display the functionality it's trying to present (whether login or sign up).
+     * @param hasFocus Whether the current window has the focus.
+     */
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         // Need to put the update responsibility in here so that animation is performed even on the
@@ -151,6 +160,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Called when starting this activity. If the user is signed in, skip the LoginActivity and go
+     * straight to the MainActivity.
+     */
     @Override
     protected void onStart() {
         super.onStart();
