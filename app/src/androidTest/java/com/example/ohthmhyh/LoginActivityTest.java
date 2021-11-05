@@ -1,16 +1,12 @@
 package com.example.ohthmhyh;
 
 import android.app.Activity;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.robotium.solo.Solo;
@@ -28,42 +24,28 @@ public class LoginActivityTest {
 
     private Solo solo;
 
-    // Email, username, and password of a user that will always exist in the database before each
-    // test. The credentials of this user should not be used by any actual user using this app.
-    // Hopefully these won't be used.
-    // TODO: Any way to enforce that this user will not be created by any actual users?
-    private static final String EXISTING_USER_EMAIL = "come_to_del_taco_they_have_fre_shavaca_do@gmail.com";
-    private static final String EXISTING_USER_USERNAME = "come_to_del_taco_they_have_fre_shavaca_do";
-    private static final String EXISTING_USER_PASSWORD = "fre_sha_vaca_do";
-
-    // Email, username, and password of a user that will not exist in the database before any tests.
-    // The credentials of this user should not be used by any actual user using this app. Hopefully
-    // these won't be used.
-    // TODO: Any way to enforce that this user will not be created by any actual users?
-    private static final String TEMP_USER_EMAIL = "back_at_it_again_at_krispy_kreme@gmail.com";
-    private static final String TEMP_USER_USERNAME = "back_at_it_again_at_krispy_kreme";
-    private static final String TEMP_USER_PASSWORD = "krispy_kreme";
+    private static String LOGIN_BUTTON_TEXT;
+    private static String SIGNUP_BUTTON_TEXT;
 
     @Rule
     public ActivityTestRule<LoginActivity> rule = new ActivityTestRule<>(
             LoginActivity.class, true, true);
 
     /**
-     * Runs before all tests to create a usable Solo instance for the test and create the existing
-     * user if they do not yet exist.
+     * Runs before all tests to create a usable Solo instance for the test and sign out of the
+     * existing user.
      * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
+        // Sign out of the existing user before the test starts so that we don't immediately go to
+        // the MainActivity.
+        FirebaseAuth.getInstance().signOut();
+
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
 
-        // Create the user that should be existing before each test begins. If the user already
-        // exists, that's fine. Firebase will take care of that.
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.createUserWithEmailAndPassword(EXISTING_USER_EMAIL, EXISTING_USER_PASSWORD);
-
-        // Sign out of the existing user before the test starts.
-        FirebaseAuth.getInstance().signOut();
+        LOGIN_BUTTON_TEXT = solo.getCurrentActivity().getResources().getString(R.string.login_continue_button_login);
+        SIGNUP_BUTTON_TEXT = solo.getCurrentActivity().getResources().getString(R.string.login_continue_button_signup);
     }
 
     /**
@@ -88,7 +70,7 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Click on the continue button without entering any input.
-        solo.clickOnView(solo.getView(R.id.button_continue));
+        solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -107,8 +89,8 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the email, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), TEMP_USER_EMAIL);
-        solo.clickOnView(solo.getView(R.id.button_continue));
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.NONEXISTENT_USER_EMAIL);
+        solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -127,8 +109,8 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the password, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), TEMP_USER_PASSWORD);
-        solo.clickOnView(solo.getView(R.id.button_continue));
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.NONEXISTENT_USER_PASSWORD);
+        solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -147,8 +129,8 @@ public class LoginActivityTest {
         switchToSignupFunctionality();
 
         // Enter the password, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_username), TEMP_USER_USERNAME);
-        solo.clickOnView(solo.getView(R.id.button_continue));
+        solo.enterText((EditText) solo.getView(R.id.edit_text_username), Constants.NONEXISTENT_USER_USERNAME);
+        solo.clickOnButton(SIGNUP_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -167,9 +149,9 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the password, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), TEMP_USER_EMAIL);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), TEMP_USER_PASSWORD);
-        solo.clickOnView(solo.getView(R.id.button_continue));
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.NONEXISTENT_USER_EMAIL);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.NONEXISTENT_USER_PASSWORD);
+        solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -180,7 +162,6 @@ public class LoginActivityTest {
      * @throws Exception
      */
     @Test
-    @Ignore
     public void testExistingUserLogin() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -189,12 +170,15 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the email and password of the existing user.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), EXISTING_USER_EMAIL);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), EXISTING_USER_PASSWORD);
-        solo.clickOnView(solo.getView(R.id.button_continue));
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.EXISTING_USER_EMAIL);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.EXISTING_USER_PASSWORD);
+        solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we have moved to the MainActivity.
+        solo.waitForActivity(MainActivity.class, 20000);
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
+
+        FirebaseAuth.getInstance().signOut();
     }
 
     /**
@@ -202,7 +186,7 @@ public class LoginActivityTest {
      * @throws Exception
      */
     @Test
-    @Ignore
+    @Ignore  // NOTE: We have to be able to delete all user data on deletion of a user first.
     public void testValidUserSignUp() throws Exception {
         // Ensure we are in the LoginActivity.
         solo.assertCurrentActivity("Wrong activity", LoginActivity.class);
@@ -211,13 +195,18 @@ public class LoginActivityTest {
         switchToSignupFunctionality();
 
         // Enter the email, username, and password of the valid user to sign them up.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), TEMP_USER_EMAIL);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_username), TEMP_USER_USERNAME);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), TEMP_USER_PASSWORD);
-        solo.clickOnView(solo.getView(R.id.button_continue));
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.NONEXISTENT_USER_EMAIL);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_username), Constants.NONEXISTENT_USER_USERNAME);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.NONEXISTENT_USER_PASSWORD);
+        solo.clickOnButton(SIGNUP_BUTTON_TEXT);
 
         // Ensure we have moved to the MainActivity with this valid user sign up.
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            user.delete();
+        }
     }
 
     /**
@@ -234,26 +223,12 @@ public class LoginActivityTest {
     }
 
     /**
-     * Close the LoginActivity after each test.
+     * Close the LoginActivity after each test and sign out of the user.
      * @throws Exception
      */
     @After
     public void tearDown() throws Exception {
-        // Delete the account of the valid user that may have been used.
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            user.delete()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("LoginActivityTest", "User account deleted.");
-                            }
-                        }
-                    });
-        }
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signOut();
+        FirebaseAuth.getInstance().signOut();
 
         solo.finishOpenedActivities();
     }
@@ -266,11 +241,12 @@ public class LoginActivityTest {
         // If the continue button is not letting us login, we must be using the sign up
         // functionality. Click the switch button to switch to the login functionality.
         String continue_button_text = ((Button) solo.getView(R.id.button_continue)).getText().toString();
-        String login_text = solo.getCurrentActivity().getResources().getString(R.string.login_continue_button_login);
-        if (!continue_button_text.equals(login_text)) {
-            solo.clickOnView(solo.getView(R.id.button_switch));
+        solo.waitForText(LOGIN_BUTTON_TEXT, 1, 5000);
+        if (!continue_button_text.equals(LOGIN_BUTTON_TEXT)) {
+            solo.waitForText(SIGNUP_BUTTON_TEXT, 1, 5000);
+            solo.clickOnView(solo.getView(R.id.button_continue));
         }
-        solo.waitForText(login_text, 1, 1000);
+        solo.waitForText(LOGIN_BUTTON_TEXT, 1, 5000);
     }
 
     /**
@@ -281,11 +257,12 @@ public class LoginActivityTest {
         // If the continue button is not letting us signup, we must be using the login
         // functionality. Click the switch button to switch to the signup functionality.
         String continue_button_text = ((Button) solo.getView(R.id.button_continue)).getText().toString();
-        String signup_text = solo.getCurrentActivity().getResources().getString(R.string.login_continue_button_signup);
-        if (!continue_button_text.equals(signup_text)) {
-            solo.clickOnView(solo.getView(R.id.button_switch));
+        solo.waitForText(SIGNUP_BUTTON_TEXT, 1, 5000);
+        if (!continue_button_text.equals(SIGNUP_BUTTON_TEXT)) {
+            solo.waitForText(LOGIN_BUTTON_TEXT, 1, 5000);
+            solo.clickOnView(solo.getView(R.id.button_continue));
         }
-        solo.waitForText(signup_text, 1, 1000);
+        solo.waitForText(SIGNUP_BUTTON_TEXT, 1, 5000);
     }
 
 }
