@@ -80,7 +80,10 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    /**
+     * this creates the fragment
+     * this also sets the recyclerView
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -109,7 +112,10 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         return view;
     }
 
-
+    /**
+     * @param dateAsString this takes a string to turn into a date
+     * @return localDate a date time object
+     */
     private LocalDate stringToDate(String dateAsString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
 
@@ -117,6 +123,10 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         LocalDate localDate = LocalDate.parse(dateAsString, formatter);
         return localDate;
     }
+    /**
+     * @param localDate this takes a date time object
+     * @return string object in the form of a date
+     */
     private String dateToString(LocalDate localDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
         String formattedString = localDate.format(formatter);
@@ -126,7 +136,12 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
     public ArrayList<Habit> getHabitArrayList() {
         return habitArrayList;
     }
-
+    /**
+     * @param i this is the year
+     * @param i1 this is the month
+     * @param i2 this is the day
+     *  Sets the date then clicked
+     */
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         this.year=i;
@@ -134,12 +149,19 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         this.day=i2;
         habitDateET.setText(day + "/" + month + "/" + year);
     }
-
+    /**
+     * @param position the position we need to edit
+     *  Calls the edit dialog
+     */
     @Override
     public void onItemClicked(int position) {
         editDialog(getView(), position);
     }
-
+    /**
+     * @param v this is a view object
+     * When clicked it will read all the user data and perform an error check
+     * If it is good it will become a habit if not it will give an error message to the user
+     */
     public void addDialog(View v) {
 
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
@@ -315,7 +337,13 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
             }
         });
     }
-
+    /**
+     * @param v this is a view object
+     * @param position this is the position we need to edit
+     * This sets the data from the habit we want to edit (Copy of addDialog)
+     * When clicked it will read all the user data and perform an error check
+     * If it is good it will become a habit if not it will give a message to the user
+     */
     public void editDialog(View v, int position) {
         Habit chosenHabit = habitArrayList.get(position);
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
