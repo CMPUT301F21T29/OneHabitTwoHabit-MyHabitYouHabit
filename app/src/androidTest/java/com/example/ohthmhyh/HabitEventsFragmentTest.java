@@ -71,6 +71,19 @@ public class HabitEventsFragmentTest {
     }
 
     /**
+     * Ensure the dialog to add/edit/view a habit shows up.
+     * @throws Exception
+     */
+    @Test
+    public void testAddHabitEventShowsUp() throws Exception {
+        solo.clickOnView((FloatingActionButton) solo.getView(R.id.floatingActionButton2));
+        assertTrue(solo.searchText("Enter a comment"));
+        assertTrue(solo.searchText("Click to add Image"));
+        assertTrue(solo.searchText("Add location button"));
+        assertTrue(solo.searchText("CreateEvent"));
+    }
+
+    /**
      * Test to see if the app creates and deletes an habit event
      * @throws Exception
      */
@@ -81,9 +94,6 @@ public class HabitEventsFragmentTest {
 
         Thread.sleep(3000);  // Wait for everything to load.
 
-        // Ensure we are in the MainActivity.
-        solo.assertCurrentActivity("Wrong activity", MainActivity.class);
-
         // Click on one of the add event button
         solo.clickOnView((FloatingActionButton) solo.getView(R.id.floatingActionButton2));
 
@@ -92,7 +102,7 @@ public class HabitEventsFragmentTest {
 
         // Set an event using the spinner.
         solo.clickOnView(solo.getView(R.id.AutoCompleteTextviewCE));
-        solo.clickOnView(solo.getView(TextView.class, 0));
+        solo.clickOnView(solo.getView(TextView.class, 1));
 
         // Set a random comment
         solo.enterText((EditText) solo.getView(R.id.Get_a_comment_CE), "TESTING COMMENT");
@@ -101,6 +111,8 @@ public class HabitEventsFragmentTest {
         solo.clickOnView(solo.getView(R.id.Add_location_button));
 
         solo.sleep(1000);
+
+        assertTrue(solo.searchText("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA"));
 
         // Create event
         solo.clickOnView(solo.getView(R.id.button2));
