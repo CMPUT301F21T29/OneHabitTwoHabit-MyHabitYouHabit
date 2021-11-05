@@ -1,8 +1,9 @@
 package com.example.ohthmhyh.listeners;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
+import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public abstract class HabitUpdateListener implements DialogInterface.OnClickListener {
+public abstract class HabitUpdateListener implements View.OnClickListener {
     protected AlertDialog alertDialog;
     protected EditText habitDescriptionET;
     protected TextView habitDateET;
@@ -65,7 +66,7 @@ public abstract class HabitUpdateListener implements DialogInterface.OnClickList
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
+    public void onClick(View v) {
         boolean validated = false;
         String habitName = habitNameET.getText().toString();
 
@@ -88,6 +89,9 @@ public abstract class HabitUpdateListener implements DialogInterface.OnClickList
                 && habitDateET.getText().length() > 0) {
             validated = true;
         }
+
+        Log.d("asdf", validated ? "true" : "false");
+
         if (validated) {
             alertDialog.dismiss();
             LocalDate startDate = stringToDate(habitDateET.getText().toString());

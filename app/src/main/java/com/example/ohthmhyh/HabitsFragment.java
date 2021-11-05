@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -40,8 +39,6 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    int year, month, day;
-
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -120,7 +117,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
         Button addButton = view.findViewById(R.id.add_habit);
         addButton.setOnClickListener((v) -> {
-            addDialog(v);
+            updateHabitAlertDialog(v, -1);
         });
 
         return view;
@@ -147,9 +144,9 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
      */
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        this.year=i;
-        this.month=i1+1;
-        this.day=i2;
+        int year = i;
+        int month = i1 + 1;
+        int day = i2;
         habitDateET.setText(day + "/" + month + "/" + year);
     }
 
@@ -159,15 +156,17 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
      */
     @Override
     public void onItemClicked(int position) {
-        editDialog(getView(), position);
+        updateHabitAlertDialog(getView(), position);
     }
 
+    // TODO: This should eventually be moved to its own alert dialog class that implements the
+    //       DatePickerDialog.OnDateSetListener.
     /**
-     * When clicked it will read all the user data and perform an error check
-     * If it is good it will become a habit if not it will give an error message to the user
-     * @param v this is a view object
+     * Create an alert dialog to edit/view an existing habit, or create a new habit.
+     * @param v The view to create the alert dialog from
+     * @param chosenHabitIndex The index of the chosen habit
      */
-    public void addDialog(View v) {
+    public void updateHabitAlertDialog(View v, int chosenHabitIndex) {
         AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
         v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
         alertDialog.setView(v);
@@ -194,112 +193,87 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         ToggleButton sunFrequency = v.findViewById(R.id.sun);
 
         ToggleButton private_button = v.findViewById(R.id.private_button);
+
+        View.OnClickListener habitUpdateListener;
+
+        if (chosenHabitIndex < 0) {
+            // Add a habit
+            habitUpdateListener = new HabitAddListener(
+                    alertDialog,
+                    habitDescriptionET,
+                    habitDateET,
+                    habitNameET,
+                    monFrequency,
+                    tueFrequency,
+                    wedFrequency,
+                    thuFrequency,
+                    friFrequency,
+                    satFrequency,
+                    sunFrequency,
+                    private_button,
+                    habitList,
+                    errorSchedule,
+                    adapter
+            );
+        } else {
+            // Edit/view a habit
+            Habit chosenHabit = habitList.getHabit(chosenHabitIndex);
+
+            habitUpdateListener = new HabitEditListener(
+                    alertDialog,
+                    habitDescriptionET,
+                    habitDateET,
+                    habitNameET,
+                    monFrequency,
+                    tueFrequency,
+                    wedFrequency,
+                    thuFrequency,
+                    friFrequency,
+                    satFrequency,
+                    sunFrequency,
+                    private_button,
+                    habitList,
+                    errorSchedule,
+                    adapter,
+                    chosenHabit,
+                    chosenHabitIndex
+            );
+
+            // Show the chosen habit's attributes by filling out the views
+            habitNameET.setText(chosenHabit.getName());
+            habitDescriptionET.setText(chosenHabit.getDescription());
+            habitDateET.setText(dateToString(chosenHabit.StartDateAsLocalDate()));
+            private_button.setChecked(chosenHabit.getIsPrivate());
+
+            ArrayList<Habit.Days> existedSchedule = chosenHabit.getSchedule();
+            if (existedSchedule.contains(Habit.Days.Mon)) monFrequency.setChecked(true);
+            if (existedSchedule.contains(Habit.Days.Tue)) tueFrequency.setChecked(true);
+            if (existedSchedule.contains(Habit.Days.Wed)) wedFrequency.setChecked(true);
+            if (existedSchedule.contains(Habit.Days.Thu)) thuFrequency.setChecked(true);
+            if (existedSchedule.contains(Habit.Days.Fri)) friFrequency.setChecked(true);
+            if (existedSchedule.contains(Habit.Days.Sat)) satFrequency.setChecked(true);
+            if (existedSchedule.contains(Habit.Days.Sun)) sunFrequency.setChecked(true);
+        }
+
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // Empty Listener as the Cancel button doesn't do anything.
                     }
                 });
-
-        DialogInterface.OnClickListener habitUpdateListener = new HabitAddListener(
-                alertDialog,
-                habitDescriptionET,
-                habitDateET,
-                habitNameET,
-                monFrequency,
-                tueFrequency,
-                wedFrequency,
-                thuFrequency,
-                friFrequency,
-                satFrequency,
-                sunFrequency,
-                private_button,
-                habitList,
-                errorSchedule,
-                adapter
-        );
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Done", habitUpdateListener);
-
-        alertDialog.show();
-    }
-
-    /**
-     * This sets the data from the habit we want to edit (Copy of addDialog)
-     * When clicked it will read all the user data and perform an error check
-     * If it is good it will become a habit if not it will give a message to the user
-     * @param v this is a view object
-     * @param position this is the position we need to edit
-     */
-    public void editDialog(View v, int position) {
-        Habit chosenHabit = habitList.getHabit(position);
-        AlertDialog alertDialog = new AlertDialog.Builder(v.getContext()).create();
-        v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
-        alertDialog.setView(v);
-
-        alertDialog.setTitle("Add a Habit");
-
-        EditText habitNameET = v.findViewById(R.id.enter_habit_name);
-        habitNameET.setText(chosenHabit.getName());
-        habitNameET.addTextChangedListener(new LengthTextWatcher(habitNameET, 1, 20));
-
-        EditText habitDescriptionET = v.findViewById(R.id.enter_habit_des);
-        habitDescriptionET.setText(chosenHabit.getDescription());
-        habitDescriptionET.addTextChangedListener(new LengthTextWatcher(habitDescriptionET, 1, 30));
-
-        habitDateET = v.findViewById(R.id.enter_date);
-        habitDateET.setText(dateToString(chosenHabit.StartDateAsLocalDate()));
-        habitDateET.setHint("Enter a date");
-        habitDateET.setOnClickListener(new DatePickerListener(getContext(), HabitsFragment.this));
-
-        TextView errorSchedule = v.findViewById(R.id.choose_frequency_txtview);
-        ToggleButton monFrequency = v.findViewById(R.id.mon);
-        ToggleButton tueFrequency = v.findViewById(R.id.tue);
-        ToggleButton wedFrequency = v.findViewById(R.id.wed);
-        ToggleButton thuFrequency = v.findViewById(R.id.thu);
-        ToggleButton friFrequency = v.findViewById(R.id.fri);
-        ToggleButton satFrequency = v.findViewById(R.id.sat);
-        ToggleButton sunFrequency = v.findViewById(R.id.sun);
-
-        ArrayList<Habit.Days> existedSchedule = chosenHabit.getSchedule();
-        if (existedSchedule.contains(Habit.Days.Mon)) monFrequency.setChecked(true);
-        if (existedSchedule.contains(Habit.Days.Tue)) tueFrequency.setChecked(true);
-        if (existedSchedule.contains(Habit.Days.Wed)) wedFrequency.setChecked(true);
-        if (existedSchedule.contains(Habit.Days.Thu)) thuFrequency.setChecked(true);
-        if (existedSchedule.contains(Habit.Days.Fri)) friFrequency.setChecked(true);
-        if (existedSchedule.contains(Habit.Days.Sat)) satFrequency.setChecked(true);
-        if (existedSchedule.contains(Habit.Days.Sun)) sunFrequency.setChecked(true);
-
-        // TODO: Make listeners for these.
-        ToggleButton private_button = v.findViewById(R.id.private_button);
-        private_button.setChecked(chosenHabit.getIsPrivate());
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel",
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Done",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Empty Listener as the Cancel button doesn't do anything.
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        alertDialog.dismiss();
                     }
                 });
 
-        DialogInterface.OnClickListener habitEditListener = new HabitEditListener(
-                alertDialog,
-                habitDescriptionET,
-                habitDateET,
-                habitNameET,
-                monFrequency,
-                tueFrequency,
-                wedFrequency,
-                thuFrequency,
-                friFrequency,
-                satFrequency,
-                sunFrequency,
-                private_button,
-                habitList,
-                errorSchedule,
-                adapter,
-                chosenHabit,
-                position
-        );
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Done", habitEditListener);
-
         alertDialog.show();
+
+        // NOTE: This must be set AFTER the show() method is called in order to keep the alert
+        // dialog from closing when invalid input is given. See:
+        // https://stackoverflow.com/questions/2620444/how-to-prevent-a-dialog-from-closing-when-a-button-is-clicked
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(habitUpdateListener);
     }
+
 }
