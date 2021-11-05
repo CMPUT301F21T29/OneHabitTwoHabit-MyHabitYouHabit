@@ -130,16 +130,6 @@
             android:layout_marginTop="5dp"
             android:textSize="10dp"></Button>
 
-        <Button
-            android:id="@+id/profile_button_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/Friend"
-            android:layout_alignParentRight="true"
-            android:text="Submit"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:textSize="10dp"></Button>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

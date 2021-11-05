@@ -1,13 +1,10 @@
 package com.example.ohthmhyh;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -17,31 +14,60 @@ import androidx.fragment.app.DialogFragment;
 
 public class EditProfileFragment extends DialogFragment {
 
-    interface UpdateProfileListener {
-        void updateUserCallback(User user);
+    interface ProfileListener {
+        void updateProfileCallback(User user);
     }
 
-    UpdateProfileListener listener;
+    // instance variables
+    private ProfileListener listener;
     User user;
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.e("here", "here");
-
-
-        listener = (UpdateProfileListener) context;
-
-    }
-
+    /**
+     * An empty constructor for the fragment.
+     */
     public EditProfileFragment(){}
 
+
+    /**
+     * Make the fragment, taking in a user object. The user object is used to prefill
+     * the views in the edit fragment.
+     * @param user
+     */
     public EditProfileFragment(User user){
         this.user = user;
     }
 
 
+    /**
+     * Use this to set the user profile update listener. This is used to force the
+     * calling fragment to update its views, and to return the user object.
+     * @param listener
+     */
+    public void setOnProfileUpdatelistener(ProfileListener listener){
+        this.listener = listener;
+    }
+
+
+    /**
+     * Override the onDismiss function to use the onDismissListener set by the
+     * setOnDismissListener function.
+     */
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (listener != null) {
+            listener.updateProfileCallback(user);
+        }
+    }
+
+
+    /**
+     * Runs when this dialog fragment is created. This method prefills the views based on
+     * the data in the User object set at instantiation time.
+     * @param savedInstanceState The state of the calling activity
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -52,8 +78,6 @@ public class EditProfileFragment extends DialogFragment {
         EditText nameET = view.findViewById(R.id.profile_enter_name);
         EditText usernameET = view.findViewById(R.id.profile_enter_username);
         EditText bioET = view.findViewById(R.id.profile_enter_bio);
-        Button profPicBtn = view.findViewById(R.id.profile_button_image);
-        Button saveBtn = view.findViewById(R.id.profile_button_submit);
 
         // prefill the edit texts with their current values
         nameET.setText(user.getName());
@@ -66,11 +90,10 @@ public class EditProfileFragment extends DialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        // TODO update the user object here
+                        // update the user object
                         user.setUsername(usernameET.getText().toString());
                         user.setName(nameET.getText().toString());
                         user.setBio(bioET.getText().toString());
-//                        listener.updateUserCallback(user);
                     }
                 })
                 .setNegativeButton("Exit", null)

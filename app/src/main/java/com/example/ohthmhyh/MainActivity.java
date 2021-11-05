@@ -13,7 +13,7 @@ import com.google.android.material.navigation.NavigationBarView;
  * The main activity of the app responsible for moving between fragments in the
  * bottom navigation bar.
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     private BottomNavigationView bottomNavigationView;
     private FeedFragment feedFragment = new FeedFragment();
@@ -21,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private HabitsTodayFragment habitsTodayFragment = new HabitsTodayFragment();
     private HabitEventsFragment habitEventsFragment = new HabitEventsFragment();
     private UserFragment userFragment = new UserFragment();
+
+    private User user;
+
 
     /**
      * Called to create the main activity.
@@ -30,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        //TODO: code to get stuff from database goes here
+
+
         setContentView(R.layout.activity_main);
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be
@@ -63,4 +71,24 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
 
     }
+
+
+    public User getUser(){
+        if(user == null){
+            user = new User();
+            user.setUsername("asdf username");
+            user.setBio("this is a bio bruh");
+            user.setName("josh");
+        }
+
+        return user;
+    }
+
+    public void updateUser(User user) {
+        this.user = user;
+        // TODO: update the database here
+
+    }
+
+
 }

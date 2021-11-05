@@ -1,6 +1,6 @@
 package com.example.ohthmhyh;
 
-import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,82 +13,40 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * The fragment is shown on the "user profile" screen and shows things like username, profile
+ * picture, bio, etc..
  */
-public class UserFragment extends Fragment implements EditProfileFragment.UpdateProfileListener {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private FirebaseUser fbUser;
-    private User user;
+public class UserFragment extends Fragment{
+    // instance variables
     View view;
+    MainActivity main;
 
+
+    /**
+     * An empty constructor for this fragment. Required for fragments
+     */
     public UserFragment() {
         // Required empty public constructor
     }
 
+
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserFragment.
+     * Runs when this fragment is created. This method is responsible for filling in the various
+     * views in the fragment when its created, and managing what happens when buttons are pressed.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
      */
-    // TODO: Rename and change types and number of parameters
-    public static UserFragment newInstance(String param1, String param2) {
-        UserFragment fragment = new UserFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_user, container, false);
-
-
-        // TODO: pull the user from the database here!
-        user = new User();
-        user.setUsername("asdf username");
-        user.setBio("this is a bio bruh");
-        user.setName("josh");
-
-
-        // get the views
-        TextView nameTextView = view.findViewById(R.id.user_name);
-        TextView userNameTextView = view.findViewById(R.id.user_username);
-        TextView userBioTextView = view.findViewById(R.id.user_biography);
-
-        // Set the content of the views
-        nameTextView.setText(user.getName());
-        userNameTextView.setText(user.getUsername());
-        userBioTextView.setText(user.getBio());
+        main = (MainActivity) getActivity();
+        updateViews();
 
         // define what happens when sign-out is clicked
         Button signOutButton = view.findViewById(R.id.button_sign_out);
@@ -105,12 +63,41 @@ public class UserFragment extends Fragment implements EditProfileFragment.Update
         Button editProfileButton = view.findViewById(R.id.user_editprofile);
         editProfileButton.setOnClickListener((v) -> {
             // start the fragment for editing the user profile
+            EditProfileFragment frag = new EditProfileFragment(main.getUser());
+            // when the fragment is done, refresh this view with the new content
+            frag.setOnProfileUpdatelistener(new EditProfileFragment.ProfileListener() {
+                @Override
+                public void updateProfileCallback(User user) {
+                    // update the views in this fragment
+                    updateViews();
+                    // update the master user object
+                    main.updateUser(user);
+                }
+            });
 
-            new EditProfileFragment(user).show(getChildFragmentManager(), "editUserProfile");
-
+            frag.show(getChildFragmentManager(), "editUserProfile");
         });
 
         return view;
+    }
+
+
+    /**
+     * This method will fill in the views with data from the user object
+     */
+    private void updateViews(){
+        // make sure we have the latest user object
+        MainActivity main = (MainActivity) getActivity();
+
+        // get the views
+        TextView nameTextView = view.findViewById(R.id.user_name);
+        TextView userNameTextView = view.findViewById(R.id.user_username);
+        TextView userBioTextView = view.findViewById(R.id.user_biography);
+
+        // Set the content of the views
+        nameTextView.setText(main.getUser().getName());
+        userNameTextView.setText(main.getUser().getUsername());
+        userBioTextView.setText(main.getUser().getBio());
     }
 
 
@@ -121,12 +108,6 @@ public class UserFragment extends Fragment implements EditProfileFragment.Update
         // Go to the login activity from this fragment.
         Intent loginActivityIntent = new Intent(getActivity(), LoginActivity.class);
         startActivity(loginActivityIntent);
-    }
-
-
-    @Override
-    public void updateUserCallback(User user) {
-        this.user = user;
     }
 
 }
