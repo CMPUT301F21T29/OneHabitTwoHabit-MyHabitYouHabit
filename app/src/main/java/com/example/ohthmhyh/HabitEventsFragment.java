@@ -12,6 +12,7 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -27,6 +28,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
+import com.example.ohthmhyh.dialogs.UpdateHabitEventDialog;
 import com.example.ohthmhyh.watchers.LengthTextWatcher;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -111,7 +114,14 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
 //        });
         fab = view.findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener((v) -> {
-            updateHabitEventAlertDialog(v, -1);
+//            updateHabitEventAlertDialog(v, -1);
+//            UpdateHabitEventDialog updateHabitEventDialog = new UpdateHabitEventDialog(
+//                    getContext(), habitEventList, -1);
+//            updateHabitEventDialog.show();
+//            UpdateHabitEventDialog updateHabitEventDialog = UpdateHabitEventDialog.newInstance(
+//                    habitEventList, -1);
+//            updateHabitEventDialog.show(getChildFragmentManager(), "UpdateHabitEventDialog");
+            goToUpdateHabitEvent(-1);
         });
 
         return view;
@@ -252,6 +262,12 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
     }
 
 
+    public void goToUpdateHabitEvent(int position) {
+        Intent intent = new Intent(getActivity(), UpdateHabitEventActivity.class);
+        intent.putExtra(UpdateHabitEventActivity.HABIT_EVENT_LIST_ARG, habitEventList);
+        intent.putExtra(UpdateHabitEventActivity.CHOSEN_HABIT_EVENT_INDEX_ARG, position);
+        getActivity().startActivity(intent);
+    }
 
     /**
      * This is used for editing when called it adds an edit flag
