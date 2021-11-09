@@ -312,7 +312,7 @@ public class CreateHabitEvent extends AppCompatActivity {
 
         HabitEvent habitEvent;
         if(address == null){
-            habitEvent=new HabitEvent(habit,comment,-1, -1
+            habitEvent=new HabitEvent(habit,comment,null, null
                     , bitmap,-1, habiteventlist.nextUPID());
         }
         else{

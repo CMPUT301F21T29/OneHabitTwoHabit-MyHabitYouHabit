@@ -55,7 +55,7 @@ public class HabitEvent {
      * @param flag A status flag regarding editing
      * @param UPID The id of the picture for this habit event
      */
-    public HabitEvent(Habit habit, String comment, double latitude, double longitude
+    public HabitEvent(Habit habit, String comment, Double latitude, Double longitude
             , Bitmap BitmapPic, int flag, int UPID) {
         this.habit = habit;
         this.comment = comment;
