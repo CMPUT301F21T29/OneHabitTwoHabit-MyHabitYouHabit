@@ -55,10 +55,12 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
         holder.DisplayHabit.setText((habitEventsList.getHabitEvent(position).getHabit().toString()));
         holder.ExtraDisplay.setText("Extra: ");
-        if (habitEventsList.getHabitEvent(position).getLocation()==null){
+        if (habitEventsList.getHabitEvent(position).getLatitude()==null
+            || habitEventsList.getHabitEvent(position).getLongitude()==null){
             holder.DisplayLocation.setText("Location: Na");
         } else{
-            holder.DisplayLocation.setText("Location: "+ habitEventsList.getHabitEvent(position).getLocation());
+            HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
+            holder.DisplayLocation.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
         }
 
 

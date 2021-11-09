@@ -26,7 +26,7 @@ import java.io.ByteArrayOutputStream;
 public class HabitEvent {
     private Habit habit;
     private String comment;
-    private String location;
+    private Double latitude, longitude;
     private int UPID;
     private int flag;
 
@@ -49,15 +49,18 @@ public class HabitEvent {
      * Constructor to create a new habit event
      * @param habit The habit relating to this event
      * @param comment A comment regarding this event
-     * @param location The location where the event took place
+     * @param latitude The latitude where the event took place
+     * @param longitude The longitude where the event took place
      * @param BitmapPic A photo attached to the habit event post
      * @param flag A status flag regarding editing
      * @param UPID The id of the picture for this habit event
      */
-    public HabitEvent(Habit habit, String comment, String location, Bitmap BitmapPic, int flag, int UPID) {
+    public HabitEvent(Habit habit, String comment, double latitude, double longitude
+            , Bitmap BitmapPic, int flag, int UPID) {
         this.habit = habit;
         this.comment = comment;
-        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.flag=flag;
         this.UPID = UPID;
         setBitmapPic(BitmapPic);
@@ -97,19 +100,35 @@ public class HabitEvent {
     }
 
     /**
-     * Get the location where this event occured
-     * @return The location of the event
+     * Get the latitude where this event occurred
+     * @return The latitude of where the event occurred
      */
-    public String getLocation() {
-        return location;
+    public Double getLatitude() {
+        return latitude;
     }
 
     /**
-     * Set the location where for the event
-     * @param location The location for the event
+     * Set the latitude where this event occurred
+     * @param latitude The latitude of where the event occurred
      */
-    public void setLocation(String location) {
-        this.location = location;
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    /**
+     * Get the latitude where this event occurred
+     * @return The latitude of where the event occurred
+     */
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * Set the latitude where this event occurred
+     * @param longitude The latitude of where the event occurred
+     */
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     /**
@@ -169,6 +188,7 @@ public class HabitEvent {
         UploadTask uploadTask = imgref.putBytes(picBytes);
     }
 
+    // TODO: remove this when refactoring how habit events are made.
     /**
      * Get the flag for this habitEvent
      * @return The flag for this habitEvent
@@ -177,6 +197,7 @@ public class HabitEvent {
         return flag;
     }
 
+    // TODO: remove this when refactoring how habit events are made.
     /**
      * Set the flag for this habitevent
      * @param flag the flag for this habitEvent
