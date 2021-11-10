@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import android.graphics.Bitmap;
 import android.location.Address;
+import android.location.Location;
+
 import java.time.LocalDate;
 import java.util.Locale;
 
@@ -36,13 +38,13 @@ public class HabitEventUnitTest {
 
     /**
      * simple function to create a sample address, to use for testing
-     * @return sample address
+     * @return sample location
      */
-    String createAddress() {
-        Locale l = new Locale("en", "US");
-        Address a = new Address(l);
-        return a.getAddressLine(0);
-
+    Location createAddress() {
+        Location l = new Location("");
+        l.setLongitude(69.420);
+        l.setLatitude(42.069);
+        return l;
     }
 
     /**
@@ -53,17 +55,18 @@ public class HabitEventUnitTest {
     public void testConstrAndGetters() {
         Habit h = createHabit();
         String comment = "Testing the comment";
-        String a = createAddress();
+        Location a = createAddress();
 
         Bitmap b = Bitmap.createBitmap(2, 3, Bitmap.Config.ARGB_8888); //create dummy bitmap
 
         int flag = -1;
 
-        HabitEvent event = new  HabitEvent(h, comment, a, b, flag, 1);
+        HabitEvent event = new  HabitEvent(h, comment, a.getLatitude(), a.getLongitude(), b, flag, 1);
 
         assertEquals(h, event.getHabit());
         assertEquals(comment, event.getComment());
-        assertEquals(a, event.getLocation());
+        assertTrue(a.getLatitude() == event.getLatitude());
+        assertTrue(a.getLongitude() == event.getLongitude());
         // can't use here because of dependency on firebase. Need to be logged in first.
         // assertEquals(b, event.getBitmapPic());
         assertEquals(flag, event.getFlag());
@@ -79,12 +82,12 @@ public class HabitEventUnitTest {
         //initialize the habit event
         Habit h = createHabit();
         String comment = "Testing the comment";
-        String a = createAddress();
+        Location a = createAddress();
 
         Bitmap b = Bitmap.createBitmap(2, 3, Bitmap.Config.ARGB_8888); //create dummy bitmap
 
         int flag = -1;
-        HabitEvent event = new  HabitEvent(h, comment, a, b, flag, 1);
+        HabitEvent event = new  HabitEvent(h, comment, a.getLatitude(), a.getLongitude(), b, flag, 1);
 
         //create alternate parameters
         Habit h2 = new Habit();
@@ -97,8 +100,6 @@ public class HabitEventUnitTest {
             h2.scheduleAddDay(Habit.Days.Wed);
             h2.scheduleAddDay(Habit.Days.Fri);
         String comment2 = "New comment?";
-        Locale l = new Locale("fr", "US");
-        String a2 = new Address(l).getAddressLine(0);
 
         //create dummy bitmap
         Bitmap b2 = Bitmap.createBitmap(3, 4, Bitmap.Config.ARGB_8888);
@@ -108,13 +109,15 @@ public class HabitEventUnitTest {
         //set everything to it's new values
         event.setHabit(h2);
         event.setComment(comment2);
-        event.setLocation(a2);
+        event.setLatitude(a.getLatitude());
+        event.setLongitude(a.getLongitude());
         event.setBitmapPic(b2);
         event.setFlag(flag2);
 
         assertEquals(h2, event.getHabit());
         assertEquals(comment2, event.getComment());
-        assertEquals(a2, event.getLocation());
+        assertTrue(a.getLatitude() == event.getLatitude());
+        assertTrue(a.getLongitude() == event.getLongitude());
         // can't use here because of dependency on firebase. Need to be logged in first.
         //assertEquals(b2, event.getBitmapPic());
         assertEquals(flag2, event.getFlag());

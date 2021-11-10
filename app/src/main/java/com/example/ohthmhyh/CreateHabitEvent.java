@@ -52,7 +52,7 @@ public class CreateHabitEvent extends AppCompatActivity {
     String storagePermition[];
     //used for location
     FusedLocationProviderClient fusedLocationProviderClient;
-    String address=null;
+    Location address=null;
     //Used for drop down menu
     private AutoCompleteTextView autoCompleteTextView;
     //Used for comment
@@ -137,17 +137,18 @@ public class CreateHabitEvent extends AppCompatActivity {
             });
 
             getComment.setText(habitEvent.getComment());
-            if (habitEvent.getLocation()==null){
+            if (habitEvent.getLatitude()==null || habitEvent.getLongitude()==null){
                 localText.setText("");
             }else{
-                localText.setText(address);
+                localText.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
             }
 
             //TODO: I dont think this is needed here
             //bitmap=habitEvent.getBitmapPic();
 
-
-            address=habitEvent.getLocation();
+            address = new Location("");
+            address.setLatitude(habitEvent.getLatitude());
+            address.setLongitude(habitEvent.getLongitude());
             String temp= habitEvent.getHabit().getName();
             //pop item from string habit list take note of position
             //append it to the front
@@ -240,9 +241,11 @@ public class CreateHabitEvent extends AppCompatActivity {
                         //To get everything do addressList.get(0).getLatitude
                         //getLongatude, get(0).getCountry  getAddressLine
 
-                        address= addressList.get(0).getAddressLine(0);
+                        address = new Location("");
+                        address.setLatitude(addressList.get(0).getLatitude());
+                        address.setLongitude(addressList.get(0).getLongitude());
 
-                        testLocationthing.setText(address);
+                        testLocationthing.setText("lat: "+address.getLatitude()+ "Lon: "+ address.getLongitude());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -277,7 +280,8 @@ public class CreateHabitEvent extends AppCompatActivity {
             String test;
             test=autoCompleteTextView.getText().toString();
             Toast.makeText(this, test, Toast.LENGTH_LONG).show();
-            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address,bitmap,-1, habiteventlist.nextUPID());
+            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address.getLatitude()
+                    , address.getLongitude() ,bitmap,-1, habiteventlist.nextUPID());
             //Magichabitlist.set.(position,updatehabitEvent);
             habiteventlist.replaceHabitEvent(position,updatehabitEvent);
             Intent intent = new Intent(CreateHabitEvent.this,MainActivity.class);
@@ -305,7 +309,16 @@ public class CreateHabitEvent extends AppCompatActivity {
         //TODO
         //Get user info
         //Get a habit from user
-        HabitEvent habitEvent=new HabitEvent(habit,comment,address,bitmap,-1, habiteventlist.nextUPID());
+
+        HabitEvent habitEvent;
+        if(address == null){
+            habitEvent=new HabitEvent(habit,comment,null, null
+                    , bitmap,-1, habiteventlist.nextUPID());
+        }
+        else{
+            habitEvent=new HabitEvent(habit,comment,address.getLatitude(), address.getLongitude()
+                    , bitmap,-1, habiteventlist.nextUPID());
+        }
         //push habitEvent into data base
             habiteventlist.addHabitEvent(habitEvent);
         Intent intent = new Intent(this, MainActivity.class);
