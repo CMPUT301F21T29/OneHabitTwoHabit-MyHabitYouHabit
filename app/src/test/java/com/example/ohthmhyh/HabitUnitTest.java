@@ -3,14 +3,10 @@ package com.example.ohthmhyh;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.google.gson.internal.Streams;
+import com.example.ohthmhyh.entities.Habit;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This class is used to run tests on the Habit class

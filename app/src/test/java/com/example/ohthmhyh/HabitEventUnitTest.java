@@ -5,11 +5,12 @@ package com.example.ohthmhyh;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import android.graphics.Bitmap;
-import android.location.Address;
 import android.location.Location;
 
+import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.entities.HabitEvent;
+
 import java.time.LocalDate;
-import java.util.Locale;
 
 
 /**

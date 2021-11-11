@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.fragments;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -19,6 +19,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.ohthmhyh.CustomAdapterHF;
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.database.HabitList;
+import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.TouchingHandlingHF;
 import com.example.ohthmhyh.listeners.DatePickerListener;
 import com.example.ohthmhyh.listeners.HabitAddListener;
 import com.example.ohthmhyh.listeners.HabitEditListener;

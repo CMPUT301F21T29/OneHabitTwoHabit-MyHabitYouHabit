@@ -7,6 +7,8 @@ import android.widget.EditText;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.ohthmhyh.activities.LoginActivity;
+import com.example.ohthmhyh.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.robotium.solo.Solo;
