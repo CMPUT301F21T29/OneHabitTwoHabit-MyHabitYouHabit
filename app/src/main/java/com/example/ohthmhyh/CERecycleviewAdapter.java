@@ -53,7 +53,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         //Todo
         //Need to error check because somethings might be null
         holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
-        holder.DisplayHabit.setText((habitEventsList.getHabitEvent(position).getHabit().toString()));
+        holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
         holder.ExtraDisplay.setText("Extra: ");
         if (habitEventsList.getHabitEvent(position).getLatitude()==null
             || habitEventsList.getHabitEvent(position).getLongitude()==null){
