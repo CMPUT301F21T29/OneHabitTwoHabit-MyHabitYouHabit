@@ -5,6 +5,8 @@ package com.example.ohthmhyh;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.example.ohthmhyh.entities.User;
+
 import java.util.ArrayList;
 
 
