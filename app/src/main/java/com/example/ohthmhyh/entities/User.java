@@ -170,6 +170,16 @@ public class User {
 
 
     /**
+     * Removes a friend
+     * @param index the index of the friend to remove
+     */
+    public void removeFriend(int index){
+        friendList.remove((index));
+        dba.pushUser(this);
+    }
+
+
+    /**
      * Get the biography of the user
      * @return The user bio as string
      */
