@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -95,7 +96,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
 
         HabitsFragment thisHabitsFragment = this;
 
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_undone_hf);
 
         // Get the HabitList from the database.
         databaseAdapter = new DatabaseAdapter();
@@ -103,7 +104,6 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
             @Override
             public void onHabitCallback(HabitList hList) {
                 habitList = hList;
-
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
                 adapter = new CustomAdapterHF(getContext(), thisHabitsFragment, habitList);
@@ -171,7 +171,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         v = LayoutInflater.from(getContext()).inflate(R.layout.alert_addhabit, null);
         alertDialog.setView(v);
 
-        alertDialog.setTitle("Add a Habit");
+        //alertDialog.setTitle("Add a Habit");
 
         EditText habitNameET = v.findViewById(R.id.enter_habit_name);
         habitNameET.addTextChangedListener(new LengthTextWatcher(habitNameET, 1, 20));

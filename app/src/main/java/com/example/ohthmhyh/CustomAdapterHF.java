@@ -2,15 +2,11 @@ package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.location.Address;
-import android.text.Html;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,13 +14,10 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import java.util.ArrayList;
-
 /**
  * A simple RecycleviewAdapter for the Habit list.
  */
-public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
+public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.MyViewholder>
         implements TouchingHandlingAdaptorHF{
     HabitList habitList;
     Context context;
@@ -46,16 +39,15 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
     @NonNull
     @Override
-    public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_hf,parent,false);
-        Myviewholder holder = new Myviewholder(view, mOntouchListener);
-
+        MyViewholder holder = new MyViewholder(view, mOntouchListener);
         return holder;
     }
 
     //sets the things in the display
     @Override
-    public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull MyViewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
         holder.name.setText(habitList.getHabit(position).getName());
@@ -97,7 +89,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         this.mTouchhelper = touchhelper;
     }
 
-    public class Myviewholder extends RecyclerView.ViewHolder implements
+    public class MyViewholder extends RecyclerView.ViewHolder implements
             View.OnTouchListener,
             GestureDetector.OnGestureListener
     {
@@ -107,13 +99,12 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
         OntouchListener ontouchListener;
-        public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
+        public MyViewholder(@NonNull View itemView, OntouchListener ontouchListener) {
             super(itemView);
             name = itemView.findViewById(R.id.name_rv);
             description = itemView.findViewById(R.id.habit_description_rv);
             //This is the name of the contrant layout in display HE list
             parentLayout = itemView.findViewById(R.id.rv_cl);
-
             mGestureDetector = new GestureDetector(itemView.getContext(),this);
 
             this.ontouchListener= ontouchListener;
