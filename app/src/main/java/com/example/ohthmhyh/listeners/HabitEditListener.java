@@ -19,7 +19,7 @@ public class HabitEditListener extends HabitUpdateListener {
     private int chosenHabitPosition;
 
     public HabitEditListener(EditText habitDescriptionET, TextView habitDateET, EditText habitNameET, ToggleButton monFrequency, ToggleButton tueFrequency, ToggleButton wedFrequency, ToggleButton thuFrequency, ToggleButton friFrequency, ToggleButton satFrequency, ToggleButton sunFrequency, ToggleButton private_button, HabitList habitList, TextView errorSchedule, Habit chosenHabit, int chosenHabitPosition) {
-        super(habitDescriptionET, habitDateET, habitNameET, monFrequency, tueFrequency, wedFrequency, thuFrequency, friFrequency, satFrequency, sunFrequency, private_button, habitList, errorSchedule);
+        super(null, habitDescriptionET, habitDateET, habitNameET, monFrequency, tueFrequency, wedFrequency, thuFrequency, friFrequency, satFrequency, sunFrequency, private_button, errorSchedule);
         this.chosenHabit = chosenHabit;
         this.chosenHabitPosition = chosenHabitPosition;
     }
@@ -32,7 +32,7 @@ public class HabitEditListener extends HabitUpdateListener {
         chosenHabit.setStartDate(startDate.toEpochDay());
         chosenHabit.setSchedule(schedule);
         chosenHabit.setIsPrivate(private_button.isChecked());
-        habitList.replaceHabit(chosenHabitPosition, chosenHabit);
+//        habitList.replaceHabit(chosenHabitPosition, chosenHabit);
     }
 
 }

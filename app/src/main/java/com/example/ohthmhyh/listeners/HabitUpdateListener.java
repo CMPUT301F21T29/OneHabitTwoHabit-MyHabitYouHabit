@@ -1,5 +1,8 @@
 package com.example.ohthmhyh.listeners;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.EditText;
@@ -8,6 +11,7 @@ import android.widget.ToggleButton;
 
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
+import com.example.ohthmhyh.fragments.HabitsFragment;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +20,8 @@ import java.util.ArrayList;
 /**
  * Verifies that a new or edited habit is valid
  */
-public abstract class HabitUpdateListener implements View.OnClickListener {
+public class HabitUpdateListener implements View.OnClickListener {
+    protected Activity activity;
     protected EditText habitDescriptionET;
     protected TextView habitDateET;
     protected EditText habitNameET;
@@ -28,10 +33,11 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
     protected ToggleButton satFrequency;
     protected ToggleButton sunFrequency;
     protected ToggleButton private_button;
-    protected HabitList habitList;
     protected TextView errorSchedule;
+    private ColorStateList originalErrorScheduleColor;
 
     public HabitUpdateListener(
+            Activity activity,
             EditText habitDescriptionET,
             TextView habitDateET,
             EditText habitNameET,
@@ -43,9 +49,9 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
             ToggleButton satFrequency,
             ToggleButton sunFrequency,
             ToggleButton private_button,
-            HabitList habitList,
             TextView errorSchedule
     ) {
+        this.activity = activity;
         this.habitDescriptionET = habitDescriptionET;
         this.habitDateET = habitDateET;
         this.habitNameET = habitNameET;
@@ -57,8 +63,9 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
         this.satFrequency = satFrequency;
         this.sunFrequency = sunFrequency;
         this.private_button = private_button;
-        this.habitList = habitList;
         this.errorSchedule = errorSchedule;
+
+        this.originalErrorScheduleColor = errorSchedule.getTextColors();
     }
 
     /**
@@ -117,6 +124,9 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
             if (schedule.size() == 0) {
                 errorSchedule.setText("Weekly Frequency  (Error: Choose a schedule)");
                 errorSchedule.setTextColor(Color.RED);
+            } else {
+                errorSchedule.setText("Weekly Frequency");
+                errorSchedule.setTextColor(originalErrorScheduleColor);
             }
 
             if (habitDateET.getText().toString().equals("")) {
@@ -134,7 +144,19 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
      * @param startDate The edited or new start date for the habit
      * @param schedule The edited or new schedule for the habit
      */
-    protected abstract void action(String habitName, String habitDescription, LocalDate startDate, ArrayList<Habit.Days> schedule);
+    protected void action(
+            String habitName,
+            String habitDescription,
+            LocalDate startDate,
+            ArrayList<Habit.Days> schedule
+    ) {
+        Habit habit = new Habit(
+                habitName, habitDescription, startDate, schedule, private_button.isChecked());
+        Intent intent = new Intent();
+        intent.putExtra(HabitsFragment.ARG_RETURNED_HABIT, habit);
+        activity.setResult(Activity.RESULT_OK, intent);
+        activity.finish();
+    }
 
     /**
      * Coverts a String to a LocalDate object

@@ -1,6 +1,7 @@
 package com.example.ohthmhyh.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.listeners.DatePickerListener;
 import com.example.ohthmhyh.listeners.HabitAddListener;
 import com.example.ohthmhyh.listeners.HabitEditListener;
+import com.example.ohthmhyh.listeners.HabitUpdateListener;
 import com.example.ohthmhyh.watchers.LengthTextWatcher;
 
 import java.time.LocalDate;
@@ -31,13 +33,12 @@ import java.util.ArrayList;
 
 public class UpdateHabitActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
-    public static final String ARG_HABIT_INDEX = "habit_index_arg";
+    public static final String ARG_HABIT = "habit_arg";
 
     private EditText nameEditText;
     private EditText descriptionEditText;
     private TextView dateTextView;
     private TextView scheduleErrorTextView;
-    private HabitList habitList;
     private Button doneButton;
     private ToggleButton mondayToggleButton;
     private ToggleButton tuesdayToggleButton;
@@ -47,8 +48,6 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
     private ToggleButton saturdayToggleButton;
     private ToggleButton sundayToggleButton;
     private ToggleButton privateButton;
-
-    private int habitIndex;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,30 +59,81 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
     protected void onResume() {
         super.onResume();
 
-        Bundle extras = getIntent().getExtras();
-        habitIndex = extras.getInt(ARG_HABIT_INDEX, -1);
+        // Get references to views in this activity.
+        nameEditText = findViewById(R.id.enter_habit_name);
+        descriptionEditText = findViewById(R.id.enter_habit_des);
+        dateTextView = findViewById(R.id.enter_date);
+        scheduleErrorTextView = findViewById(R.id.choose_frequency_txtview);
+        doneButton = findViewById(R.id.done_button);
+        mondayToggleButton = findViewById(R.id.mon);
+        tuesdayToggleButton = findViewById(R.id.tue);
+        wednesdayToggleButton = findViewById(R.id.wed);
+        thursdayToggleButton = findViewById(R.id.thu);
+        fridayToggleButton = findViewById(R.id.fri);
+        saturdayToggleButton = findViewById(R.id.sat);
+        sundayToggleButton = findViewById(R.id.sun);
+        privateButton = findViewById(R.id.private_button);
 
-        // Get the HabitList from the database.
-        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
-            @Override
-            public void onHabitCallback(HabitList hList) {
-                habitList = hList;
-                setup();  // TODO: Once habitList doesn't have to be loaded, move setUp to this method.
-            }
-        });
+        // Set some properties about these views.
+        nameEditText.addTextChangedListener(
+                new LengthTextWatcher(
+                        nameEditText,
+                        Constants.HABIT_NAME_MIN_LENGTH,
+                        Constants.HABIT_NAME_MAX_LENGTH
+                ));
+        descriptionEditText.addTextChangedListener(
+                new LengthTextWatcher(
+                        descriptionEditText,
+                        Constants.HABIT_DESCRIPTION_MIN_LENGTH,
+                        Constants.HABIT_DESCRIPTION_MAX_LENGTH
+                ));
+        dateTextView.setHint("Enter a date");
+        dateTextView.setOnClickListener(
+                new DatePickerListener(this, UpdateHabitActivity.this));
+        doneButton.setOnClickListener(new HabitUpdateListener(
+                this,
+                descriptionEditText,
+                dateTextView,
+                nameEditText,
+                mondayToggleButton,
+                tuesdayToggleButton,
+                wednesdayToggleButton,
+                thursdayToggleButton,
+                fridayToggleButton,
+                saturdayToggleButton,
+                sundayToggleButton,
+                privateButton,
+                scheduleErrorTextView
+        ));
+
+        // Set the views to display the Habit that was given to this activity (if there was one at
+        // all).
+        Intent intent = getIntent();
+        if (intent.hasExtra(ARG_HABIT)) {
+            Habit habit = (Habit) intent.getSerializableExtra(ARG_HABIT);
+            showHabit(habit);
+        }
     }
 
+    /**
+     * Handle button presses in the top bar.
+     * @param item The MenuItem that was selected.
+     * @return Whether the action was successful or not.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
+            case android.R.id.home:  // The back arrow is pressed.
                 onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Ensures that when the back arrow is pressed, that we return to the calling Fragment and not
+     * just the default Fragment.
+     */
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -137,85 +187,5 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
         if (schedule.contains(Habit.Days.Fri)) fridayToggleButton.setChecked(true);
         if (schedule.contains(Habit.Days.Sat)) saturdayToggleButton.setChecked(true);
         if (schedule.contains(Habit.Days.Sun)) sundayToggleButton.setChecked(true);
-    }
-
-    private void setup() {
-        // Get references to views in this activity.
-        nameEditText = findViewById(R.id.enter_habit_name);
-        descriptionEditText = findViewById(R.id.enter_habit_des);
-        dateTextView = findViewById(R.id.enter_date);
-        scheduleErrorTextView = findViewById(R.id.choose_frequency_txtview);
-        doneButton = findViewById(R.id.done_button);
-        mondayToggleButton = findViewById(R.id.mon);
-        tuesdayToggleButton = findViewById(R.id.tue);
-        wednesdayToggleButton = findViewById(R.id.wed);
-        thursdayToggleButton = findViewById(R.id.thu);
-        fridayToggleButton = findViewById(R.id.fri);
-        saturdayToggleButton = findViewById(R.id.sat);
-        sundayToggleButton = findViewById(R.id.sun);
-        privateButton = findViewById(R.id.private_button);
-
-        // Set some properties about these views.
-        nameEditText.addTextChangedListener(
-                new LengthTextWatcher(
-                        nameEditText,
-                        Constants.HABIT_NAME_MIN_LENGTH,
-                        Constants.HABIT_NAME_MAX_LENGTH
-                ));
-        descriptionEditText.addTextChangedListener(
-                new LengthTextWatcher(
-                        descriptionEditText,
-                        Constants.HABIT_DESCRIPTION_MIN_LENGTH,
-                        Constants.HABIT_DESCRIPTION_MAX_LENGTH
-                ));
-        dateTextView.setText("Enter a date");
-        dateTextView.setOnClickListener(
-                new DatePickerListener(this, UpdateHabitActivity.this));
-
-        View.OnClickListener habitUpdateListener;
-        if (habitIndex < 0) {
-            // We are adding a habit.
-            habitUpdateListener = new HabitAddListener(
-                    descriptionEditText,
-                    dateTextView,
-                    nameEditText,
-                    mondayToggleButton,
-                    tuesdayToggleButton,
-                    wednesdayToggleButton,
-                    thursdayToggleButton,
-                    fridayToggleButton,
-                    saturdayToggleButton,
-                    sundayToggleButton,
-                    privateButton,
-                    habitList,
-                    scheduleErrorTextView
-            );
-        } else {
-            // We are editing/viewing a habit.
-            Habit habit = habitList.getHabit(habitIndex);
-
-            habitUpdateListener = new HabitEditListener(
-                    descriptionEditText,
-                    dateTextView,
-                    nameEditText,
-                    mondayToggleButton,
-                    tuesdayToggleButton,
-                    wednesdayToggleButton,
-                    thursdayToggleButton,
-                    fridayToggleButton,
-                    saturdayToggleButton,
-                    sundayToggleButton,
-                    privateButton,
-                    habitList,
-                    scheduleErrorTextView,
-                    habit,
-                    habitIndex
-            );
-
-            showHabit(habit);
-        }
-
-        // Set the behaviour of the done button when it's clicked.
-        doneButton.setOnClickListener(habitUpdateListener);
     }
 }
