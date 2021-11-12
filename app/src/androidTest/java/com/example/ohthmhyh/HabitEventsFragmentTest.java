@@ -4,15 +4,15 @@ import static junit.framework.TestCase.assertTrue;
 
 import static org.junit.Assert.assertFalse;
 
-import android.app.Activity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.ohthmhyh.activities.CreateHabitEvent;
+import com.example.ohthmhyh.activities.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.robotium.solo.Solo;

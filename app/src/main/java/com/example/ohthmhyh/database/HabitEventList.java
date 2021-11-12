@@ -1,4 +1,6 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.database;
+
+import com.example.ohthmhyh.entities.HabitEvent;
 
 import java.util.ArrayList;
 

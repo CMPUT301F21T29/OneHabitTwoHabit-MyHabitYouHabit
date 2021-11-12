@@ -1,5 +1,6 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.database;
 
+import com.example.ohthmhyh.entities.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

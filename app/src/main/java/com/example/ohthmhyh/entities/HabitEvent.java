@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.entities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
