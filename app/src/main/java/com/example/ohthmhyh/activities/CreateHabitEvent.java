@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -14,7 +14,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.text.Html;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -28,6 +27,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.entities.HabitEvent;
+import com.example.ohthmhyh.database.HabitEventList;
+import com.example.ohthmhyh.R;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -141,15 +145,14 @@ public class CreateHabitEvent extends AppCompatActivity {
                 localText.setText("");
             }else{
                 localText.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
+                address = new Location("");
+                address.setLatitude(habitEvent.getLatitude());
+                address.setLongitude(habitEvent.getLongitude());
             }
 
             //TODO: I dont think this is needed here
             //bitmap=habitEvent.getBitmapPic();
 
-            address = new Location("");
-            address.setLatitude(habitEvent.getLatitude());
-            address.setLongitude(habitEvent.getLongitude());
-            String temp= habitEvent.getHabit().getName();
             //pop item from string habit list take note of position
             //append it to the front
             String [] habitList={"Habit one", "Habit two", "Habit three"};//This is temport untill I can get the user habit list
@@ -280,8 +283,14 @@ public class CreateHabitEvent extends AppCompatActivity {
             String test;
             test=autoCompleteTextView.getText().toString();
             Toast.makeText(this, test, Toast.LENGTH_LONG).show();
-            HabitEvent updatehabitEvent=new HabitEvent(habit,comment,address.getLatitude()
-                    , address.getLongitude() ,bitmap,-1, habiteventlist.nextUPID());
+            HabitEvent updatehabitEvent = new HabitEvent(
+                    habit.getUHID(),
+                    comment,
+                    address.getLatitude(),
+                    address.getLongitude(),
+                    bitmap,
+                    habiteventlist.nextUPID()
+            );
             //Magichabitlist.set.(position,updatehabitEvent);
             habiteventlist.replaceHabitEvent(position,updatehabitEvent);
             Intent intent = new Intent(CreateHabitEvent.this,MainActivity.class);
@@ -312,12 +321,24 @@ public class CreateHabitEvent extends AppCompatActivity {
 
         HabitEvent habitEvent;
         if(address == null){
-            habitEvent=new HabitEvent(habit,comment,null, null
-                    , bitmap,-1, habiteventlist.nextUPID());
+            habitEvent = new HabitEvent(
+                    habit.getUHID(),
+                    comment,
+                    null,
+                    null,
+                    bitmap,
+                    habiteventlist.nextUPID()
+            );
         }
         else{
-            habitEvent=new HabitEvent(habit,comment,address.getLatitude(), address.getLongitude()
-                    , bitmap,-1, habiteventlist.nextUPID());
+            habitEvent = new HabitEvent(
+                    habit.getUHID(),
+                    comment,
+                    address.getLatitude(),
+                    address.getLongitude(),
+                    bitmap,
+                    habiteventlist.nextUPID()
+            );
         }
         //push habitEvent into data base
             habiteventlist.addHabitEvent(habitEvent);

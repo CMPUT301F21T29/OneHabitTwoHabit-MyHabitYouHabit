@@ -8,6 +8,7 @@ import android.widget.EditText;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
+import com.example.ohthmhyh.activities.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.robotium.solo.Solo;
 
@@ -15,7 +16,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 

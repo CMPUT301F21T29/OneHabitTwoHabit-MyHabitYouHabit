@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.entities;
 
 
 import java.time.LocalDate;

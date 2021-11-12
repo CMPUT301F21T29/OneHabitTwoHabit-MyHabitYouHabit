@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.ohthmhyh.CERecycleviewAdapter;
+import com.example.ohthmhyh.CETouchHelp;
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitEventList;
+import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.activities.CreateHabitEvent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,7 +73,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
             public void onClick(View view) {
                 //todo
                 // add a check to make sure habit list is not empty (simple if)
-                Intent intent =new Intent(getContext(),CreateHabitEvent.class);
+                Intent intent =new Intent(getContext(), CreateHabitEvent.class);
                 startActivity(intent);
             }
         });
@@ -85,9 +89,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
      */
     @Override
     public void onItemclicked(int position) {
-        habitEventList.getHabitEvent(position).setFlag(1);
         Intent intent = new Intent(getActivity(),CreateHabitEvent.class);
-        intent.putExtra("flag", habitEventList.getHabitEvent(position).getFlag());
+        intent.putExtra("flag", 1);
         intent.putExtra("position",position);
         getActivity().startActivity(intent);
     }

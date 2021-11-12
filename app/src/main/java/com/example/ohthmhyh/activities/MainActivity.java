@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,6 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.example.ohthmhyh.fragments.FeedFragment;
+import com.example.ohthmhyh.fragments.HabitEventsFragment;
+import com.example.ohthmhyh.fragments.HabitsFragment;
+import com.example.ohthmhyh.fragments.HabitsTodayFragment;
+import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.fragments.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 

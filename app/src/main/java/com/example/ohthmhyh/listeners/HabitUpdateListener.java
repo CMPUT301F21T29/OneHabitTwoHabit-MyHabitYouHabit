@@ -8,8 +8,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.ohthmhyh.CustomAdapterHF;
-import com.example.ohthmhyh.Habit;
-import com.example.ohthmhyh.HabitList;
+import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.database.HabitList;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

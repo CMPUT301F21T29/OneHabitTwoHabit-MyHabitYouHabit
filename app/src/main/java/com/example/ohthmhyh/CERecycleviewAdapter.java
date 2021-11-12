@@ -16,6 +16,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ohthmhyh.database.HabitEventList;
+import com.example.ohthmhyh.entities.HabitEvent;
+
 /**
  * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
  */
@@ -32,7 +35,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      * @param mOntouchListener A thing that does touch actions
      * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
      */
-    public  CERecycleviewAdapter(HabitEventList habitEventsList, Context context,OntouchListener mOntouchListener){
+    public  CERecycleviewAdapter(HabitEventList habitEventsList, Context context, OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
         this.context=context;
         this.mOntouchListener=mOntouchListener;
@@ -53,7 +56,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         //Todo
         //Need to error check because somethings might be null
         holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
-        holder.DisplayHabit.setText((habitEventsList.getHabitEvent(position).getHabit().toString()));
+        holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
         holder.ExtraDisplay.setText("Extra: ");
         if (habitEventsList.getHabitEvent(position).getLatitude()==null
             || habitEventsList.getHabitEvent(position).getLongitude()==null){
