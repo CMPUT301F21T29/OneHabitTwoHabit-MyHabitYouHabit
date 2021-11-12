@@ -165,7 +165,7 @@ public class HabitUpdateListener implements View.OnClickListener {
      * @return The LocalDate object created from the string
      */
     private LocalDate stringToDate(String dateAsString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
 
         //convert String to LocalDate
         LocalDate localDate = LocalDate.parse(dateAsString, formatter);
