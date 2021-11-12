@@ -1,13 +1,11 @@
 package com.example.ohthmhyh.listeners;
 
-import android.app.AlertDialog;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.example.ohthmhyh.CustomAdapterHF;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
 
@@ -19,7 +17,6 @@ import java.util.ArrayList;
  * Verifies that a new or edited habit is valid
  */
 public abstract class HabitUpdateListener implements View.OnClickListener {
-    protected AlertDialog alertDialog;
     protected EditText habitDescriptionET;
     protected TextView habitDateET;
     protected EditText habitNameET;
@@ -33,9 +30,8 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
     protected ToggleButton private_button;
     protected HabitList habitList;
     protected TextView errorSchedule;
-    protected CustomAdapterHF adapter;
 
-    public HabitUpdateListener(AlertDialog alertDialog,
+    public HabitUpdateListener(
             EditText habitDescriptionET,
             TextView habitDateET,
             EditText habitNameET,
@@ -48,9 +44,8 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
             ToggleButton sunFrequency,
             ToggleButton private_button,
             HabitList habitList,
-            TextView errorSchedule,
-            CustomAdapterHF adapter) {
-        this.alertDialog = alertDialog;
+            TextView errorSchedule
+    ) {
         this.habitDescriptionET = habitDescriptionET;
         this.habitDateET = habitDateET;
         this.habitNameET = habitNameET;
@@ -64,7 +59,6 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
         this.private_button = private_button;
         this.habitList = habitList;
         this.errorSchedule = errorSchedule;
-        this.adapter = adapter;
     }
 
     /**
@@ -97,10 +91,8 @@ public abstract class HabitUpdateListener implements View.OnClickListener {
         }
 
         if (validated) {
-            alertDialog.dismiss();
             LocalDate startDate = stringToDate(habitDateET.getText().toString());
             action(habitName, habitDescription, startDate, schedule);
-            adapter.notifyDataSetChanged();
         }
 
         else {

@@ -3,8 +3,13 @@ package com.example.ohthmhyh.fragments;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +25,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.example.ohthmhyh.CustomAdapterHF;
+import com.example.ohthmhyh.activities.UpdateHabitActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
@@ -41,14 +47,14 @@ import java.util.ArrayList;
  */
 public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateSetListener, CustomAdapterHF.OntouchListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+//    // TODO: Rename parameter arguments, choose names that match
+//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+//    private static final String ARG_PARAM1 = "param1";
+//    private static final String ARG_PARAM2 = "param2";
+//
+//    // TODO: Rename and change types of parameters
+//    private String mParam1;
+//    private String mParam2;
 
     private TextView habitDateET;
     private HabitList habitList;
@@ -59,33 +65,33 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         // Required empty public constructor
     }
 
-    // TODO: Remove all the created todos.
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HabitsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HabitsFragment newInstance(String param1, String param2) {
-        HabitsFragment fragment = new HabitsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    //    // TODO: Remove all the created todos.
+//    /**
+//     * Use this factory method to create a new instance of
+//     * this fragment using the provided parameters.
+//     *
+//     * @param param1 Parameter 1.
+//     * @param param2 Parameter 2.
+//     * @return A new instance of fragment HabitsFragment.
+//     */
+//    // TODO: Rename and change types and number of parameters
+//    public static HabitsFragment newInstance(String param1, String param2) {
+//        HabitsFragment fragment = new HabitsFragment();
+//        Bundle args = new Bundle();
+//        args.putString(ARG_PARAM1, param1);
+//        args.putString(ARG_PARAM2, param2);
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_habits, null);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
     }
 
     /**
@@ -122,11 +128,27 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         });
 
         Button addButton = view.findViewById(R.id.add_habit);
-        addButton.setOnClickListener((v) -> {
-            updateHabitAlertDialog(v, -1);
-        });
+//        addButton.setOnClickListener((v) -> {
+//            updateHabitAlertDialog(v, -1);
+//        });
+        addButton.setOnClickListener(v -> goToUpdateHabitActivity(-1));
+
+//        ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(
+//                new ActivityResultContracts.StartActivityForResult(),
+//                new ActivityResultCallback<ActivityResult>() {
+//                    @Override
+//                    public void onActivityResult(ActivityResult result) {
+//                        result.getData().getS
+//                    }
+//                });
 
         return view;
+    }
+
+    private void goToUpdateHabitActivity(int habitIndex) {
+        Intent intent = new Intent(getActivity(), UpdateHabitActivity.class);
+        intent.putExtra(UpdateHabitActivity.ARG_HABIT_INDEX, habitIndex);
+        startActivity(intent);
     }
 
     // TODO: Move this somewhere else (like the stringToDate method).
@@ -205,7 +227,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
         if (chosenHabitIndex < 0) {
             // Add a habit
             habitUpdateListener = new HabitAddListener(
-                    alertDialog,
+//                    alertDialog,
                     habitDescriptionET,
                     habitDateET,
                     habitNameET,
@@ -218,15 +240,15 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                     sunFrequency,
                     private_button,
                     habitList,
-                    errorSchedule,
-                    adapter
+                    errorSchedule
+//                    adapter
             );
         } else {
             // Edit/view a habit
             Habit chosenHabit = habitList.getHabit(chosenHabitIndex);
 
             habitUpdateListener = new HabitEditListener(
-                    alertDialog,
+//                    alertDialog,
                     habitDescriptionET,
                     habitDateET,
                     habitNameET,
@@ -240,7 +262,7 @@ public class HabitsFragment extends Fragment implements DatePickerDialog.OnDateS
                     private_button,
                     habitList,
                     errorSchedule,
-                    adapter,
+//                    adapter,
                     chosenHabit,
                     chosenHabitIndex
             );
