@@ -24,11 +24,10 @@ import java.io.ByteArrayOutputStream;
  * It is analogous to a post on a social media platform.
  */
 public class HabitEvent {
-    private Habit habit;
+    private int habitUHID;
     private String comment;
     private Double latitude, longitude;
     private int UPID;
-    private int flag;
 
     /**
      * A callback used when retrieving images from the database for this habit event
@@ -47,40 +46,44 @@ public class HabitEvent {
 
     /**
      * Constructor to create a new habit event
-     * @param habit The habit relating to this event
+     * @param habitUHID The habit UHID relating to this event
      * @param comment A comment regarding this event
      * @param latitude The latitude where the event took place
      * @param longitude The longitude where the event took place
      * @param BitmapPic A photo attached to the habit event post
-     * @param flag A status flag regarding editing
      * @param UPID The id of the picture for this habit event
      */
-    public HabitEvent(Habit habit, String comment, Double latitude, Double longitude
-            , Bitmap BitmapPic, int flag, int UPID) {
-        this.habit = habit;
+    public HabitEvent(
+            int habitUHID,
+            String comment,
+            Double latitude,
+            Double longitude,
+            Bitmap BitmapPic,
+            int UPID
+    ) {
+        this.habitUHID = habitUHID;
         this.comment = comment;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.flag=flag;
         this.UPID = UPID;
         setBitmapPic(BitmapPic);
     }
 
 
     /**
-     * Get the habit relating to this event
-     * @return The habit relating to this event
+     * Get the habit UHID relating to this event
+     * @return The habit UHID relating to this event
      */
-    public Habit getHabit() {
-        return habit;
+    public int getHabitUHID() {
+        return habitUHID;
     }
 
     /**
-     * Set the habit for this event
-     * @param habit The habit for the event
+     * Set the habit UHID for this event
+     * @param habitUHID The habit UHID for the event
      */
-    public void setHabit(Habit habit) {
-        this.habit = habit;
+    public void setHabitUHID(int habitUHID) {
+        this.habitUHID = habitUHID;
     }
 
     /**
@@ -140,7 +143,8 @@ public class HabitEvent {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String UID = user.getUid();
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference imgref = storage.getReference().child("images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
+        StorageReference imgref = storage.getReference().child(
+                "images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
 
         // pull the image
         final long ONE_MEGABYTE = 1024 * 1024;
@@ -187,26 +191,7 @@ public class HabitEvent {
 
         UploadTask uploadTask = imgref.putBytes(picBytes);
     }
-
-    // TODO: remove this when refactoring how habit events are made.
-    /**
-     * Get the flag for this habitEvent
-     * @return The flag for this habitEvent
-     */
-    public int getFlag() {
-        return flag;
-    }
-
-    // TODO: remove this when refactoring how habit events are made.
-    /**
-     * Set the flag for this habitevent
-     * @param flag the flag for this habitEvent
-     */
-    public void setFlag(int flag) {
-        this.flag = flag;
-    }
-
-
+    
     /**
      * Get the picture ID of this habit event
      * @return The UPID of this habit event

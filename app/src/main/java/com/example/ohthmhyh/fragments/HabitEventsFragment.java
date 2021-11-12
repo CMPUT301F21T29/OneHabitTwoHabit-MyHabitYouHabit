@@ -89,9 +89,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
      */
     @Override
     public void onItemclicked(int position) {
-        habitEventList.getHabitEvent(position).setFlag(1);
         Intent intent = new Intent(getActivity(),CreateHabitEvent.class);
-        intent.putExtra("flag", habitEventList.getHabitEvent(position).getFlag());
+        intent.putExtra("flag", 1);
         intent.putExtra("position",position);
         getActivity().startActivity(intent);
     }

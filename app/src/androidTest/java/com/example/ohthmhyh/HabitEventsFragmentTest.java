@@ -113,7 +113,7 @@ public class HabitEventsFragmentTest {
 
         solo.sleep(1000);
 
-        assertTrue(solo.searchText("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA"));
+        assertTrue(solo.searchText("lat: 37.422065599999996Lon: -122.08408969999998"));
 
         // Create event
         solo.clickOnView(solo.getView(R.id.button2));
@@ -124,7 +124,7 @@ public class HabitEventsFragmentTest {
 
         // Check to see if comments is proper
         assertTrue(solo.searchText("TESTING COMMENT"));
-        assertTrue(solo.searchText("1600 Amphitheatre Pkwy, Mountain View, CA 94043, USA"));
+        assertTrue(solo.searchText("lat: 37.422065599999996Lon: -122.08408969999998"));
 
         // Delete
         View row = solo.getText("Comment: TESTING COMMENT");
