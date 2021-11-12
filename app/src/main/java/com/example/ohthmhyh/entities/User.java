@@ -150,7 +150,7 @@ public class User {
                 // add this user to the requesters friends list
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 user.getFriendList().add(currentUser.getUid());
-                dba.pushUser(user);
+                dba.pushUser(UID, user);
 
                 // remove the request from the current user
                 friendRequests.remove(index);
