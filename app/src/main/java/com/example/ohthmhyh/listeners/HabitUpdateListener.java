@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.fragments.HabitsFragment;
 
 import java.time.LocalDate;
@@ -79,7 +79,6 @@ public class HabitUpdateListener implements View.OnClickListener {
 
         String habitDescription = habitDescriptionET.getText().toString();
 
-
         ArrayList<Habit.Days> schedule = new ArrayList<>();
 
         if (monFrequency.isChecked()) schedule.add(Habit.Days.Mon);
@@ -90,8 +89,10 @@ public class HabitUpdateListener implements View.OnClickListener {
         if (satFrequency.isChecked()) schedule.add(Habit.Days.Sat);
         if (sunFrequency.isChecked()) schedule.add(Habit.Days.Sun);
 
-        if (habitName.length() > 0 && habitName.length() <= 20
-                && habitDescription.length() > 0 && habitDescription.length() <= 30
+        if (habitName.length() >= Constants.HABIT_NAME_MIN_LENGTH
+                && habitName.length() <= Constants.HABIT_NAME_MAX_LENGTH
+                && habitDescription.length() >= Constants.HABIT_DESCRIPTION_MIN_LENGTH
+                && habitDescription.length() <= Constants.HABIT_DESCRIPTION_MAX_LENGTH
                 && schedule.size() > 0
                 && habitDateET.getText().length() > 0) {
             validated = true;
@@ -137,8 +138,8 @@ public class HabitUpdateListener implements View.OnClickListener {
     }
 
     /**
-     * Performs an action based on whether this update listener is responding to verify a new habit
-     * or an existing habit
+     * Creates a Habit after all input has been validated and returns this Habit as the activity's
+     * result. Finally, it finishes the current activity.
      * @param habitName The edited or new name for the habit
      * @param habitDescription The edited or new description for the habit
      * @param startDate The edited or new start date for the habit

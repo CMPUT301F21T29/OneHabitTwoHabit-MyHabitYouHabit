@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -18,12 +17,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.listeners.DatePickerListener;
-import com.example.ohthmhyh.listeners.HabitAddListener;
-import com.example.ohthmhyh.listeners.HabitEditListener;
 import com.example.ohthmhyh.listeners.HabitUpdateListener;
 import com.example.ohthmhyh.watchers.LengthTextWatcher;
 
@@ -106,8 +101,8 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
                 scheduleErrorTextView
         ));
 
-        // Set the views to display the Habit that was given to this activity (if there was one at
-        // all).
+        // Set the views to display the Habit that was given to this activity (if there was a Habit
+        // passed to this Activity at all).
         Intent intent = getIntent();
         if (intent.hasExtra(ARG_HABIT)) {
             Habit habit = (Habit) intent.getSerializableExtra(ARG_HABIT);

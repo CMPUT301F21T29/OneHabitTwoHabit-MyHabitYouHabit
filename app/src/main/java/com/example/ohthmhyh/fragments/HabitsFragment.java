@@ -1,9 +1,6 @@
 package com.example.ohthmhyh.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,15 +13,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.example.ohthmhyh.CustomAdapterHF;
 import com.example.ohthmhyh.activities.UpdateHabitActivity;
@@ -33,14 +25,6 @@ import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.TouchingHandlingHF;
-import com.example.ohthmhyh.listeners.DatePickerListener;
-import com.example.ohthmhyh.listeners.HabitAddListener;
-import com.example.ohthmhyh.listeners.HabitEditListener;
-import com.example.ohthmhyh.watchers.LengthTextWatcher;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +35,6 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
 
     private int chosenHabitIndex = -1;
     private ActivityResultLauncher<Intent> resultLauncher;
-    private TextView habitDateET;
     private HabitList habitList;
     private CustomAdapterHF adapter;
     private DatabaseAdapter databaseAdapter;
@@ -77,8 +60,6 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
 
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
 
-//        HabitsFragment thisHabitsFragment = this;
-
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
 
         // Get the HabitList from the database.
@@ -102,6 +83,7 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
         Button addButton = view.findViewById(R.id.add_habit);
         addButton.setOnClickListener(v -> goToUpdateHabitActivity(-1));
 
+        // Gets the result of the UpdateHabitActivity (the modified/new Habit).
         resultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
