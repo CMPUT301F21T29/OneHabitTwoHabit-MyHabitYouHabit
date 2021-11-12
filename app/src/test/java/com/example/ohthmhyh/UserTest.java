@@ -70,29 +70,13 @@ public class UserTest {
         u.setName(name);
         u.setBio(bio);
         u.setFriendList(friendList);
-        u.setUPIDCounter(UPIDCounter);
 
         //make sure the newly set values are what they're supposed to be using the getters
         assertEquals(username, u.getUsername());
         assertEquals(name, u.getName());
         assertEquals(bio, u.getBio());
         assertEquals(friendList, u.getFriendList());
-        assertEquals(UPIDCounter, u.getUPIDCounter());
     }
 
-
-    /**
-     * Test the nextUPID() method in the user class
-     * @throws Exception
-     */
-    @Test
-    public void testNextUPID(){
-        int UPIDCounter = 242332;
-        User u = new User(); //create user
-
-        u.setUPIDCounter(UPIDCounter);
-        assertEquals(UPIDCounter, u.getUPIDCounter());
-        assertEquals(UPIDCounter, u.nextUPID());
-    }
 }
 

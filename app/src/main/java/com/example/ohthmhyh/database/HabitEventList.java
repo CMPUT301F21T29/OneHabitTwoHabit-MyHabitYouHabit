@@ -16,7 +16,7 @@ public class HabitEventList {
 
     public HabitEventList() {
         habitEventList = new ArrayList<>();
-        UPIDCounter = 0;
+        UPIDCounter = 1; // start at 1. ID 0 is the PFP
     }
 
     /**
