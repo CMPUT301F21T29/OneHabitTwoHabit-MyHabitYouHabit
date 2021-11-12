@@ -1,6 +1,6 @@
 package com.example.ohthmhyh;
 
-public class Constants {
+public class TestConstants {
     // Email, username, and password of a user that should always exist in the database before each
     // test. The credentials of this user should not be used by any actual user using this app.
     public final static String EXISTING_USER_EMAIL = "cjjans@ualberta.ca";
