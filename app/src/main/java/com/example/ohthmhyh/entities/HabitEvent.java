@@ -51,7 +51,6 @@ public class HabitEvent {
      * @param latitude The latitude where the event took place
      * @param longitude The longitude where the event took place
      * @param BitmapPic A photo attached to the habit event post
-     * @param flag A status flag regarding editing
      * @param UPID The id of the picture for this habit event
      */
     public HabitEvent(
