@@ -111,7 +111,7 @@ public class User {
      */
     public void sendFriendRequest(String username){
         // make sure we aren't sending a friend request to ourself
-        if(username == this.username){
+        if(username.equals(this.username)){
             return;
         }
 
@@ -120,15 +120,19 @@ public class User {
             @Override
             public void onUIDCallback(String UID) {
                 if(UID != null){
+                    //prevent sending friend requests to existing friends.
+                    if(friendList.contains(UID)){
+                        return;
+                    }
 
                     // now pull the user we want to send the friend request to
                     dba.pullUser(UID, new DatabaseAdapter.ProfileCallback() {
                         @Override
                         public void onProfileCallback(User otherUser) {
-                            // add this users UID to the other users friend requests
                             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                             // prevent sending multiple requests to the same person
                             if(!otherUser.getFriendRequests().contains(currentUser.getUid())) {
+                                // add this users UID to the other users friend requests
                                 otherUser.getFriendRequests().add(currentUser.getUid());
                             }
                             // push the other user back to the database
