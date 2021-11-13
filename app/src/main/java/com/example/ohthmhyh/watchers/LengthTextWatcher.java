@@ -10,9 +10,9 @@ import android.widget.EditText;
  */
 public class LengthTextWatcher implements TextWatcher {
 
-    private EditText editText;
-    private int minLength;
-    private int maxLength;
+    protected EditText editText;
+    protected int minLength;
+    protected int maxLength;
 
     /**
      * Create a new instance of the LengthTextWatcher to act on an EditText

@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -31,6 +33,7 @@ import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.listeners.HabitEventUpdateListener;
+import com.example.ohthmhyh.watchers.HabitEventCommentTextWatcher;
 import com.example.ohthmhyh.watchers.LengthTextWatcher;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -48,8 +51,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     public static final String ARG_HABIT_EVENT = "habit_event_arg";
     public static final String ARG_HABIT_EVENT_UPID = "habit_event_upid_arg";
     public static final String ARG_HABIT_ARRAYLIST = "habit_arraylist_arg";
-    public static final String PROVIDER_LOCATION_UNSET = "unset_location_provider";
-    public static final String PROVIDER_LOCATION_SET = "set_location_provider";
 
     private int UPID;
     private ArrayList<Habit> habitArrayList;
@@ -59,7 +60,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private Button doneButton;
     private EditText commentEditText;
     private ImageView eventImageView;
-    private Location location;
+    private HabitEvent habitEvent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,10 +82,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             habitNameArray[i] = habitArrayList.get(i).getName();
         }
 
-        // Initialize the location holding the currently selected location with a provider
-        // indicating that the location has not been set.
-        location = new Location(PROVIDER_LOCATION_UNSET);
-
         // Get references to views on the screen.
         habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
         locationTextView = findViewById(R.id.Add_Location_text);
@@ -92,6 +89,16 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         doneButton = findViewById(R.id.button2);
         commentEditText = findViewById(R.id.Get_a_comment_CE);
         eventImageView = findViewById(R.id.pickImage);
+
+        if (intent.hasExtra(ARG_HABIT_EVENT)) {
+            // A HabitEvent was passed. Set the views to display this HabitEvent.
+            habitEvent = (HabitEvent) intent.getSerializableExtra(ARG_HABIT_EVENT);
+            showHabitEvent(habitEvent);
+        } else {
+            // No HabitEvent was passed, create an empty HabitEvent to use and set its UPID.
+            habitEvent = new HabitEvent();
+            habitEvent.setUPID(UPID);
+        }
 
         // TODO: Replace with actual Habits.
         // Set up the drop-down habit list element.
@@ -104,37 +111,25 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 habitListArrayAdapter.getItem(0).toString(), false);
         habitListAutoCompleteTextView.setListSelection(0);
         habitListAutoCompleteTextView.setAdapter(habitListArrayAdapter);
+        habitListAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                habitEvent.setHabitUHID(habitArrayList.get(i).getUHID());
+            }
+        });
 
         // TODO: Make some (or all) of these literals into constants.
         // Add extra functionality to these views.
         locationButton.setOnClickListener(view -> setHabitEventLocation());
-        doneButton.setOnClickListener(new HabitEventUpdateListener(
-                this,
-                habitArrayList,
-                commentEditText,
-                habitListAutoCompleteTextView,
-                eventImageView,
-                location,
-                UPID
-        ));
+        doneButton.setOnClickListener(new HabitEventUpdateListener(this, habitEvent));
         commentEditText.addTextChangedListener(
-                new LengthTextWatcher(commentEditText, 0, 20));
+                new HabitEventCommentTextWatcher(commentEditText, 0, 20, habitEvent));
         eventImageView.setOnClickListener(
                 view -> ImagePicker.with(this)
                         .crop()
                         .compress(1024).maxResultSize(1080, 1080)
                         .start()
         );
-
-        if (intent.hasExtra(ARG_HABIT_EVENT)) {
-            // A HabitEvent was passed. Set the views to display this HabitEvent.
-            HabitEvent habitEvent = (HabitEvent) intent.getSerializableExtra(ARG_HABIT_EVENT);
-            showHabitEvent(habitEvent);
-        } else {
-            // No HabitEvent was passed. Set a default image for the HabitEvent.
-            eventImageView.setImageBitmap(
-                    BitmapFactory.decodeResource(getResources(), R.drawable.lol_pic));
-        }
     }
 
     /**
@@ -184,6 +179,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             Uri uri=data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                habitEvent.setBitmapPic(bitmap);
                 eventImageView.setImageBitmap(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -217,12 +213,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                             List<Address> addressList = geocoder.getFromLocation(
                                     selectedLocation.getLatitude(), selectedLocation.getLongitude(), 1);
 
-                            // Set the latitude and longitude of the location the HabitEvent will
-                            // have, and indicate that the location has been set by changing the
-                            // provider.
-                            location.setProvider(PROVIDER_LOCATION_SET);
-                            location.setLatitude(selectedLocation.getLatitude());
-                            location.setLongitude(selectedLocation.getLongitude());
+                            habitEvent.setLatitude(selectedLocation.getLatitude());
+                            habitEvent.setLongitude(selectedLocation.getLongitude());
 
                             locationTextView.setText(
                                     "lat: " + selectedLocation.getLatitude()
