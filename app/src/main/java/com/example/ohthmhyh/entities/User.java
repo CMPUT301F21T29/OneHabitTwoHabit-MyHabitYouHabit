@@ -110,6 +110,11 @@ public class User {
      * username is valid first!
      */
     public void sendFriendRequest(String username){
+        // make sure we aren't sending a friend request to ourself
+        if(username == this.username){
+            return;
+        }
+
         // get the UID of the username to send the request from
         dba.pullUIDFromUsername(username, new DatabaseAdapter.UIDCallback() {
             @Override
@@ -144,6 +149,9 @@ public class User {
     public void acceptFriendRequest(int index){
         // get the user who sent the friend request
         String UID = friendRequests.get(index);
+        // remove the request from the current user
+        friendRequests.remove(index);
+        dba.pushUser(this);
         dba.pullUser(UID, new DatabaseAdapter.ProfileCallback() {
             @Override
             public void onProfileCallback(User user) {
@@ -151,9 +159,6 @@ public class User {
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                 user.getFriendList().add(currentUser.getUid());
                 dba.pushUser(UID, user);
-
-                // remove the request from the current user
-                friendRequests.remove(index);
             }
         });
     }
