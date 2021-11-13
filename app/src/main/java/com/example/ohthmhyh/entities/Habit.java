@@ -1,6 +1,7 @@
 package com.example.ohthmhyh.entities;
 
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Random;
@@ -10,7 +11,7 @@ import java.util.Random;
  * to a habit (name, description, start date, etc.). Make an instance of this class to
  * represent a habit.
  */
-public class Habit {
+public class Habit implements Serializable {
 
     // define days with an enum to avoid mapping days to numbers
     public enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};

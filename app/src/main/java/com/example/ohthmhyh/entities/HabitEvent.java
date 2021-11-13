@@ -15,6 +15,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.Serializable;
 
 /**
  * The habitEvent class is used to define a habit event.
@@ -23,7 +24,7 @@ import java.io.ByteArrayOutputStream;
  * want to brush teeth every day, and at 9pm you actually brushed your teeth, you would create a habit event.
  * It is analogous to a post on a social media platform.
  */
-public class HabitEvent {
+public class HabitEvent implements Serializable {
     private int habitUHID;
     private String comment;
     private Double latitude, longitude;
