@@ -11,7 +11,7 @@ import com.example.ohthmhyh.database.DatabaseAdapter;
 
 import java.util.ArrayList;
 
-public class FriendsListAdaptor extends ArrayAdapter<String> {
+public class FriendsListAdapter extends ArrayAdapter<String> {
 
     // resource ID of the layout to use as the listView elements
     private int resource;
@@ -24,7 +24,7 @@ public class FriendsListAdaptor extends ArrayAdapter<String> {
      * @param resource the resource ID of the view to put data into
      * @param friendRequests the arrayList of friends
      */
-    public FriendsListAdaptor(Context context, int resource, ArrayList<String> friendRequests) {
+    public FriendsListAdapter(Context context, int resource, ArrayList<String> friendRequests) {
         super(context, resource, friendRequests);
         this.resource = resource;
         this.context = context;

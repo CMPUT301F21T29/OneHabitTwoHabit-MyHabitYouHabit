@@ -8,23 +8,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ohthmhyh.FriendRequestListAdaptor;
-import com.example.ohthmhyh.FriendsListAdaptor;
+import com.example.ohthmhyh.FriendRequestListAdapter;
+import com.example.ohthmhyh.FriendsListAdapter;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.User;
 import com.example.ohthmhyh.activities.EditProfileActivity;
 import com.example.ohthmhyh.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.ArrayList;
 
 /**
  * This fragment is used to show the user's data
@@ -117,31 +114,31 @@ public class UserFragment extends Fragment {
 
         // fill the friends list view
         friendsLV.setEmptyView(emptyFriendsTV);
-        FriendsListAdaptor friendsAdaptor = new FriendsListAdaptor(getActivity(),
+        FriendsListAdapter friendsAdapter = new FriendsListAdapter(getActivity(),
                 R.layout.item_friend, user.getFriendList());
-        friendsLV.setAdapter(friendsAdaptor);
+        friendsLV.setAdapter(friendsAdapter);
 
         // fill the friend request list view
         requestLV.setEmptyView(emptyRequestTV);
-        FriendRequestListAdaptor FRAdaptor = new FriendRequestListAdaptor(getActivity(),
+        FriendRequestListAdapter FRAdapter = new FriendRequestListAdapter(getActivity(),
                 R.layout.item_friend_request, user.getFriendRequests());
-        FRAdaptor.setCustomButtonListener(new FriendRequestListAdaptor.buttonListener() {
+        FRAdapter.setCustomButtonListener(new FriendRequestListAdapter.buttonListener() {
             @Override
             public void onAcceptClickListener(int position) {
                 Toast.makeText(getContext(), "ACCEPT "+position, Toast.LENGTH_SHORT).show();
                 user.acceptFriendRequest(position);
-                friendsAdaptor.notifyDataSetChanged();
-                FRAdaptor.notifyDataSetChanged();
+                friendsAdapter.notifyDataSetChanged();
+                FRAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onDeclineClickListener(int position) {
                 Toast.makeText(getContext(), "DECLINE "+position, Toast.LENGTH_SHORT).show();
                 user.denyFriendRequest(position);
-                FRAdaptor.notifyDataSetChanged();
+                FRAdapter.notifyDataSetChanged();
             }
         });
-        requestLV.setAdapter(FRAdaptor);
+        requestLV.setAdapter(FRAdapter);
 
         // send friend request when the button is pressed
         searchBtn.setOnClickListener(new View.OnClickListener() {

@@ -13,7 +13,7 @@ import com.example.ohthmhyh.database.DatabaseAdapter;
 
 import java.util.ArrayList;
 
-public class FriendRequestListAdaptor extends ArrayAdapter<String> {
+public class FriendRequestListAdapter extends ArrayAdapter<String> {
 
     /**
      * Used when setting the functions that are called when buttons in the listView are pressed
@@ -45,7 +45,7 @@ public class FriendRequestListAdaptor extends ArrayAdapter<String> {
      * @param resource the resource ID of the view to put data into
      * @param friendRequests the arrayList of friend requests
      */
-    public FriendRequestListAdaptor(Context context, int resource, ArrayList<String> friendRequests) {
+    public FriendRequestListAdapter(Context context, int resource, ArrayList<String> friendRequests) {
         super(context, resource, friendRequests);
         this.resource = resource;
         this.context = context;
