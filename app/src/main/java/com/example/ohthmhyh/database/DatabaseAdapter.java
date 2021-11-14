@@ -32,6 +32,20 @@ public class DatabaseAdapter{
     }
 
     /**
+     * A callback used when turning a UID into a username.
+     */
+    public interface UsernameCallback{
+        void onUsernameCallback(String username);
+    }
+
+    /**
+     * A callback used when turning a username into a UID
+     */
+    public interface UIDCallback{
+        void onUIDCallback(String UID);
+    }
+
+    /**
      * A callback used when retrieving a users habits from the database.
      */
     public interface HabitCallback{
@@ -97,14 +111,64 @@ public class DatabaseAdapter{
 
 
     /**
+     * Call this method to get the UID associated with a username
+     * @param username The username to get the UID for
+     * @param callback The callback which will provide the UID info
+     */
+    public void pullUIDFromUsername(String username, DatabaseAdapter.UIDCallback callback){
+        Query profile = db.collection("Profiles").whereEqualTo("username", username);
+
+        profile.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(!queryDocumentSnapshots.isEmpty()){
+                    callback.onUIDCallback(queryDocumentSnapshots.iterator().next().getId());
+                }
+                else{
+                    callback.onUIDCallback(null);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * Call this method to get the username associated with a UID
+     * @param UID The UID to get the username for
+     * @param callback The callback which will provide the username info
+     */
+    public void pullUsernameFromUID(String UID, DatabaseAdapter.UsernameCallback callback){
+        DocumentReference profile = db.collection("Profiles").document(UID);
+
+        profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                User user = documentSnapshot.toObject(User.class);
+                callback.onUsernameCallback(user.getUsername());
+            }
+        });
+    }
+
+
+    /**
      * Call with a user profile to update it in the database. This should be called whenever a data
      * member is changed in a user profile.
      * @param user The user profile to push to / update in the database
      */
     public void pushUser(User user){
-        db.collection("Profiles").document(UID).set(user);
+        pushUser(UID, user);
     }
 
+
+    /**
+     * Call with a user profile to update it in the database. This should be called whenever a data
+     * member is changed in a user profile.
+     * @param user The user profile to push to / update in the database
+     * @param UID The UID of the user profile being pushed
+     */
+    public void pushUser(String UID, User user){
+        db.collection("Profiles").document(UID).set(user);
+    }
 
     /**
      * Call this method to push the users habits into the database
@@ -129,6 +193,16 @@ public class DatabaseAdapter{
      * @param callback A callback which will be used to update the user profile
      */
     public void pullUser(DatabaseAdapter.ProfileCallback callback){
+        pullUser(UID, callback);
+    }
+
+
+    /**
+     * Call this when a user logs-on in order to retrieve their user profile from the database
+     * @param UID the UID of the user to pull
+     * @param callback A callback which will be used to update the user profile
+     */
+    public void pullUser(String UID, DatabaseAdapter.ProfileCallback callback){
         DocumentReference profile = db.collection("Profiles").document(UID);
         profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -162,23 +236,12 @@ public class DatabaseAdapter{
      * @param callback A callback which is called when the query completes
      */
     public void pullHabitEvents(HabitEventCallback callback){
-        //pullHabitEvents(UID, callback);
-
-        DocumentReference habitEvents = db.collection("HabitEvents").document(UID);
-        // get the users habits
-        habitEvents.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                HabitEventList HEList = documentSnapshot.toObject(HabitEventList.class);
-                callback.onHabitEventCallback(HEList);
-            }
-        });
-
+        pullHabitEvents(UID, callback);
     }
 
 
     /**
-     * Call this method to pull another users habit events from the database
+     * Call this method to pull another users habit events from the database.
      * @param UID The UID for which to pull the habits of
      * @param callback A callback which is called when the query completes
      */
