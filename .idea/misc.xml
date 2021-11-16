@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.39828860197361105" />
         <entry key="app/src/main/res/layout/alert_addhabit.xml" value="0.19998870390299928" />
+        <entry key="app/src/main/res/layout/create_habit_event.xml" value="0.5593407288693026" />
         <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.20052083333333334" />
         <entry key="app/src/main/res/layout/fragment_habit_events.xml" value="0.20052083333333334" />
         <entry key="app/src/main/res/layout/fragment_habits.xml" value="0.20052083333333334" />
