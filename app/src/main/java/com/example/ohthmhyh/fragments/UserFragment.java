@@ -9,76 +9,57 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.ohthmhyh.FriendRequestListAdapter;
+import com.example.ohthmhyh.FriendsListAdapter;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.User;
 import com.example.ohthmhyh.activities.EditProfileActivity;
 import com.example.ohthmhyh.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link UserFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * This fragment is used to show the user's data
  */
 public class UserFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private FirebaseUser user;
-    private User user_info;
-
+    /**
+     * An empty constructor required for fragments
+     */
     public UserFragment() {
         // Required empty public constructor
     }
 
+
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserFragment.
+     * Runs when the fragment view is created.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
      */
-    // TODO: Rename and change types and number of parameters
-    public static UserFragment newInstance(String param1, String param2) {
-        UserFragment fragment = new UserFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Get the user that is currently signed in.
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        user_info = new User();
-
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
+        // set up the edit profile button
+        Button editProfileButton = view.findViewById(R.id.user_editprofile);
+        editProfileButton.setOnClickListener((v) -> {
+            Intent editProfile = new Intent(getActivity(), EditProfileActivity.class);
+            //TODO: no idea why this is here. Should probably be removed.
+            editProfile.putExtra("NAME", "change me - userFragment.java");
+            getActivity().startActivity(editProfile);
+        });
+
+        // set up the sign out button
         Button signOutButton = view.findViewById(R.id.button_sign_out);
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,33 +70,103 @@ public class UserFragment extends Fragment {
             }
         });
 
-        // Display the user's email.
-        //TextView userTextView = view.findViewById(R.id.text_view_user);
-        //userTextView.setText(user.getEmail());
-
-        // Display the user's name
-        TextView userNameTextView = view.findViewById(R.id.user_name);
-        userNameTextView.setText(user.getDisplayName().length() > 0 ? user.getDisplayName() : "Breadfish");
-
-        // Display the user's username
-        TextView userUserNameTextView = view.findViewById(R.id.user_username);
-        userUserNameTextView.setText(user_info.getUsername());
-
-        // Display the user's biography.
-        //TextView userBioTextView = view.findViewById(R.id.user_biography);
-        //userBioTextView.setText(user.);
-
-        Button editProfileButton = view.findViewById(R.id.user_editprofile);
-        editProfileButton.setOnClickListener((v) -> {
-            Intent editProfile = new Intent(getActivity(), EditProfileActivity.class);
-            editProfile.putExtra("NAME", user.getDisplayName());
-            //editProfile.putExtra("USERNAME", user.get)
-            getActivity().startActivity(editProfile);
+        // get the user data and put it into the proper views
+        DatabaseAdapter dba = new DatabaseAdapter();
+        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
+            @Override
+            public void onProfileCallback(User user) {
+                fillViews(view, user);
+            }
         });
-
 
         return view;
     }
+
+
+    /**
+     * Fills the views in the fragment that are dependent on the user object
+     * that is retrieved from the database.
+     * @param view The fragment view being filled
+     * @param user The user object used to populate the views
+     */
+    private void fillViews(View view, User user){
+
+         // Ian added this, idk if we need it. It currently doesn't work
+//        // Display the user's email.
+//        TextView userTextView = view.findViewById(R.id.text_view_user);
+//        userTextView.setText(user.getEmail());
+
+        // get the views
+        TextView usernameTV= view.findViewById(R.id.username_TV);
+        TextView userBioTV = view.findViewById(R.id.user_biography_TV);
+        ListView requestLV = view.findViewById(R.id.friend_request_LV);
+        TextView emptyRequestTV = view.findViewById(R.id.empty_request_list);
+        ListView friendsLV = view.findViewById(R.id.friends_LV);
+        TextView emptyFriendsTV = view.findViewById(R.id.empty_friend_list);
+        EditText searchFriendsET = view.findViewById(R.id.friend_Search_ET);
+        Button searchBtn = view.findViewById(R.id.send_request_btn);
+
+        // set the views
+        usernameTV.setText(user.getUsername());
+        userBioTV.setText(user.getBio());
+        emptyRequestTV.setText("Looks like you're all caught up!");
+        emptyFriendsTV.setText("You're not following anyone!");
+
+        // fill the friends list view
+        friendsLV.setEmptyView(emptyFriendsTV);
+        FriendsListAdapter friendsAdapter = new FriendsListAdapter(getActivity(),
+                R.layout.item_friend, user.getFriendList());
+        friendsLV.setAdapter(friendsAdapter);
+
+        // fill the friend request list view
+        requestLV.setEmptyView(emptyRequestTV);
+        FriendRequestListAdapter FRAdapter = new FriendRequestListAdapter(getActivity(),
+                R.layout.item_friend_request, user.getFriendRequests());
+        FRAdapter.setCustomButtonListener(new FriendRequestListAdapter.buttonListener() {
+            @Override
+            public void onAcceptClickListener(int position) {
+                Toast.makeText(getContext(), "ACCEPT "+position, Toast.LENGTH_SHORT).show();
+                user.acceptFriendRequest(position);
+                friendsAdapter.notifyDataSetChanged();
+                FRAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onDeclineClickListener(int position) {
+                Toast.makeText(getContext(), "DECLINE "+position, Toast.LENGTH_SHORT).show();
+                user.denyFriendRequest(position);
+                FRAdapter.notifyDataSetChanged();
+            }
+        });
+        requestLV.setAdapter(FRAdapter);
+
+        // send friend request when the button is pressed
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String username = searchFriendsET.getText().toString();
+                searchFriendsET.getText().clear();
+
+                // make sure the username is valid
+                DatabaseAdapter.checkUsernameExists(username,
+                        new DatabaseAdapter.UsernameCheckCallback() {
+                            @Override
+                            public void onUsernameCheckCallback(boolean usernameExists) {
+                                if(usernameExists){
+                                    // send the friend request
+                                    user.sendFriendRequest(username);
+                                    Toast.makeText(getContext(), "Friend request sent!", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Toast.makeText(getContext(), "User not found!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
+
+    }
+
 
     /**
      * Create an intent and start the login activity. (when sign out button pressed)
@@ -125,4 +176,6 @@ public class UserFragment extends Fragment {
         Intent loginActivityIntent = new Intent(getActivity(), LoginActivity.class);
         startActivity(loginActivityIntent);
     }
+
 }
+
