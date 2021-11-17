@@ -116,7 +116,7 @@ public class HabitEventsFragmentTest {
         assertTrue(solo.searchText("lat: 37.422065599999996Lon: -122.08408969999998"));
 
         // Create event
-        solo.clickOnView(solo.getView(R.id.button2));
+        solo.clickOnView(solo.getView(R.id.Create_edit_event_button));
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);

@@ -13,10 +13,12 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,8 +29,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.ohthmhyh.CustomAdapterHF;
+import com.example.ohthmhyh.TouchingHandlingHF;
 import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.database.HabitEventList;
@@ -41,6 +48,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,7 +60,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private Bitmap bitmap = null;
     private Habit habit = Habit.makeDummyHabit();  // This is temp
     private HabitEventList habitEventList;
+    private HabitList habitList;
     private DatabaseAdapter databaseAdapter;
+    ArrayList<String> NameArray=new ArrayList<>();
     private Location location = null;
     private int habitEventIndex;
 
@@ -59,20 +70,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private EditText commentEditText;
     private ImageView pictureImageView;
     private TextView locationTextView;
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Down here is for dropdown menu. Need to get the habit.
-        String[] habitList = {"Habit one", "Habit two", "Habit three"};
-        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(
-                this, R.layout.create_habit_habit_drop_down_menu, habitList);
-        habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
-        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
-    }
-
+    private Button editandCreateEventButton;
+    private Button locationButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +85,28 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 makeAndEdit();
             }
         });
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
+            @Override
+            public void onHabitCallback(HabitList hList) {
+                habitList = hList;
+            }
+        });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        // Down here is for dropdown menu. Need to get the habit.
+        NameArray = habitList.getStringNameArray();
+        NameArray.add("tet");
+        NameArray.add("bcb");
+        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(
+                this, R.layout.create_habit_habit_drop_down_menu, NameArray);
+        habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
+        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
+    }
     /**
      * Handle button presses in the top bar.
      * @param item The MenuItem that was selected.
@@ -126,9 +145,11 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         locationTextView = (TextView) findViewById(R.id.Add_Location_text);
         commentEditText = (EditText) findViewById(R.id.Get_a_comment_CE);
         pictureImageView = (ImageView) findViewById(R.id.pickImage);
-
+        editandCreateEventButton=(Button) findViewById(R.id.Create_edit_event_button);
+        locationButton=(Button) findViewById(R.id.Add_location_button);
         // Set attributes for the views in the Activity.
         commentEditText.addTextChangedListener(new LengthTextWatcher(commentEditText, 0, 20));
+        editandCreateEventButton.setText("Create New Habit");
         pictureImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,7 +165,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
 
         // Show the selected HabitEvent.
-        if (habitEventIndex >= 0) {
+        if (habitEventIndex >= 0) {//THIS IS THE EDIT AREA
             HabitEvent habitEvent = habitEventList.getHabitEvent(habitEventIndex);
 
             // Set the image picture.
@@ -154,7 +175,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                     pictureImageView.setImageBitmap(bitmap);
                 }
             });
-
+            editandCreateEventButton.setText("commit edit");
+            locationButton.setText("Update Location?");
             // Set the comment.
             commentEditText.setText(habitEvent.getComment());
 
@@ -163,15 +185,34 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 locationTextView.setText("");
                 location = null;
             } else {
-                locationTextView.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
+                Geocoder geocoder=new Geocoder(this, Locale.getDefault());
                 location = new Location("");
-                location.setLatitude(habitEvent.getLatitude());
-                location.setLongitude(habitEvent.getLongitude());
-            }
+                try {
+                    List<Address> addresses=geocoder.getFromLocation(habitEvent.getLatitude(),habitEvent.getLongitude(),1);
+                    locationTextView.setText(Html.fromHtml("<font color='#6200EEE'><b>Address: " +
+                            addresses.get(0).getLocality())+" " +addresses.get(0).getCountryName());
+                } catch (IOException e) {//Failed to get location from user
+                    e.printStackTrace();
+                    locationTextView.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
 
-            // TODO: Set the habit associated with this HabitEvent.
+                }
+            }
+            //Changes the name of the habit to be in pos zero when editing
+            //for(int i=0;i<habitList.size();i++){
+              //  if (habitList.getHabit(i).getUHID()==(habitEvent.getHabitUHID())){
+                //    NameArray.remove(i);
+                  //  NameArray.add(0,habitList.getHabit(i).getName());
+                    //break;}
+            NameArray.remove("tet");
+            NameArray.remove("bcb");
+            NameArray.add("bcb");
+            NameArray.add("tet");
+            ArrayAdapter arrayAdapter = new ArrayAdapter(
+                        this, R.layout.create_habit_habit_drop_down_menu, NameArray);
+            habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
+          //}
         }
-    }
+    }//THIS IS THE END OF EDIT AREA
 
     /**
      * Call this method to get the camera from the user
@@ -248,11 +289,11 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                         location.setLatitude(addressList.get(0).getLatitude());
                         location.setLongitude(addressList.get(0).getLongitude());
 
-                        locationTextView.setText(
-                                "lat: " + location.getLatitude()
-                                        + "Lon: "+ location.getLongitude());
+                        locationTextView.setText(Html.fromHtml("<font color='#6200EEE'><b>Address: " +
+                                addressList.get(0).getLocality())+" " +addressList.get(0).getCountryName());
                     } catch (IOException e) {
                         e.printStackTrace();
+                        locationTextView.setText("Failed to find your Location!");
                     }
                 }
             }
@@ -284,7 +325,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lol_pic);
         }
 
-        // TODO: Associate the HabitEvent with an actual Habit.
+        // TODO: Associate the HabitEvent with an actual Habit
         HabitEvent habitEvent;
         if (location == null) {
             habitEvent = new HabitEvent(

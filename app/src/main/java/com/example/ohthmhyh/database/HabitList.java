@@ -124,4 +124,13 @@ public class HabitList{
         return UHIDCounter++;
     }
 
+    public ArrayList<String> getStringNameArray() {
+        ArrayList<String> NameArray=new ArrayList<>();
+
+        for (int i=0;i<habitList.size();i++){
+            NameArray.add((habitList.get(i).getName()));
+        }
+
+        return NameArray;
+    }
 }
