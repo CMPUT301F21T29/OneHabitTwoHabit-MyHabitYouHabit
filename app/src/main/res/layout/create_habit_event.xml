@@ -44,7 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="192dp"
             android:layout_marginTop="4dp"
-            android:src="@drawable/ic_launcher_background" />
+            android:src="@drawable/ic_baseline_camera_alt_24"
+            android:background="@drawable/ic_launcher_background" />
 
         <Button
             android:id="@+id/Add_location_button"

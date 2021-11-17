@@ -98,7 +98,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         super.onResume();
 
         // Down here is for dropdown menu. Need to get the habit.
-        NameArray = habitList.getStringNameArray();
+        //NameArray = habitList.getStringNameArray();
         NameArray.add("tet");
         NameArray.add("bcb");
         habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
