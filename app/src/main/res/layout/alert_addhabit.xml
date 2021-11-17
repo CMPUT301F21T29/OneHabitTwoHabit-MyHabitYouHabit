@@ -170,16 +170,6 @@
                 android:textSize="12sp" />
 
             <ToggleButton
-                android:id="@+id/sun"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Sun"
-                android:textOn="Sun"
-                android:textSize="12sp" />
-
-            <ToggleButton
                 android:id="@+id/sat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -187,6 +177,16 @@
                 android:minWidth="40dip"
                 android:textOff="Sat"
                 android:textOn="Sat"
+                android:textSize="12sp" />
+
+            <ToggleButton
+                android:id="@+id/sun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="40dip"
+                android:textOff="Sun"
+                android:textOn="Sun"
                 android:textSize="12sp" />
 
         </LinearLayout>
