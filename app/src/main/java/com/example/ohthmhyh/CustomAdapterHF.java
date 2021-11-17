@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.ohthmhyh.database.HabitList;
+import com.example.ohthmhyh.entities.Habit;
+
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 
 /**
  * A simple RecycleviewAdapter for the Habit list.
@@ -106,6 +112,15 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         TextView description;
         ProgressBar pb;
 
+        //days of week
+        TextView mon;
+        TextView tues;
+        TextView wed;
+        TextView thurs;
+        TextView fri;
+        TextView sat;
+        TextView sun;
+
         GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
         OntouchListener ontouchListener;
@@ -114,6 +129,17 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             name = itemView.findViewById(R.id.name_rv);
             description = itemView.findViewById(R.id.habit_description_rv);
             pb = (ProgressBar) itemView.findViewById(R.id.pb);
+
+            //days of week
+            mon = itemView.findViewById(R.id.mon);
+            tues = itemView.findViewById(R.id.tues);
+            wed = itemView.findViewById(R.id.wed);
+            thurs = itemView.findViewById(R.id.thurs);
+            fri = itemView.findViewById(R.id.fri);
+            sat = itemView.findViewById(R.id.sat);
+            sun = itemView.findViewById(R.id.sun);
+
+
             //This is the name of the contrant layout in display HE list
             parentLayout = itemView.findViewById(R.id.rv_cl);
 
@@ -177,6 +203,11 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         void onItemClicked(int position);
     }
 
+    /**
+     * Contains the logic to set the progress bar, both in magnitude and colour
+     * @param holder the viewholder holding objects
+     * @param position the position of the habit in the list that we are using
+     */
     public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //@author Matt
         double progress = habitList.getHabit(position).getAdherance();
@@ -203,10 +234,77 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         }
     }
 
+    /**
+     * contains the logic to bold and set text colour of applicable days in the week
+     * @param holder the viewholder holding objects
+     * @param position the position of the habit in the list that we are using
+     */
     public void setDays(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //@author Matt
+        //Bold/change colour of the days for which a habit is applicable
+
+        ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
+
+        float minOpacity = 0.3f;
+
+        //set all to default params
+        holder.mon.setTypeface(null, Typeface.NORMAL);
+        holder.tues.setTypeface(null, Typeface.NORMAL);
+        holder.wed.setTypeface(null, Typeface.NORMAL);
+        holder.thurs.setTypeface(null, Typeface.NORMAL);
+        holder.fri.setTypeface(null, Typeface.NORMAL);
+        holder.sat.setTypeface(null, Typeface.NORMAL);
+        holder.sun.setTypeface(null, Typeface.NORMAL);
+        holder.mon.setAlpha(minOpacity);
+        holder.tues.setAlpha(minOpacity);
+        holder.wed.setAlpha(minOpacity);
+        holder.thurs.setAlpha(minOpacity);
+        holder.fri.setAlpha(minOpacity);
+        holder.sat.setAlpha(minOpacity);
+        holder.sun.setAlpha(minOpacity);
 
 
+        if(days.contains(Habit.Days.Mon)){
+            // bold / change colour
+            holder.mon.setTypeface(null, Typeface.BOLD);
+            holder.mon.setAlpha(1f);
+        }
+
+        if(days.contains(Habit.Days.Tue)){
+            // bold / change colour
+            holder.tues.setTypeface(null, Typeface.BOLD);
+            holder.tues.setAlpha(1f);
+        }
+
+        if(days.contains(Habit.Days.Wed)){
+            // bold / change colour
+            holder.wed.setTypeface(null, Typeface.BOLD);
+            holder.wed.setAlpha(1f);
+        }
+
+        if(days.contains(Habit.Days.Thu)){
+            // bold / change colour
+            holder.thurs.setTypeface(null, Typeface.BOLD);
+            holder.thurs.setAlpha(1f);
+        }
+
+        if(days.contains(Habit.Days.Fri)){
+            // bold / change colour
+            holder.fri.setTypeface(null, Typeface.BOLD);
+            holder.fri.setAlpha(1f);
+        }
+
+        if(days.contains(Habit.Days.Sat)){
+            // bold / change colour
+            holder.sat.setTypeface(null, Typeface.BOLD);
+            holder.sat.setAlpha(1f);
+        }
+
+        if(days.contains(Habit.Days.Sun)){
+            // bold / change colour
+            holder.sun.setTypeface(null, Typeface.BOLD);
+            holder.sun.setAlpha(1f);
+        }
     }
 
 }
