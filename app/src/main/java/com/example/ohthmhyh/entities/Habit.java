@@ -22,6 +22,7 @@ public class Habit implements Serializable {
     private long startDate;
     private ArrayList<Days> schedule = new ArrayList<Days>();
     private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
+    private ArrayList<Boolean> adheranceTracker = new ArrayList<>();
 
 
     /**
@@ -268,6 +269,40 @@ public class Habit implements Serializable {
                 ", schedule=" + schedule +
                 '}';
     }
-    
+
+    /**
+     * Resets the adherance tracker by deleting all logged events (deletes all records of this habit being followed / not followed)
+     */
+    public void resetAdherance() {
+        adheranceTracker = new ArrayList<Boolean>();
+    }
+
+
+    /**
+     * Logs either a true / false. If the user followed a habit in a given day, we log a true. If not, we log a false.
+     * @param val the value to log
+     */
+    public void logAdherance(Boolean val) {
+        adheranceTracker.add(val);
+    }
+
+    /**
+     * Calculate and return the % adherance for the given habit
+     * @return the % adherance to this habit
+     */
+    public double getAdherance() {
+        if (adheranceTracker.size() == 0) {return 0;}
+
+        double numTrue = 0;
+
+        for (int i = 0; i < adheranceTracker.size(); i++) {
+            if (adheranceTracker.get(i)) {numTrue++;}
+        }
+
+        if (numTrue == 0) {return 0;}
+
+        return (numTrue / (adheranceTracker.size())*100);
+
+    }
 }
 

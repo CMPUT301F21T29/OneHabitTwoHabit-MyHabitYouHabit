@@ -120,6 +120,45 @@ public class HabitUnitTest {
         assertTrue(h.getIsPrivate());
     }
 
+
+    @Test
+    public void test_adherance () {
+        //test initialization
+        Habit h = new Habit();
+        assertEquals(0, h.getAdherance());
+
+        //test itegers
+        h.logAdherance(true);
+        h.logAdherance(true);
+        h.logAdherance(false);
+        h.logAdherance(false);
+        assertEquals(50, h.getAdherance());
+
+        //test resetting
+        h.resetAdherance();
+        assertEquals(0, h.getAdherance());
+
+        //test for doubles
+        h.logAdherance(true);
+        h.logAdherance(true);
+        h.logAdherance(false);
+        h.logAdherance(false);
+        h.logAdherance(false);
+        h.logAdherance(false);
+        h.logAdherance(false);
+
+
+        double t1 = 2;
+        double t2 = 7;
+        assertEquals(t1/t2*100, h.getAdherance());
+
+
+
+
+
+
+    }
+
 }
 
 
