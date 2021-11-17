@@ -29,7 +29,7 @@ public class UserDatabaseTests {
     @BeforeClass
     public static void setUp() throws Exception {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL, Constants.EXISTING_USER_PASSWORD);
+        mAuth.signInWithEmailAndPassword(TestConstants.EXISTING_USER_EMAIL, TestConstants.EXISTING_USER_PASSWORD);
         Thread.sleep(10000);  // Wait for sign in to occur.
     }
 
@@ -42,18 +42,18 @@ public class UserDatabaseTests {
     public void TestSendFriendRequest_1() throws Exception{
         // push users to the DB
         dba = new DatabaseAdapter();
-        User user1 = new User(Constants.EXISTING_USER_USERNAME);
-        User user2 = new User(Constants.EXISTING_USER_USERNAME2);
+        User user1 = new User(TestConstants.EXISTING_USER_USERNAME);
+        User user2 = new User(TestConstants.EXISTING_USER_USERNAME2);
         dba.pushUser(user1);
         dba.pushUser("UID2", user2);
 
         // send a friend request from user 1 to user 2
-        user1.sendFriendRequest(Constants.EXISTING_USER_USERNAME2);
+        user1.sendFriendRequest(TestConstants.EXISTING_USER_USERNAME2);
         Thread.sleep(2000);  // Wait for push to finish.
 
         // make sure that user2 got the friend request.
         // get the UID of user2
-        dba.pullUIDFromUsername(Constants.EXISTING_USER_USERNAME2,
+        dba.pullUIDFromUsername(TestConstants.EXISTING_USER_USERNAME2,
             new DatabaseAdapter.UIDCallback() {
                 @Override
                 public void onUIDCallback(String UID) {
@@ -78,23 +78,23 @@ public class UserDatabaseTests {
     public void TestAcceptFriendRequest_1() throws Exception{
         // push users to the DB
         dba = new DatabaseAdapter();
-        User user1 = new User(Constants.EXISTING_USER_USERNAME);
-        User user2 = new User(Constants.EXISTING_USER_USERNAME2);
+        User user1 = new User(TestConstants.EXISTING_USER_USERNAME);
+        User user2 = new User(TestConstants.EXISTING_USER_USERNAME2);
         dba.pushUser(user1);
         dba.pushUser("0daedC91Z0dGFwSvNIZoQLqmOlq2", user2); // nasty string is user2's UID
 
         // send a friend request from user 1 to user 2
-        user1.sendFriendRequest(Constants.EXISTING_USER_USERNAME2);
+        user1.sendFriendRequest(TestConstants.EXISTING_USER_USERNAME2);
         Thread.sleep(2000);  // Wait for push to finish.
 
         // now user 2 accepts the friend request. To do this, sign in as user 2
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
-        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL2, Constants.EXISTING_USER_PASSWORD2);
+        mAuth.signInWithEmailAndPassword(TestConstants.EXISTING_USER_EMAIL2, TestConstants.EXISTING_USER_PASSWORD2);
         Thread.sleep(5000);  // Wait for sign in to occur.
 
         // get the UID of user2
-        dba.pullUIDFromUsername(Constants.EXISTING_USER_USERNAME2,
+        dba.pullUIDFromUsername(TestConstants.EXISTING_USER_USERNAME2,
             new DatabaseAdapter.UIDCallback() {
                 @Override
                 public void onUIDCallback(String UID) {

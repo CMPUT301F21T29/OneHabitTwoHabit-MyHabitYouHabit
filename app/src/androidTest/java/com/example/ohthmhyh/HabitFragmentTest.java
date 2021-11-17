@@ -34,7 +34,7 @@ public class HabitFragmentTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL, Constants.EXISTING_USER_PASSWORD);
+        mAuth.signInWithEmailAndPassword(TestConstants.EXISTING_USER_EMAIL, TestConstants.EXISTING_USER_PASSWORD);
         Thread.sleep(10000);  // Wait for sign in to occur.
     }
 
@@ -64,14 +64,13 @@ public class HabitFragmentTest {
      * @throws Exception
      */
     @Test
-    public void testAddHabitDialogShowsUp() throws Exception {
+    public void testUpdateHabitActivityShowsUp() throws Exception {
         solo.clickOnButton("Add a Habit");
         assertTrue(solo.searchText("Enter a Habit"));
-        assertTrue(solo.searchText("Enter descriptions"));
+        assertTrue(solo.searchText("Enter description"));
         assertTrue(solo.searchText("Enter a date"));
         assertTrue(solo.searchText("This habit is"));
         assertTrue(solo.searchText("Done"));
-        assertTrue(solo.searchText("Cancel"));
     }
 
     /**
@@ -85,7 +84,7 @@ public class HabitFragmentTest {
         assertTrue(solo.searchText("Too long!"));
         solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         assertTrue(solo.searchText("Too long!"));
-        solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Done" button in the AlertDialog.
+        solo.clickOnButton("Done");
         assertTrue(solo.searchText("ENTER A DATE"));
         assertTrue(solo.searchText("(Error: Choose a schedule)"));
     }
@@ -113,7 +112,7 @@ public class HabitFragmentTest {
         solo.clickOnButton("Sun");
         solo.clickOnButton("Tue");
         solo.clickOnButton("PUBLIC");
-        solo.clickOnView(solo.getView(android.R.id.button1));  // Click on the "Done" button in the AlertDialog.
+        solo.clickOnButton("Done");
         assertTrue(solo.searchText(HABIT_NAME));
         assertTrue(solo.searchText("HabitDescription"));
         assertTrue(solo.searchText("Done"));
