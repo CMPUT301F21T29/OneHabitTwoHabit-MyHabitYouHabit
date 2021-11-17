@@ -72,7 +72,6 @@ public class DatabaseAdapterTests{
         dba = new DatabaseAdapter();
         // push a user to the DB
         User user = new User(TestConstants.EXISTING_USER_USERNAME);
-        user.setUPIDCounter(1);
         dba.pushUser(user);
         // get the user back from the DB
         dba.pullUser(new DatabaseAdapter.ProfileCallback() {
@@ -80,7 +79,6 @@ public class DatabaseAdapterTests{
             public void onProfileCallback(User user) {
                 // make sure the stuff matches
                 assertTrue(TestConstants.EXISTING_USER_USERNAME.equals(user.getUsername()));
-                assertTrue(user.getUPIDCounter() == 1);
             }
         });
     }
@@ -220,7 +218,7 @@ public class DatabaseAdapterTests{
     @Test
     public void testPullUIDFromUsername_1() throws Exception{
         dba = new DatabaseAdapter();
-        dba.pullUIDFromUsername(Constants.EXISTING_USER_USERNAME,
+        dba.pullUIDFromUsername(TestConstants.EXISTING_USER_USERNAME,
             new DatabaseAdapter.UIDCallback() {
                 @Override
                 public void onUIDCallback(String UID) {
@@ -256,7 +254,7 @@ public class DatabaseAdapterTests{
     public void testSendFriendRequest_1() throws Exception{
         dba = new DatabaseAdapter();
         // push a user to the DB
-        User user = new User(Constants.EXISTING_USER_USERNAME);
+        User user = new User(TestConstants.EXISTING_USER_USERNAME);
         dba.pushUser(user);
 
 
