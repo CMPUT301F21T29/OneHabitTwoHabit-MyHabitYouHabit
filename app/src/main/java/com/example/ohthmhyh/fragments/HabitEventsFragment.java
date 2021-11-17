@@ -14,10 +14,10 @@ import android.view.ViewGroup;
 
 import com.example.ohthmhyh.CERecycleviewAdapter;
 import com.example.ohthmhyh.CETouchHelp;
+import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.activities.CreateHabitEvent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
@@ -26,9 +26,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  * create an instance of this fragment.
  */
 public class HabitEventsFragment extends Fragment implements CERecycleviewAdapter.OntouchListener {
-    FloatingActionButton fab;
-    RecyclerView recyclerView;
-    CERecycleviewAdapter mAdapter;
+
+    private FloatingActionButton fab;
+    private RecyclerView recyclerView;
+    private CERecycleviewAdapter mAdapter;
     private HabitEventList habitEventList;
     private DatabaseAdapter databaseAdapter;
 
@@ -66,22 +67,16 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
             }
         });
 
-
         fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton2);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //todo
-                // add a check to make sure habit list is not empty (simple if)
-                Intent intent =new Intent(getContext(), CreateHabitEvent.class);
-                startActivity(intent);
+                goToUpdateHabitEventActivity(-1);
             }
         });
 
         return view;
     }
-
-
 
     /**
      * This is used for editing when called it adds an edit flag
@@ -89,9 +84,20 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
      */
     @Override
     public void onItemclicked(int position) {
-        Intent intent = new Intent(getActivity(),CreateHabitEvent.class);
-        intent.putExtra("flag", 1);
-        intent.putExtra("position",position);
+        goToUpdateHabitEventActivity(position);
+    }
+
+    /**
+     * Go to the UpdateHabitEventActivity, providing a HabitEvent index (>= 0) if you want edit/view
+     * an existing HabitEvent, or an index < 0 if you want to try and add a HabitEvent.
+     * @param position The position of the HabitEvent.
+     */
+    private void goToUpdateHabitEventActivity(int position) {
+        // TODO: Add a check to make sure the HabitList is not empty.
+        Intent intent = new Intent(getActivity(), UpdateHabitEventActivity.class);
+        if (position >= 0) {
+            intent.putExtra(UpdateHabitEventActivity.ARG_HABIT_EVENT_INDEX, position);
+        }
         getActivity().startActivity(intent);
     }
 

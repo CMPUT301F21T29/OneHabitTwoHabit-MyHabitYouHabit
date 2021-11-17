@@ -41,7 +41,7 @@
             android:exported="true">
         </activity>
         <activity
-            android:name=".activities.CreateHabitEvent"
+            android:name=".activities.UpdateHabitEventActivity"
             android:parentActivityName=".activities.MainActivity"/>
         <activity
             android:name=".activities.UpdateHabitActivity"
