@@ -2,11 +2,14 @@ package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -56,6 +59,8 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         //Need to error check because somethings might be null
         holder.name.setText(habitList.getHabit(position).getName());
         holder.description.setText(habitList.getHabit(position).getDescription());
+        setProgressBar(holder, position);
+        setDays(holder, position);
     }
 
     /**
@@ -99,6 +104,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     {
         TextView name;
         TextView description;
+        ProgressBar pb;
 
         GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
@@ -107,6 +113,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             super(itemView);
             name = itemView.findViewById(R.id.name_rv);
             description = itemView.findViewById(R.id.habit_description_rv);
+            pb = (ProgressBar) itemView.findViewById(R.id.pb);
             //This is the name of the contrant layout in display HE list
             parentLayout = itemView.findViewById(R.id.rv_cl);
 
@@ -169,4 +176,37 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
          */
         void onItemClicked(int position);
     }
+
+    public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
+        //@author Matt
+        double progress = habitList.getHabit(position).getAdherance();
+
+        //you can manually set this for debugging
+        //habitList.getHabit(position).resetAdherance();
+        //progress = 100;
+
+        holder.pb.setProgress((int) progress);
+
+        //set colour based on progress
+        if (progress >= 85) {
+            //make progress bar green
+            holder.pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#50C878"))); //green
+        }
+        else if (progress >= 60) {
+            //make progress bar amber
+            holder.pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#FFBF00"))); //amber
+
+        }
+        else if (progress > 0) {
+            //make progress bar red
+            holder.pb.setProgressTintList(ColorStateList.valueOf(Color.RED));
+        }
+    }
+
+    public void setDays(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
+        //@author Matt
+
+
+    }
+
 }
