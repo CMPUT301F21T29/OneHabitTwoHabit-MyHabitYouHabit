@@ -28,7 +28,7 @@
         tools:layout_editor_absoluteY="57dp">
 
         <TextView
-            android:id="@+id/user_name"
+            android:id="@+id/username_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -39,34 +39,23 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/user_biography"
+            android:id="@+id/user_biography_TV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/user_name"
+            android:layout_below="@id/username_TV"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:text="--bio--"
             android:textColor="@color/black"
             android:textSize="18dp" />
 
-        <TextView
-            android:id="@+id/user_username"
-            android:layout_below="@id/user_biography"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:textSize="18dp"
-            android:textColor="@color/black"
-            android:text="--username--" />
-
         <ImageView
             android:id="@+id/user_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:src="@drawable/ic_person_foreground"
-            android:background="@drawable/ic_person_background"></ImageView>
+            android:background="@drawable/ic_person_background"
+            android:src="@drawable/ic_person_foreground"></ImageView>
 
     </RelativeLayout>
 
@@ -90,12 +79,17 @@
         android:layout_below="@id/textView5"
         android:minHeight="20dp"
         android:orientation="vertical">
-        <TextView
+
+        <ListView
+            android:id="@+id/friend_request_LV"
             android:layout_width="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/empty_request_list"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="None"></TextView>
+            android:textAlignment="viewStart" />
 
     </LinearLayout>
 
@@ -104,9 +98,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_request"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="5dp"
-        android:text="You May Know"
+        android:layout_marginTop="10dp"
+        android:text="Following"
         android:textColor="@color/greenD2"
         android:textSize="25dp" />
 
@@ -118,12 +112,17 @@
         android:minHeight="20dp"
         android:orientation="vertical">
 
-        <TextView
+        <ListView
+            android:id="@+id/friends_LV"
             android:layout_width="match_parent"
-            android:layout_marginLeft="10dp"
-            android:textColor="@color/black"
+            android:layout_height="50dp" />
+
+        <TextView
+            android:id="@+id/empty_friend_list"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="None"></TextView>
+            android:textAlignment="viewStart" />
+
     </LinearLayout>
 
     <TextView
@@ -140,7 +139,7 @@
         tools:layout_editor_absoluteY="266dp" />
 
     <EditText
-        android:id="@+id/Friend"
+        android:id="@+id/friend_Search_ET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView7"
@@ -151,14 +150,12 @@
         android:textSize="15dp"></EditText>
 
     <Button
+        android:id="@+id/send_request_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/Friend"
+        android:layout_below="@id/friend_Search_ET"
         android:layout_alignParentRight="true"
-        android:layout_marginEnd="5dp"
-        android:enabled="false"
-        android:text="Request to follow"
-        android:textSize="10dp"></Button>
+        android:text="Request to follow"></Button>
 
     <Button
         android:id="@+id/user_editprofile"

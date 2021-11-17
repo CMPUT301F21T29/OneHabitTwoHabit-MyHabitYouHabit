@@ -4,12 +4,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import android.graphics.Bitmap;
+import android.util.Log;
+
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.ohthmhyh.activities.MainActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.entities.User;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -124,6 +129,137 @@ public class DatabaseAdapterTests{
                 assertEquals(habits.getHabit(1).getSchedule(), hList.getHabit(1).getSchedule());
             }
         });
+    }
+
+
+    /**
+     * Tests pushing a HabitEventList object to the database. Check the firebase console to
+     * make sure that it worked.
+     * @throws Exception
+     */
+    @Test
+    public void pushHabitEventListTest_1() throws Exception{
+        // make a database adapter and force a UID because we're not logged in while testing
+        dba = new DatabaseAdapter();
+        // push habits into the DB
+        HabitEventList eventList = new HabitEventList();
+        eventList.addHabitEvent(new HabitEvent(
+            1,
+            "event1",
+            1.11,
+            11.1,
+            null,
+            1
+        ));
+        eventList.addHabitEvent(new HabitEvent(
+            2,
+            "event2",
+            2.22,
+            22.2,
+            null,
+            2
+        ));
+        dba.pushHabitEvents(eventList);
+        assert true;
+    }
+
+
+    /**
+     * Tests pulling a HabitEventList object from the database.
+     * @throws Exception
+     */
+    @Test
+    public void pullHabitEventListTest_1() throws Exception{
+        // make a database adapter and force a UID because we're not logged in while testing
+        dba = new DatabaseAdapter();
+        // push habits into the DB
+        HabitEventList eventList = new HabitEventList();
+        eventList.addHabitEvent(new HabitEvent(
+                1,
+                "event1",
+                1.11,
+                11.1,
+                null,
+                1
+        ));
+        eventList.addHabitEvent(new HabitEvent(
+                2,
+                "event2",
+                2.22,
+                22.2,
+                null,
+                2
+        ));
+        dba.pushHabitEvents(eventList);
+        // make sure the habit events we get back from the db match what we pushed
+        dba.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+            @Override
+            public void onHabitEventCallback(HabitEventList habitEvents) {
+                assertEquals(habitEvents.getHabitEvent(0).getComment(),
+                        eventList.getHabitEvent(0).getComment());
+                assertEquals(habitEvents.getHabitEvent(0).getHabitUHID(),
+                        eventList.getHabitEvent(0).getHabitUHID());
+                assertEquals(habitEvents.getHabitEvent(0).getLatitude(),
+                        eventList.getHabitEvent(0).getLatitude());
+
+                assertEquals(habitEvents.getHabitEvent(1).getComment(),
+                        eventList.getHabitEvent(1).getComment());
+                assertEquals(habitEvents.getHabitEvent(1).getHabitUHID(),
+                        eventList.getHabitEvent(1).getHabitUHID());
+                assertEquals(habitEvents.getHabitEvent(1).getLatitude(),
+                        eventList.getHabitEvent(1).getLatitude());
+            }
+        });
+    }
+
+
+    /**
+     * Tests getting a UID from a username.
+     * @throws Exception
+     */
+    @Test
+    public void testPullUIDFromUsername_1() throws Exception{
+        dba = new DatabaseAdapter();
+        dba.pullUIDFromUsername(Constants.EXISTING_USER_USERNAME,
+            new DatabaseAdapter.UIDCallback() {
+                @Override
+                public void onUIDCallback(String UID) {
+                    Log.e("THE UID IS", UID);
+                    assertEquals(UID, "ZcJzv1lHwHSGIGNbQO4gaYVhITy1");
+                }
+        });
+    }
+
+
+    /**
+     * Tests getting a username from a UID.
+     * @throws Exception
+     */
+    @Test
+    public void testGetUsernameFromUID_1() throws Exception{
+        dba = new DatabaseAdapter();
+        dba.pullUsernameFromUID("ZcJzv1lHwHSGIGNbQO4gaYVhITy1",
+            new DatabaseAdapter.UsernameCallback() {
+                @Override
+                public void onUsernameCallback(String username) {
+                    Log.e("THE USERNAME IS", username);
+                }
+            });
+    }
+
+
+    /**
+     * Tests sending a friend request
+     * @throws Exception
+     */
+    @Test
+    public void testSendFriendRequest_1() throws Exception{
+        dba = new DatabaseAdapter();
+        // push a user to the DB
+        User user = new User(Constants.EXISTING_USER_USERNAME);
+        dba.pushUser(user);
+
+
     }
 
 

@@ -6,6 +6,9 @@ public class TestConstants {
     public final static String EXISTING_USER_EMAIL = "cjjans@ualberta.ca";
     public final static String EXISTING_USER_USERNAME = "christian";
     public final static String EXISTING_USER_PASSWORD = "password";
+    public final static String EXISTING_USER_EMAIL2 = "testusr@gmail.com";
+    public final static String EXISTING_USER_USERNAME2 = "testusr";
+    public final static String EXISTING_USER_PASSWORD2 = "password";
 
     // Email, username, and password of a user that will not exist in the database before any tests.
     // The credentials of this user should not be used by any actual user using this app.
