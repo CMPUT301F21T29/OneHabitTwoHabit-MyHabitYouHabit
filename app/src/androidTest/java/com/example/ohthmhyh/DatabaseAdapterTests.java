@@ -41,7 +41,7 @@ public class DatabaseAdapterTests{
     @BeforeClass
     public static void setUp() throws Exception {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL, Constants.EXISTING_USER_PASSWORD);
+        mAuth.signInWithEmailAndPassword(TestConstants.EXISTING_USER_EMAIL, TestConstants.EXISTING_USER_PASSWORD);
         Thread.sleep(10000);  // Wait for sign in to occur.
     }
 
@@ -55,7 +55,7 @@ public class DatabaseAdapterTests{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter();
         // test pushing a user to the DB
-        User user = new User(Constants.EXISTING_USER_USERNAME);
+        User user = new User(TestConstants.EXISTING_USER_USERNAME);
         dba.pushUser(user);
         // you'll have to check this by looking in the Firestore console
         assert true;
@@ -71,14 +71,14 @@ public class DatabaseAdapterTests{
         // make a database adapter and force a UID because we're not logged in while testing
         dba = new DatabaseAdapter();
         // push a user to the DB
-        User user = new User(Constants.EXISTING_USER_USERNAME);
+        User user = new User(TestConstants.EXISTING_USER_USERNAME);
         dba.pushUser(user);
         // get the user back from the DB
         dba.pullUser(new DatabaseAdapter.ProfileCallback() {
             @Override
             public void onProfileCallback(User user) {
                 // make sure the stuff matches
-                assertTrue(Constants.EXISTING_USER_USERNAME.equals(user.getUsername()));
+                assertTrue(TestConstants.EXISTING_USER_USERNAME.equals(user.getUsername()));
             }
         });
     }
@@ -218,7 +218,7 @@ public class DatabaseAdapterTests{
     @Test
     public void testPullUIDFromUsername_1() throws Exception{
         dba = new DatabaseAdapter();
-        dba.pullUIDFromUsername(Constants.EXISTING_USER_USERNAME,
+        dba.pullUIDFromUsername(TestConstants.EXISTING_USER_USERNAME,
             new DatabaseAdapter.UIDCallback() {
                 @Override
                 public void onUIDCallback(String UID) {
@@ -254,7 +254,7 @@ public class DatabaseAdapterTests{
     public void testSendFriendRequest_1() throws Exception{
         dba = new DatabaseAdapter();
         // push a user to the DB
-        User user = new User(Constants.EXISTING_USER_USERNAME);
+        User user = new User(TestConstants.EXISTING_USER_USERNAME);
         dba.pushUser(user);
 
 
@@ -269,7 +269,7 @@ public class DatabaseAdapterTests{
     @Test
     public void checkUsernameExists_1() throws Exception{
         // verify that we can tell if their username is in the database
-        dba.checkUsernameExists(Constants.EXISTING_USER_USERNAME, new DatabaseAdapter.UsernameCheckCallback() {
+        dba.checkUsernameExists(TestConstants.EXISTING_USER_USERNAME, new DatabaseAdapter.UsernameCheckCallback() {
             @Override
             public void onUsernameCheckCallback(boolean usernameExists) {
                 assertTrue(usernameExists);
@@ -289,7 +289,7 @@ public class DatabaseAdapterTests{
         pushUserTest_1();
 
         // verify that we can tell if their username is not in the database
-        dba.checkUsernameExists(Constants.NONEXISTENT_USER_USERNAME, new DatabaseAdapter.UsernameCheckCallback() {
+        dba.checkUsernameExists(TestConstants.NONEXISTENT_USER_USERNAME, new DatabaseAdapter.UsernameCheckCallback() {
             @Override
             public void onUsernameCheckCallback(boolean usernameExists) {
                 assertFalse(usernameExists);
