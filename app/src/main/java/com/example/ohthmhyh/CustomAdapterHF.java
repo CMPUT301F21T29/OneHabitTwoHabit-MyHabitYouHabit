@@ -207,11 +207,11 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     /**
      * Contains the logic to set the progress bar, both in magnitude and colour
      * Also set the % value
+     * @author Matt
      * @param holder the viewholder holding objects
      * @param position the position of the habit in the list that we are using
      */
     public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        //@author Matt
         double progress = habitList.getHabit(position).getAdherence(LocalDate.now());
 
         //set colours of bar and text to grey
