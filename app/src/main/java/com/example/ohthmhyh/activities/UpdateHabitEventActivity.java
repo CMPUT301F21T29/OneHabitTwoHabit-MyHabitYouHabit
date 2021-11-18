@@ -85,7 +85,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             public void onHabitCallback(HabitList hList) {
                 habitList = hList;
                 makeNameList();
-
+                //OnItemClickListener that gets position of item
                 AutoCompleteTextView mActv = (AutoCompleteTextView) findViewById(R.id.AutoCompleteTextviewCE);
                 mActv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -114,7 +114,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
+    /**
+     * This handles the drop down list for Habits
+     * Can tell if we are on edit or new Calls to the data base to get the habitevent list
+     */
     private void makeNameList(){
         ArrayList<String> NameList=new ArrayList<>();
         NameList.addAll(habitList.getHabitNames());
@@ -140,8 +143,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             });
 
         }else{habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);}
-
-
 
         habitListAutoCompleteTextView.setAdapter(arrayAdapter);
     }
@@ -301,6 +302,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             }
         });
     }
+    /**
+     * @param habit Takes a habit and if it is null this means the first habit in the list is selected
+     * @return habit returns a valid habit (ether the first one or witch one the user chose.)
+     */
     private Habit checkHabitNull(Habit habit){
         if (habit==null) {
             habit = habitList.getHabit(0);
