@@ -119,11 +119,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
      * Can tell if we are on edit or new Calls to the data base to get the habitevent list
      */
     private void makeNameList(){
-        ArrayList<String> NameList=new ArrayList<>();
-        NameList.addAll(habitList.getHabitNames());
+        ArrayList<String> habitNameList = habitList.getHabitNames();
         habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
         ArrayAdapter arrayAdapter = new ArrayAdapter(
-                this, R.layout.create_habit_habit_drop_down_menu, NameList);
+                this, R.layout.create_habit_habit_drop_down_menu, habitNameList);
 
         Intent intent = getIntent();
         habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
@@ -142,7 +141,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 }
             });
 
-        }else{habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);}
+        }else//Default list view (not editing)
+            {habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0)
+                    .toString(),false);}
 
         habitListAutoCompleteTextView.setAdapter(arrayAdapter);
     }
@@ -302,16 +303,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             }
         });
     }
-    /**
-     * @param habit Takes a habit and if it is null this means the first habit in the list is selected
-     * @return habit returns a valid habit (ether the first one or witch one the user chose.)
-     */
-    private Habit checkHabitNull(Habit habit){
-        if (habit==null) {
-            habit = habitList.getHabit(0);
-        }
-        return habit;
-    }
+
+
+
+
     /**
      * Verify the string is less than 20 characters long.
      * @param string Takes a string and make sure to get a string less then 20
@@ -337,7 +332,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lol_pic);
         }
 
-        habit=checkHabitNull(habit);
+        if (habit==null){
+            habit = habitList.getHabit(0);}
 
         HabitEvent habitEvent;
         if (location == null) {

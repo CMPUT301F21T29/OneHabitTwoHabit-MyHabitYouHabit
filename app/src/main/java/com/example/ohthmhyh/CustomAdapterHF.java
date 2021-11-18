@@ -87,17 +87,17 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     @Override
     public void onItemSwiped(int position) {
         //TODO: Add confirmation alert dialog
-        DatabaseAdapter databaseAdapter;
-        databaseAdapter = new DatabaseAdapter();
+        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
             @Override
             public void onHabitEventCallback(HabitEventList habitEvents) {
-                HabitEventList habitEventList;
-                habitEventList = habitEvents;
-                for (int index=0;index<habitEventList.size();index++){
-                    if (habitList.getHabit(position).getUHID()==habitEventList.getHabitEvent(index).getHabitUHID()){
-                        habitEventList.removeHabitEvent(index);
-                    }}
+                // TODO: Look to add this as a method to HabitEventList.
+
+                for (int index = 0; index < habitEvents.size(); index++){
+                    if (habitList.getHabit(position).getUHID() == habitEvents.getHabitEvent(index).getHabitUHID()) {
+                        habitEvents.removeHabitEvent(index);
+                    }
+                }
                 habitList.removeHabit(position);
                 notifyItemRemoved(position);
             }
