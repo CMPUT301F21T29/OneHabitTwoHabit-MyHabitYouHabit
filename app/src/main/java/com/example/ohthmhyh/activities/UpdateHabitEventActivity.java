@@ -134,9 +134,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 @Override
                 public void onHabitEventCallback(HabitEventList habitEvents) {
                     habitEventList = habitEvents;
-                    for (int index=0;index<habitList.size();index++) {
-                        if (habitList.getHabit(index).getUHID() ==habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()){
-                            habitListAutoCompleteTextView.setText(habitList.getHabit(index).getName(),false);
+                    for (int index = 0; index < habitList.size(); index++) {
+                        if (habitList.getHabit(index).getUHID() == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
+                            habitListAutoCompleteTextView.setText(habitList.getHabit(index).getName(), false);
                         }
                     }
                 }
