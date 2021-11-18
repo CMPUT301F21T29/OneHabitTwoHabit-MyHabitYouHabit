@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.database.HabitList;
 
 /**
@@ -85,8 +87,22 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     @Override
     public void onItemSwiped(int position) {
         //TODO: Add confirmation alert dialog
-        habitList.removeHabit(position);
-        notifyItemRemoved(position);
+        DatabaseAdapter databaseAdapter;
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+            @Override
+            public void onHabitEventCallback(HabitEventList habitEvents) {
+                HabitEventList habitEventList;
+                habitEventList = habitEvents;
+                for (int index=0;index<habitEventList.size();index++){
+                    if (habitList.getHabit(position).getUHID()==habitEventList.getHabitEvent(index).getHabitUHID()){
+                        habitEventList.removeHabitEvent(index);
+                    }}
+                habitList.removeHabit(position);
+                notifyItemRemoved(position);
+            }
+        });
+
     }
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
