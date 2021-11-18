@@ -87,8 +87,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     @Override
     public void onItemSwiped(int position) {
         //TODO: Add confirmation alert dialog
-        DatabaseAdapter databaseAdapter;
-        databaseAdapter = new DatabaseAdapter();
+        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
             @Override
             public void onHabitEventCallback(HabitEventList habitEvents) {
