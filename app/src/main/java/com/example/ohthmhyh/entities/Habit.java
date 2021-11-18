@@ -298,7 +298,7 @@ public class Habit implements Serializable {
      * Calculate and return the % adherance for the given habit
      * @return the % adherance to this habit
      */
-    public double getAdherance() {
+    public double getAdherence() {
         LocalDate currentDay = LocalDate.now();
         LocalDate startDay = LocalDate.ofEpochDay(startDate);
         int totalOpportunity = calculateOpportunity(startDay, currentDay);
@@ -311,22 +311,24 @@ public class Habit implements Serializable {
 
     }
 
+    /**
+     * Given a starting date, end date, and a given habit's scedule, find how many days for which this
+     * habit was applicable. This is used to calculate an adherence score.
+     * @author Matt
+     * @param from The starting date
+     * @param to the ending date
+     * @return the number of days where the user had the opportunity to successfully complete the habit's task
+     */
     public int calculateOpportunity(LocalDate from, LocalDate to) {
-        // Added year to ensure edge case where the year is on a different year
-        int fromDay = from.getDayOfYear() + from.getYear();
-        int toDay = to.getDayOfYear() + to.getYear();
-
         int opportunity = 0;
-        int todayJAV = from.getDayOfWeek().getValue();
-        int i = (todayJAV + 1) % 7;
+        //iterate through the days, and see if it falls on an applicable day of the week
+        for (LocalDate date = from; date.isBefore(to.plusDays(1)); date = date.plusDays(1)) {
+            int DOWjav = date.getDayOfWeek().getValue(); //note that mon is 1 in this convention, sun is 7
+            int DOW = DOWjav % 7; //this is the convention our code uses, where sun is 0, and sat is 6
 
-        // Go through each day and check
-        for (int j = fromDay; j < toDay; j++) {
-            int mod = i % 7;
-            if (schedule.contains(Days.values()[mod])) {
+            if (schedule.contains(Days.values()[DOW])) {
                 opportunity++;
             }
-            i++;
         }
 
         return opportunity;

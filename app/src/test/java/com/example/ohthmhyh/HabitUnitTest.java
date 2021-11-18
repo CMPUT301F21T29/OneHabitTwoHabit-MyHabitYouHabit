@@ -97,7 +97,7 @@ public class HabitUnitTest {
      * @throws Exception
      */
     @Test
-    public void Test_getters_setters() {
+    public void Test_Getters_Setters() {
         Habit h = new Habit();
 
         // compare against this later
@@ -122,43 +122,106 @@ public class HabitUnitTest {
 
 
 //    @Test
-//    public void test_adherance () {
+//    public void test_adherence () {
 //        //test initialization
 //        Habit h = new Habit();
 //
 //
 //    }
 
-    @Test
-    public void test_Opportunity() {
-        Habit h = new Habit();
-        //h.setStartDate(1636538265); //Nov 10, 2021 (WED)
 
+    /**
+     * Performs a basic test on the calculateOpportunit() method
+     * This is simply a 1 week test
+     * @author Matt
+     * @throws Exception
+     */
+    @Test
+    public void Test_Opportunity_Basic() {
+        Habit h = new Habit();
         ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
         sched.add(Habit.Days.Mon);
         sched.add(Habit.Days.Fri);
         h.setSchedule(sched);
+        LocalDate startDay = LocalDate.of(2021, 11, 10);
+        LocalDate endDay = LocalDate.of(2021, 11, 17);
 
-        LocalDate startDay = LocalDate.of(2021, 10, 13);
-        LocalDate currentDay = LocalDate.of(2021, 11, 17);
-
-        //LocalDate startDay = LocalDate.ofEpochDay(h.getStartDate());
-        int totalOpportunity = h.calculateOpportunity(startDay, currentDay);
+        int totalOpportunity = h.calculateOpportunity(startDay, endDay);
         assertEquals(2, totalOpportunity);
-
-
-
-
-
-        //test sundays
-
-        //test edge case: if today is wednesday, what if it is applicable to wednesday?
-
-
-
 
     }
 
+    /**
+     * Performs a more advanced test on the calculateOpportunit() method where the valid range
+     * spans multiple weeks, and months
+     * @author Matt
+     * @throws Exception
+     */
+    @Test
+    public void Test_Opportunity_Advanced() {
+        Habit h = new Habit();
+        ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
+        sched.add(Habit.Days.Wed);
+        sched.add(Habit.Days.Thu);
+        sched.add(Habit.Days.Sat);
+        h.setSchedule(sched);
+        LocalDate startDay = LocalDate.of(2021, 11, 9);
+        LocalDate endDay = LocalDate.of(2021, 12, 10);
+
+        int totalOpportunity = h.calculateOpportunity(startDay, endDay);
+        assertEquals(14, totalOpportunity);
+
+    }
+
+    /**
+     * Performs a test where the habit's valid range spans the transition between years
+     *
+     * This test also tests the usage of sunday. This is notable because of date
+     * format conversion inside Habit's code revolving around sundays.
+     * @author Matt
+     * @throws Exception
+     */
+    @Test
+    public void Test_Opportunity_Year_Crossover() {
+        Habit h = new Habit();
+        ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
+        sched.add(Habit.Days.Sun);
+        sched.add(Habit.Days.Tue);
+        sched.add(Habit.Days.Sat);
+        h.setSchedule(sched);
+        LocalDate startDay = LocalDate.of(2021, 12, 22);
+        LocalDate endDay = LocalDate.of(2022, 1, 7);
+
+        int totalOpportunity = h.calculateOpportunity(startDay, endDay);
+        assertEquals(6, totalOpportunity);
+    }
+
+    /**
+     * Tests the edge cases of this function, where the valid testing range begins and ends on a valid
+     * habit day.
+     *
+     * We want to count the starting day, as that was a valid day for which the user could have completed
+     *
+     * We also want to count the end day. This is a design decision. This means that if you had a 100% score one
+     * day, but now it's the next day, your score will be lower than 100 until you complete this item for the day.
+     * Then it will be back at 100% after completion.
+     *
+     * @author Matt
+     * @throws Exception
+     */
+    @Test
+    public void Test_Opportunity_Start_End_Edgecase() {
+        Habit h = new Habit();
+        ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
+        sched.add(Habit.Days.Thu);
+        h.setSchedule(sched);
+        LocalDate startDay = LocalDate.of(2021, 12, 16);
+        LocalDate endDay = LocalDate.of(2021, 12, 30);
+
+        int totalOpportunity = h.calculateOpportunity(startDay, endDay);
+        assertEquals(3, totalOpportunity);
+
+    }
 }
 
 

@@ -49,6 +49,15 @@
         app:layout_constraintTop_toBottomOf="@+id/habit_description_rv">
 
         <TextView
+            android:id="@+id/sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="SUN"
+            android:textSize="10sp" />
+
+        <TextView
             android:id="@+id/mon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -81,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="THURS"
+            android:text="THUR"
             android:textSize="10sp" />
 
         <TextView
@@ -100,15 +109,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="SAT"
-            android:textSize="10sp" />
-
-        <TextView
-            android:id="@+id/sun"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="SUN"
             android:textSize="10sp" />
 
 

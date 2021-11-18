@@ -22,8 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**
@@ -213,11 +211,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      */
     public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //@author Matt
-        double progress = habitList.getHabit(position).getAdherance();
-
-        //you can manually set this for debugging
-//        progress = 99;
-
+        double progress = habitList.getHabit(position).getAdherence();
 
         //set colours of bar and text to grey
         holder.percent.setTextColor(Color.parseColor("#808080")); //grey
@@ -249,11 +243,11 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
     /**
      * contains the logic to bold and set text colour of applicable days in the week
+     * @author Matt
      * @param holder the viewholder holding objects
      * @param position the position of the habit in the list that we are using
      */
     public void setDays(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        //@author Matt
         //Bold/change colour of the days for which a habit is applicable
 
         ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
