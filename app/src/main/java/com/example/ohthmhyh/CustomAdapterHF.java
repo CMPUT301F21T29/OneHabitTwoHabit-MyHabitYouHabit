@@ -111,6 +111,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         TextView name;
         TextView description;
         ProgressBar pb;
+        TextView percent;
 
         //days of week
         TextView mon;
@@ -129,6 +130,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             name = itemView.findViewById(R.id.name_rv);
             description = itemView.findViewById(R.id.habit_description_rv);
             pb = (ProgressBar) itemView.findViewById(R.id.pb);
+            percent = itemView.findViewById(R.id.percent);
 
             //days of week
             mon = itemView.findViewById(R.id.mon);
@@ -205,6 +207,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
     /**
      * Contains the logic to set the progress bar, both in magnitude and colour
+     * Also set the % value
      * @param holder the viewholder holding objects
      * @param position the position of the habit in the list that we are using
      */
@@ -213,12 +216,22 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         double progress = habitList.getHabit(position).getAdherance();
 
         //you can manually set this for debugging
-        //habitList.getHabit(position).resetAdherance();
-        //progress = 100;
+//        progress = 99;
 
-        holder.pb.setProgress((int) progress);
+
+        //set colours of bar and text to grey
+        holder.percent.setTextColor(Color.parseColor("#808080")); //grey
+        holder.pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#808080"))); //gray
+
+        int progressPercent = (int) progress;
+        holder.pb.setProgress(progressPercent);
+        holder.percent.setText(String.valueOf(progressPercent) + "%");
 
         //set colour based on progress
+        if (progress == 100) {
+            holder.percent.setTextColor(Color.parseColor("#50C878")); //green
+        }
+
         if (progress >= 85) {
             //make progress bar green
             holder.pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#50C878"))); //green

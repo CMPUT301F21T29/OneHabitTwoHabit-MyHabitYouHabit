@@ -121,38 +121,38 @@ public class HabitUnitTest {
     }
 
 
+//    @Test
+//    public void test_adherance () {
+//        //test initialization
+//        Habit h = new Habit();
+//
+//
+//    }
+
     @Test
-    public void test_adherance () {
-        //test initialization
+    public void test_Opportunity() {
         Habit h = new Habit();
-        assertEquals(0, h.getAdherance());
+        //h.setStartDate(1636538265); //Nov 10, 2021 (WED)
 
-        //test itegers
-        h.logAdherance(true);
-        h.logAdherance(true);
-        h.logAdherance(false);
-        h.logAdherance(false);
-        assertEquals(50, h.getAdherance());
+        ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
+        sched.add(Habit.Days.Mon);
+        sched.add(Habit.Days.Fri);
+        h.setSchedule(sched);
 
-        //test resetting
-        h.resetAdherance();
-        assertEquals(0, h.getAdherance());
+        LocalDate startDay = LocalDate.of(2021, 11, 10);
+        LocalDate currentDay = LocalDate.of(2021, 11, 17);
 
-        //test for doubles
-        h.logAdherance(true);
-        h.logAdherance(true);
-        h.logAdherance(false);
-        h.logAdherance(false);
-        h.logAdherance(false);
-        h.logAdherance(false);
-        h.logAdherance(false);
+        //LocalDate startDay = LocalDate.ofEpochDay(h.getStartDate());
+        int totalOpportunity = h.calculateOpportunity(startDay, currentDay);
+        assertEquals(2, totalOpportunity);
 
 
-        double t1 = 2;
-        double t2 = 7;
-        assertEquals(t1/t2*100, h.getAdherance());
 
 
+
+        //test sundays
+
+        //test edge case: if today is wednesday, what if it is applicable to wednesday?
 
 
 

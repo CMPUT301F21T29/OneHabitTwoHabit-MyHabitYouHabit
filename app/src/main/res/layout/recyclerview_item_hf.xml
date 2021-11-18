@@ -35,18 +35,6 @@
             representing how far the operation has progressed; the application can change
             the amount of progress (modifying the length of the bar) as it moves forward.
     -->
-    <CheckBox
-        android:id="@+id/habit_done"
-        android:layout_width="61dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="5dp"
-        android:text="Done"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toTopOf="@+id/days"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/days"
@@ -126,15 +114,29 @@
 
     </LinearLayout>
 
-    <ProgressBar
-        android:id="@+id/pb"
-        style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/habit_done"
-        android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/days" />
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/days"
+        tools:layout_editor_absoluteX="33dp">
+
+        <ProgressBar
+            android:id="@+id/pb"
+            style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+            android:layout_width="360dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp" />
+
+        <TextView
+            android:id="@+id/percent"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="100%"
+            android:textSize="11sp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,9 @@ package com.example.ohthmhyh.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -22,7 +24,8 @@ public class Habit implements Serializable {
     private long startDate;
     private ArrayList<Days> schedule = new ArrayList<Days>();
     private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
-    private ArrayList<Boolean> adheranceTracker = new ArrayList<>();
+    private int completedCounter = 0;
+
 
 
     /**
@@ -271,38 +274,64 @@ public class Habit implements Serializable {
     }
 
     /**
-     * Resets the adherance tracker by deleting all logged events (deletes all records of this habit being followed / not followed)
+     * Gets the number of times a habit has been successfully completed
+     * @return number of times a habit has been successfully completed
      */
-    public void resetAdherance() {
-        adheranceTracker = new ArrayList<Boolean>();
+    public int getCompletedCounter() {
+        return completedCounter;
     }
-
 
     /**
-     * Logs either a true / false. If the user followed a habit in a given day, we log a true. If not, we log a false.
-     * @param val the value to log
+     * Sets the number of times a habit has been successfully completed
+     * @param completedCounter number of times a habit has been successfully completed
      */
-    public void logAdherance(Boolean val) {
-        adheranceTracker.add(val);
+    public void setCompletedCounter(int completedCounter) {
+        this.completedCounter = completedCounter;
     }
+
+    /**
+     * Increments the completed counter whenever a habit was successfully completed
+     */
+    public void logCompleted() {completedCounter++;}
 
     /**
      * Calculate and return the % adherance for the given habit
      * @return the % adherance to this habit
      */
     public double getAdherance() {
-        if (adheranceTracker.size() == 0) {return 0;}
+        LocalDate currentDay = LocalDate.now();
+        LocalDate startDay = LocalDate.ofEpochDay(startDate);
+        int totalOpportunity = calculateOpportunity(startDay, currentDay);
 
-        double numTrue = 0;
+        //if opportunity is zero, return zero
+        if (totalOpportunity == 0) {return 0;}
+        if (completedCounter == 0) {return 0;}
 
-        for (int i = 0; i < adheranceTracker.size(); i++) {
-            if (adheranceTracker.get(i)) {numTrue++;}
+        return (completedCounter / (totalOpportunity)*100);
+
+    }
+
+    public int calculateOpportunity(LocalDate from, LocalDate to) {
+        // Added year to ensure edge case where the year is on a different year
+        int fromWeek = from.get(WeekFields.of(Locale.getDefault()).weekOfYear()) +
+                from.getYear();
+        int toWeek = from.get(WeekFields.of(Locale.getDefault()).weekOfYear()) +
+                to.getYear();
+
+        int opportunity = 0;
+        int today = to.getDayOfWeek().getValue();
+        for (int i = fromWeek; i < toWeek+1; i++) {
+            int todayJAV = to.getDayOfWeek().getValue();
+            int todayHAB = (todayJAV + 1) % 7;
+
+            for (int j = 0; j != todayHAB; j++) {
+                if (schedule.contains(Days.values()[j])) {
+                    opportunity++;
+                }
+            }
         }
 
-        if (numTrue == 0) {return 0;}
-
-        return (numTrue / (adheranceTracker.size())*100);
-
+        return opportunity;
     }
 }
 
