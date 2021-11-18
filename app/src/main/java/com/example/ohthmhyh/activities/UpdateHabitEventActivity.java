@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -29,6 +30,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.database.HabitEventList;
@@ -41,6 +43,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,8 +52,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     public static final String ARG_HABIT_EVENT_INDEX = "habit_event_index_arg";
 
     private Bitmap bitmap = null;
-    private Habit habit = Habit.makeDummyHabit();  // This is temp
+    private Habit habit = null;  // This is temp
     private HabitEventList habitEventList;
+    private HabitList habitList;
     private DatabaseAdapter databaseAdapter;
     private Location location = null;
     private int habitEventIndex;
@@ -60,18 +64,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private ImageView pictureImageView;
     private TextView locationTextView;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Down here is for dropdown menu. Need to get the habit.
-        String[] habitList = {"Habit one", "Habit two", "Habit three"};
-        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(
-                this, R.layout.create_habit_habit_drop_down_menu, habitList);
-        habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
-        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +78,26 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 makeAndEdit();
             }
         });
+        // Get the HabitList from the database.
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
+            @Override
+            public void onHabitCallback(HabitList hList) {
+                habitList = hList;
+                makeNameList();
+
+                AutoCompleteTextView mActv = (AutoCompleteTextView) findViewById(R.id.AutoCompleteTextviewCE);
+                mActv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View arg1, int pos,
+                                            long id) {
+                        habit=habitList.getHabit(pos);
+                    }
+                });
+
+            }
+        });
+
     }
 
     /**
@@ -101,6 +113,37 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void makeNameList(){
+        ArrayList<String> NameList=new ArrayList<>();
+        NameList.addAll(habitList.getHabitNames());
+        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(
+                this, R.layout.create_habit_habit_drop_down_menu, NameList);
+
+        Intent intent = getIntent();
+        habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
+        if (habitEventIndex >= 0) {
+            //Wait for habitEventList to become non null
+            databaseAdapter = new DatabaseAdapter();
+            databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+                @Override
+                public void onHabitEventCallback(HabitEventList habitEvents) {
+                    habitEventList = habitEvents;
+                    for (int index=0;index<habitList.size();index++) {
+                        if (habitList.getHabit(index).getUHID() ==habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()){
+                            habitListAutoCompleteTextView.setText(habitList.getHabit(index).getName(),false);
+                        }
+                    }
+                }
+            });
+
+        }else{habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);}
+
+
+
+        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
     }
 
     /**
@@ -170,7 +213,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 location.setLongitude(habitEvent.getLongitude());
             }
 
-            // TODO: Set the habit associated with this HabitEvent.
         }
     }
 
@@ -259,7 +301,12 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             }
         });
     }
-
+    private Habit checkHabitNull(Habit habit){
+        if (habit==null) {
+            habit = habitList.getHabit(0);
+        }
+        return habit;
+    }
     /**
      * Verify the string is less than 20 characters long.
      * @param string Takes a string and make sure to get a string less then 20
@@ -285,7 +332,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lol_pic);
         }
 
-        // TODO: Associate the HabitEvent with an actual Habit.
+        habit=checkHabitNull(habit);
+
         HabitEvent habitEvent;
         if (location == null) {
             habitEvent = new HabitEvent(

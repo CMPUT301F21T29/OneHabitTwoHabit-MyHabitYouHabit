@@ -3,6 +3,7 @@ package com.example.ohthmhyh.database;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * The entity class for a the users habits. This class represents all of the habits created
@@ -124,4 +125,11 @@ public class HabitList{
         return UHIDCounter++;
     }
 
+    public ArrayList<String> getHabitNames(){
+        ArrayList<String> NameList=new ArrayList<>();
+        for (int i=0; i<habitList.size();i++){
+            NameList.add(habitList.get(i).getName());
+        }
+        return NameList;
+    }
 }
