@@ -313,22 +313,20 @@ public class Habit implements Serializable {
 
     public int calculateOpportunity(LocalDate from, LocalDate to) {
         // Added year to ensure edge case where the year is on a different year
-        int fromWeek = from.get(WeekFields.of(Locale.getDefault()).weekOfYear()) +
-                from.getYear();
-        int toWeek = from.get(WeekFields.of(Locale.getDefault()).weekOfYear()) +
-                to.getYear();
+        int fromDay = from.getDayOfYear() + from.getYear();
+        int toDay = to.getDayOfYear() + to.getYear();
 
         int opportunity = 0;
-        int today = to.getDayOfWeek().getValue();
-        for (int i = fromWeek; i < toWeek+1; i++) {
-            int todayJAV = to.getDayOfWeek().getValue();
-            int todayHAB = (todayJAV + 1) % 7;
+        int todayJAV = from.getDayOfWeek().getValue();
+        int i = (todayJAV + 1) % 7;
 
-            for (int j = 0; j != todayHAB; j++) {
-                if (schedule.contains(Days.values()[j])) {
-                    opportunity++;
-                }
+        // Go through each day and check
+        for (int j = fromDay; j < toDay; j++) {
+            int mod = i % 7;
+            if (schedule.contains(Days.values()[mod])) {
+                opportunity++;
             }
+            i++;
         }
 
         return opportunity;

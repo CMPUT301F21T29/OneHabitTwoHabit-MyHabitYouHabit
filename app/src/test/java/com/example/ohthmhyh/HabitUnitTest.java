@@ -139,7 +139,7 @@ public class HabitUnitTest {
         sched.add(Habit.Days.Fri);
         h.setSchedule(sched);
 
-        LocalDate startDay = LocalDate.of(2021, 11, 10);
+        LocalDate startDay = LocalDate.of(2021, 10, 13);
         LocalDate currentDay = LocalDate.of(2021, 11, 17);
 
         //LocalDate startDay = LocalDate.ofEpochDay(h.getStartDate());
