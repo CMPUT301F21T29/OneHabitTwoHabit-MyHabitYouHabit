@@ -112,13 +112,13 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         TextView percent;
 
         //days of week
+        TextView sun;
         TextView mon;
         TextView tues;
         TextView wed;
         TextView thurs;
         TextView fri;
         TextView sat;
-        TextView sun;
 
         GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
@@ -131,13 +131,13 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             percent = itemView.findViewById(R.id.percent);
 
             //days of week
+            sun = itemView.findViewById(R.id.sun);
             mon = itemView.findViewById(R.id.mon);
             tues = itemView.findViewById(R.id.tues);
             wed = itemView.findViewById(R.id.wed);
             thurs = itemView.findViewById(R.id.thurs);
             fri = itemView.findViewById(R.id.fri);
             sat = itemView.findViewById(R.id.sat);
-            sun = itemView.findViewById(R.id.sun);
 
 
             //This is the name of the contrant layout in display HE list
@@ -213,29 +213,31 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         //@author Matt
         double progress = habitList.getHabit(position).getAdherence();
 
+        progress = 100;
+
         //set colours of bar and text to grey
-        holder.percent.setTextColor(Color.parseColor("#808080")); //grey
-        holder.pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#808080"))); //gray
+        holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGray));
+        holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGray)));
 
         int progressPercent = (int) progress;
         holder.pb.setProgress(progressPercent);
         holder.percent.setText(String.valueOf(progressPercent) + "%");
 
         //set colour based on progress
-        if (progress == 100) {
-            holder.percent.setTextColor(Color.parseColor("#50C878")); //green
+        if (progress == Constants.ADHERENCE_TEXT_GREEN_THRESHOLD) {
+            holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGreen));
         }
 
-        if (progress >= 85) {
+        if (progress >= Constants.ADHERENCE_PROGRESS_BAR_GREEN_THRESHOLD) {
             //make progress bar green
-            holder.pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#50C878"))); //green
+            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGreen)));
         }
-        else if (progress >= 60) {
+        else if (progress >= Constants.ADHERENCE_PROGRESS_BAR_AMBER_THRESHOLD) {
             //make progress bar amber
-            holder.pb.setProgressTintList(ColorStateList.valueOf(Color.parseColor("#FFBF00"))); //amber
+            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarAmber))); //amber
 
         }
-        else if (progress > 0) {
+        else if (progress > Constants.ADHERENCE_PROGRESS_BAR_RED_THRESHOLD) {
             //make progress bar red
             holder.pb.setProgressTintList(ColorStateList.valueOf(Color.RED));
         }
@@ -255,21 +257,26 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         float minOpacity = 0.3f;
 
         //set all to default params
+        holder.sun.setTypeface(null, Typeface.NORMAL);
         holder.mon.setTypeface(null, Typeface.NORMAL);
         holder.tues.setTypeface(null, Typeface.NORMAL);
         holder.wed.setTypeface(null, Typeface.NORMAL);
         holder.thurs.setTypeface(null, Typeface.NORMAL);
         holder.fri.setTypeface(null, Typeface.NORMAL);
         holder.sat.setTypeface(null, Typeface.NORMAL);
-        holder.sun.setTypeface(null, Typeface.NORMAL);
+        holder.sun.setAlpha(minOpacity);
         holder.mon.setAlpha(minOpacity);
         holder.tues.setAlpha(minOpacity);
         holder.wed.setAlpha(minOpacity);
         holder.thurs.setAlpha(minOpacity);
         holder.fri.setAlpha(minOpacity);
         holder.sat.setAlpha(minOpacity);
-        holder.sun.setAlpha(minOpacity);
 
+        if(days.contains(Habit.Days.Sun)){
+            // bold / change colour
+            holder.sun.setTypeface(null, Typeface.BOLD);
+            holder.sun.setAlpha(1f);
+        }
 
         if(days.contains(Habit.Days.Mon)){
             // bold / change colour
@@ -305,12 +312,6 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             // bold / change colour
             holder.sat.setTypeface(null, Typeface.BOLD);
             holder.sat.setAlpha(1f);
-        }
-
-        if(days.contains(Habit.Days.Sun)){
-            // bold / change colour
-            holder.sun.setTypeface(null, Typeface.BOLD);
-            holder.sun.setAlpha(1f);
         }
     }
 
