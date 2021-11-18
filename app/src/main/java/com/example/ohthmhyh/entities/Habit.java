@@ -3,9 +3,7 @@ package com.example.ohthmhyh.entities;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 
 /**
