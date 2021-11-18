@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -211,9 +212,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      */
     public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //@author Matt
-        double progress = habitList.getHabit(position).getAdherence();
-
-        progress = 100;
+        double progress = habitList.getHabit(position).getAdherence(LocalDate.now());
 
         //set colours of bar and text to grey
         holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGray));

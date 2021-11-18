@@ -222,6 +222,44 @@ public class HabitUnitTest {
         assertEquals(3, totalOpportunity);
 
     }
+
+    /**
+     * Test the calling and calculation of the getAdherance function
+     *
+     * While I am testing using h.getAdherence(specificDate), the actual function will always be called
+     * in practice using h.getAdherence(LocalDate.now()). I am not using the now function in tests because
+     * in the future, the assertions would be incorrect.
+     *
+     * @author Matt
+     * @throws Exception
+     */
+    @Test
+    public void Test_getAdherence() {
+        Habit h = new Habit();
+        ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
+        sched.add(Habit.Days.Thu);
+        sched.add(Habit.Days.Wed);
+        h.setSchedule(sched);
+
+        LocalDate startDate = LocalDate.of(2021, 11, 11);
+        h.setStartDate(startDate.toEpochDay());
+
+        assertEquals(0, h.getAdherence(LocalDate.of(2021, 11, 18))); //is zero because we have completed 0/3
+
+        h.logCompleted();
+        h.logCompleted();
+
+        double t1 = 2;
+        double t2 = 3;
+
+        assertEquals((t1/t2)*100, h.getAdherence(LocalDate.of(2021, 11, 18))); //66.6% because we have completed 2/3
+
+        h.logCompleted();
+
+        assertEquals(100, h.getAdherence(LocalDate.of(2021, 11, 18))); //100% because we have completed 3/3
+    }
+
+
 }
 
 

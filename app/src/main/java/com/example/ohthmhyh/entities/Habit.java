@@ -295,17 +295,23 @@ public class Habit implements Serializable {
     public void logCompleted() {completedCounter++;}
 
     /**
+     * Decrements the completed counter
+     */
+    public void undoCompleted() {completedCounter--;}
+
+    /**
      * Calculate and return the % adherance for the given habit
      * @return the % adherance to this habit
      */
-    public double getAdherence() {
-        LocalDate currentDay = LocalDate.now();
+    public double getAdherence(LocalDate today) {
+        LocalDate currentDay = today;
         LocalDate startDay = LocalDate.ofEpochDay(startDate);
-        int totalOpportunity = calculateOpportunity(startDay, currentDay);
+        Double totalOpportunity = Double.valueOf(calculateOpportunity(startDay, currentDay));
 
         //if opportunity is zero, return zero
+        //Theoretically this will never be called, as the opportunity is the valid days from when the
+        //habit started. And if you call it on the same day as creation it will =1.
         if (totalOpportunity == 0) {return 0;}
-        if (completedCounter == 0) {return 0;}
 
         return (completedCounter / (totalOpportunity)*100);
 
@@ -330,7 +336,6 @@ public class Habit implements Serializable {
                 opportunity++;
             }
         }
-
         return opportunity;
     }
 }
