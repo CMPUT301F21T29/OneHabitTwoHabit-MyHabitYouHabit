@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
-import com.example.ohthmhyh.activities.CreateHabitEvent;
+import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.activities.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,7 +38,7 @@ public class HabitEventsFragmentTest {
     @BeforeClass
     public static void setUpClass() throws Exception {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.signInWithEmailAndPassword(Constants.EXISTING_USER_EMAIL, Constants.EXISTING_USER_PASSWORD);
+        mAuth.signInWithEmailAndPassword(TestConstants.EXISTING_USER_EMAIL, TestConstants.EXISTING_USER_PASSWORD);
         Thread.sleep(10000);  // Wait for sign in to occur.
     }
 
@@ -67,8 +67,8 @@ public class HabitEventsFragmentTest {
         // Click on one of the add event button
         solo.clickOnView((FloatingActionButton) solo.getView(R.id.floatingActionButton2));
 
-        // Ensure we are in CreateHabitEvent activity.
-        solo.assertCurrentActivity("Wrong activity", CreateHabitEvent.class);
+        // Ensure we are in UpdateHabitEventActivity activity.
+        solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
     }
 
     /**
@@ -98,8 +98,8 @@ public class HabitEventsFragmentTest {
         // Click on one of the add event button
         solo.clickOnView((FloatingActionButton) solo.getView(R.id.floatingActionButton2));
 
-        // Ensure we are in CreateHabitEvent activity.
-        solo.assertCurrentActivity("Wrong activity", CreateHabitEvent.class);
+        // Ensure we are in UpdateHabitEventActivity activity.
+        solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
 
         // Set an event using the spinner.
         solo.clickOnView(solo.getView(R.id.AutoCompleteTextviewCE));
@@ -118,7 +118,7 @@ public class HabitEventsFragmentTest {
         // Create event
         solo.clickOnView(solo.getView(R.id.button2));
 
-        // Ensure we are in CreateHabitEvent activity.
+        // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
         solo.clickOnView(solo.getView(R.id.habit_events_nav_item));
 

@@ -91,7 +91,7 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the email, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.NONEXISTENT_USER_EMAIL);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), TestConstants.NONEXISTENT_USER_EMAIL);
         solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
@@ -111,7 +111,7 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the password, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.NONEXISTENT_USER_PASSWORD);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), TestConstants.NONEXISTENT_USER_PASSWORD);
         solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
@@ -131,7 +131,7 @@ public class LoginActivityTest {
         switchToSignupFunctionality();
 
         // Enter the password, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_username), Constants.NONEXISTENT_USER_USERNAME);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_username), TestConstants.NONEXISTENT_USER_USERNAME);
         solo.clickOnButton(SIGNUP_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
@@ -151,8 +151,8 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the password, then press continue.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.NONEXISTENT_USER_EMAIL);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.NONEXISTENT_USER_PASSWORD);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), TestConstants.NONEXISTENT_USER_EMAIL);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), TestConstants.NONEXISTENT_USER_PASSWORD);
         solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we are still in the LoginActivity.
@@ -172,8 +172,8 @@ public class LoginActivityTest {
         switchToLoginFunctionality();
 
         // Enter the email and password of the existing user.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.EXISTING_USER_EMAIL);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.EXISTING_USER_PASSWORD);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), TestConstants.EXISTING_USER_EMAIL);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), TestConstants.EXISTING_USER_PASSWORD);
         solo.clickOnButton(LOGIN_BUTTON_TEXT);
 
         // Ensure we have moved to the MainActivity.
@@ -197,9 +197,9 @@ public class LoginActivityTest {
         switchToSignupFunctionality();
 
         // Enter the email, username, and password of the valid user to sign them up.
-        solo.enterText((EditText) solo.getView(R.id.edit_text_email), Constants.NONEXISTENT_USER_EMAIL);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_username), Constants.NONEXISTENT_USER_USERNAME);
-        solo.enterText((EditText) solo.getView(R.id.edit_text_password), Constants.NONEXISTENT_USER_PASSWORD);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_email), TestConstants.NONEXISTENT_USER_EMAIL);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_username), TestConstants.NONEXISTENT_USER_USERNAME);
+        solo.enterText((EditText) solo.getView(R.id.edit_text_password), TestConstants.NONEXISTENT_USER_PASSWORD);
         solo.clickOnButton(SIGNUP_BUTTON_TEXT);
 
         // Ensure we have moved to the MainActivity with this valid user sign up.
