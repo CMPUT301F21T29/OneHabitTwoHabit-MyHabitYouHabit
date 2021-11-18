@@ -60,7 +60,7 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
 
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
 
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_htf);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
 
         // Get the HabitList from the database.
         databaseAdapter = new DatabaseAdapter();
