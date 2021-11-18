@@ -6,36 +6,39 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
 
         <TextView
             android:id="@+id/habit_title_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Habit Title"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Give your habit an interesting title"
+            android:textSize="20sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/enter_habit_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
 
         <EditText
             android:id="@+id/enter_habit_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:hint="Enter a Habit"
-            android:textSize="16sp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="Enter the title here"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/habit_tittle" />
 
@@ -44,11 +47,11 @@
             android:id="@+id/habit_des_txtview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:text="Habit Description"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:text="Tell us more about it"
+            android:textSize="20sp"
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/enter_habit_name" />
 
@@ -57,14 +60,14 @@
             android:id="@+id/enter_habit_des"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:ems="10"
             android:gravity="start|top"
-            android:hint="Enter description"
+            android:hint="Type some description here"
             android:inputType="textMultiLine"
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -74,12 +77,13 @@
             android:id="@+id/start_date_txtview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:hint="DD/MM/YYYY"
-            android:text="Start Date"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:text="When did you start?"
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/enter_habit_des" />
 
@@ -87,12 +91,13 @@
             android:id="@+id/enter_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+
+
             android:ems="10"
-
-
-            android:textSize="16sp"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/start_date_txtview" />
 
@@ -100,11 +105,11 @@
             android:id="@+id/choose_frequency_txtview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:text="Weekly Frequency"
-            android:textSize="16sp"
-            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textStyle="italic"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/enter_date" />
 
@@ -117,112 +122,118 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
             android:orientation="horizontal">
-
-            <ToggleButton
-                android:id="@+id/mon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Mon"
-                android:textOn="Mon"
-                android:textSize="12sp" />
-
-            <ToggleButton
-                android:id="@+id/tue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Tue"
-                android:textOn="Tue"
-                android:textSize="12sp" />
-
-            <ToggleButton
-                android:id="@+id/wed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Wed"
-                android:textOn="Wed"
-                android:textSize="12sp" />
-
-            <ToggleButton
-                android:id="@+id/thu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Thu"
-                android:textOn="Thu"
-                android:textSize="12sp" />
-
-            <ToggleButton
-                android:id="@+id/fri"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Fri"
-                android:textOn="Fri"
-                android:textSize="12sp" />
-
-            <ToggleButton
-                android:id="@+id/sat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
-                android:textOff="Sat"
-                android:textOn="Sat"
-                android:textSize="12sp" />
 
             <ToggleButton
                 android:id="@+id/sun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/add_habit_frequency_button_toggle"
-                android:minWidth="40dip"
+                android:minWidth="50dip"
                 android:textOff="Sun"
                 android:textOn="Sun"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:text="This habit is  "
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/enter_date" />
+                android:textSize="16sp" />
 
             <ToggleButton
-                android:id="@+id/private_button"
+                android:id="@+id/mon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ToggleButton"
-                android:textOn="PRIVATE"
-                android:textOff="PUBLIC" />
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="50dip"
+                android:textOff="Mon"
+                android:textOn="Mon"
+                android:textSize="16sp" />
+
+            <ToggleButton
+                android:id="@+id/tue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="50dip"
+                android:textOff="Tue"
+                android:textOn="Tue"
+                android:textSize="16sp" />
+
+            <ToggleButton
+                android:id="@+id/wed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="50dip"
+                android:textOff="Wed"
+                android:textOn="Wed"
+                android:textSize="16sp" />
+
+            <ToggleButton
+                android:id="@+id/thu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="50dip"
+                android:textOff="Thu"
+                android:textOn="Thu"
+                android:textSize="16sp" />
+
+            <ToggleButton
+                android:id="@+id/fri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="50dip"
+                android:textOff="Fri"
+                android:textOn="Fri"
+                android:textSize="16sp" />
+
+            <ToggleButton
+                android:id="@+id/sat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/add_habit_frequency_button_toggle"
+                android:minWidth="50dip"
+                android:textOff="Sat"
+                android:textOn="Sat"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/done_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Done" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="15dp"
+        android:text="Share this habit?   "
+        android:textSize="20sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+    <ToggleButton
+        android:id="@+id/private_button"
+        android:layout_width="131dp"
+        android:layout_height="wrap_content"
+        android:text="ToggleButton"
+        android:textOff="Yes, publicly"
+        android:textOn="Nah, only me"
+        android:textSize="16sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintHorizontal_bias="0.03"
+        app:layout_constraintStart_toEndOf="@+id/textView2" />
+
+    <Button
+        android:id="@+id/done_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Done"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

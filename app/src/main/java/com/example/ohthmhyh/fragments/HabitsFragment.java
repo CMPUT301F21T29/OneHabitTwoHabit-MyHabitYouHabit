@@ -9,7 +9,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -128,6 +127,7 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
     private void goToUpdateHabitActivity(int habitIndex) {
         chosenHabitIndex = habitIndex;
         Intent intent = new Intent(getActivity(), UpdateHabitActivity.class);
+
         if (habitIndex >= 0) {
             // Pass the Habit to the UpdateHabitActivity.
             intent.putExtra(UpdateHabitActivity.ARG_HABIT, habitList.getHabit(habitIndex));
