@@ -121,15 +121,6 @@ public class HabitUnitTest {
     }
 
 
-//    @Test
-//    public void test_adherence () {
-//        //test initialization
-//        Habit h = new Habit();
-//
-//
-//    }
-
-
     /**
      * Performs a basic test on the calculateOpportunit() method
      * This is simply a 1 week test
