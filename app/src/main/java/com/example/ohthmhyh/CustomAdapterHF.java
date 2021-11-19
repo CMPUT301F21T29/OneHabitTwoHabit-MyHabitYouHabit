@@ -177,7 +177,7 @@ implements TouchingHandlingAdaptorHF{
      * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
      * it will be ran before the user input, this way makes it so the user input does something
      */
-    public void openDiolog(int position){
+    private void openDiolog(int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage("Are you sure, You wanted to make decision");
         alertDialogBuilder.setPositiveButton("yes",
