@@ -87,7 +87,6 @@ implements TouchingHandlingAdaptorHF{
      */
     @Override
     public void onItemSwiped(int position) {
-        System.out.println("GfG112212312");
         openDiolog(position);
     }
 
