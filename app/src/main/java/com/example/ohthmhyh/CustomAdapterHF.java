@@ -1,14 +1,16 @@
 package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -23,12 +25,11 @@ import com.example.ohthmhyh.database.HabitList;
  * A simple RecycleviewAdapter for the Habit list.
  */
 public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
-        implements TouchingHandlingAdaptorHF{
+implements TouchingHandlingAdaptorHF{
     HabitList habitList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
-
     /**
      * Creates the custom adapter instance
      * @param habitList The HabitList containing the habits
@@ -86,23 +87,8 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      */
     @Override
     public void onItemSwiped(int position) {
-        //TODO: Add confirmation alert dialog
-        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-            @Override
-            public void onHabitEventCallback(HabitEventList habitEvents) {
-                // TODO: Look to add this as a method to HabitEventList.
-
-                for (int index = 0; index < habitEvents.size(); index++){
-                    if (habitList.getHabit(position).getUHID() == habitEvents.getHabitEvent(index).getHabitUHID()) {
-                        habitEvents.removeHabitEvent(index);
-                    }
-                }
-                habitList.removeHabit(position);
-                notifyItemRemoved(position);
-            }
-        });
-
+        System.out.println("GfG112212312");
+        openDiolog(position);
     }
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
@@ -184,5 +170,56 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
          * @param position the position of the list we want to edit
          */
         void onItemClicked(int position);
+    }
+    /**
+     *This method is used to open a conformation screen with the user before a delete
+     * @param position the position of the item being swiped
+     *
+     */
+    public void openDiolog(int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage("Are you sure, You wanted to make decision");
+        alertDialogBuilder.setPositiveButton("yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Toast.makeText(context,"You clicked yes button",Toast.LENGTH_LONG).show();
+                        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+                        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+                            @Override
+                            public void onHabitEventCallback(HabitEventList habitEvents) {
+                                for (int index = 0; index < habitEvents.size(); index++) {
+                                    if (habitList.getHabit(position).getUHID() == habitEvents.getHabitEvent(index).getHabitUHID()) {
+                                        habitEvents.removeHabitEvent(index);
+                                    }
+                                }
+                                habitList.removeHabit(position);
+                                notifyItemRemoved(position);
+                            }
+                        });
+
+                    }
+                });
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        Toast.makeText(context,"You clicked no button",Toast.LENGTH_LONG).show();
+                        notifyItemChanged(position);
+
+                    }
+                });
+        alertDialogBuilder.setOnCancelListener(
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        notifyItemChanged(position);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        System.out.println("asd");
+
     }
 }
