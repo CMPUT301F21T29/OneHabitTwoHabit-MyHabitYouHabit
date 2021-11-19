@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.time.LocalDate;
@@ -27,7 +30,7 @@ import java.util.ArrayList;
  * A simple RecycleviewAdapter for the Habit list.
  */
 public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myviewholder> implements TouchingHandlingAdaptorHTF {
-    //HabitList habitList;
+    HabitList habitList;
     ArrayList<Habit> newHabitList;
 
 
@@ -42,16 +45,17 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
      * @param mOntouchListener A thing that does touch actions
      * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
      */
-    public CustomAdapterHTF(Context context, OntouchListener mOntouchListener, ArrayList<Habit> habitList) {
-        this.newHabitList = habitList;
+    public CustomAdapterHTF(Context context, OntouchListener mOntouchListener, ArrayList<Habit> newHabitList, HabitList habitList) {
+        this.newHabitList = newHabitList;
         this.context = context;
         this.mOntouchListener = mOntouchListener;
+        this.habitList = habitList;
     }
 
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_hf,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_htf,parent,false);
         Myviewholder holder = new Myviewholder(view, mOntouchListener);
 
         return holder;
@@ -67,6 +71,27 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
         holder.description.setText(newHabitList.get(position).getDescription());
         setProgressBar(holder, position);
         setDays(holder, position);
+
+        Habit h = newHabitList.get(position);
+
+        holder.checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.checkbox.isChecked()){
+                    Log.d("tag", h.getName() + " checked");
+                    int index = habitList.getHabitIndex(h);
+
+                    h.logCompleted();
+                    habitList.setHabit(index, h);
+                } else {
+                    Log.d("tag", h.getName() + " unchecked");
+                    int index = habitList.getHabitIndex(h);
+
+                    h.undoCompleted();
+                    habitList.setHabit(index, h);
+                }
+            }
+        });
 
     }
 
@@ -113,6 +138,8 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
         TextView description;
         ProgressBar pb;
         TextView percent;
+        CheckBox checkbox;
+        //CheckBox checkbox;
 
         //days of week
         TextView sun;
@@ -128,23 +155,24 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
         OntouchListener ontouchListener;
         public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
             super(itemView);
-            name = itemView.findViewById(R.id.name_rv);
-            description = itemView.findViewById(R.id.habit_description_rv);
-            pb = (ProgressBar) itemView.findViewById(R.id.pb);
-            percent = itemView.findViewById(R.id.percent);
+            name = itemView.findViewById(R.id.name_rv_ht);
+            description = itemView.findViewById(R.id.habit_description_rv_ht);
+            pb = (ProgressBar) itemView.findViewById(R.id.pb_ht);
+            percent = itemView.findViewById(R.id.percent_ht);
+            checkbox = itemView.findViewById(R.id.checkBox_ht);
 
             //days of week
-            sun = itemView.findViewById(R.id.sun);
-            mon = itemView.findViewById(R.id.mon);
-            tues = itemView.findViewById(R.id.tues);
-            wed = itemView.findViewById(R.id.wed);
-            thurs = itemView.findViewById(R.id.thurs);
-            fri = itemView.findViewById(R.id.fri);
-            sat = itemView.findViewById(R.id.sat);
+            sun = itemView.findViewById(R.id.sun_ht);
+            mon = itemView.findViewById(R.id.mon_ht);
+            tues = itemView.findViewById(R.id.tues_ht);
+            wed = itemView.findViewById(R.id.wed_ht);
+            thurs = itemView.findViewById(R.id.thurs_ht);
+            fri = itemView.findViewById(R.id.fri_ht);
+            sat = itemView.findViewById(R.id.sat_ht);
 
 
             //This is the name of the contrant layout in display HE list
-            parentLayout = itemView.findViewById(R.id.rv_cl);
+            parentLayout = itemView.findViewById(R.id.rv_cl_ht);
 
             mGestureDetector = new GestureDetector(itemView.getContext(),this);
 
@@ -316,5 +344,23 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
             holder.sat.setAlpha(1f);
         }
     }
+
+//    public void onCheckboxClicked(View view) {
+//        // Is the view now checked?
+//        boolean checked = ((CheckBox) view).isChecked();
+//
+//        // Check which checkbox was clicked
+//        switch(view.getId()) {
+//            case R.id.checkBox_ht:
+//                if (checked) {
+//                    Log.d("tag", "box checked");
+//                }
+//                // Put some meat on the sandwich
+//
+//                else {
+//                    Log.d("tag", "box unchecked");
+//                }
+//        }
+//    }
 
 }

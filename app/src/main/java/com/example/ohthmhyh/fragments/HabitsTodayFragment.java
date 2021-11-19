@@ -13,9 +13,11 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.example.ohthmhyh.CustomAdapterHTF;
 import com.example.ohthmhyh.activities.UpdateHabitActivity;
@@ -94,7 +96,7 @@ public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.On
 
 
 
-                adapter = new CustomAdapterHTF(getContext(), HabitsTodayFragment.this, newList);
+                adapter = new CustomAdapterHTF(getContext(), HabitsTodayFragment.this, newList, habitList);
                 ItemTouchHelper.Callback callback = new TouchingHandlingHTF(adapter);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
                 adapter.setTouchhelper(itemTouchHelper);
@@ -135,7 +137,7 @@ public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.On
      */
     @Override
     public void onItemClicked(int position) {
-        goToUpdateHabitActivity(position);
+        // goToUpdateHabitActivity(position); //we don't actually want to do anything when clicking a habit
     }
 
     /**
