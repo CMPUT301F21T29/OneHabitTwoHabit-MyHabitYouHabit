@@ -33,6 +33,7 @@ import java.util.ArrayList;
  */
 public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.OntouchListener {
 
+    
     public static final String ARG_RETURNED_HABIT = "returned_habit_arg";
 
     private int chosenHabitIndex = -1;
