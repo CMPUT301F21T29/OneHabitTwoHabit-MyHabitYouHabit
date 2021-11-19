@@ -151,6 +151,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
                 @Override
                 public void onBMPcallback(Bitmap bitmap) {
+                    UpdateHabitEventActivity.this.bitmap = bitmap;  // Set this instance's bitmap.
                     pictureImageView.setImageBitmap(bitmap);
                 }
             });
