@@ -17,13 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
-
-
-<<<<<<< HEAD
 import com.example.ohthmhyh.database.HabitList;
-=======
-import java.util.ArrayList;
->>>>>>> parent of 9a43b4c (items in habits fragment are now bigger)
 
 /**
  * A simple RecycleviewAdapter for the Habit list.
