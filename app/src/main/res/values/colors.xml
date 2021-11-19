@@ -27,7 +27,7 @@
     <color name="secondaryLightColor">#8C8C8C</color>
     <color name="secondaryDarkColor">#4A4A4A</color>
 
-    <color name="undoneHabitRed">#E88686</color>
+
     <color name="primaryTextColor">@color/greenD3</color>
     <color name="secondaryTextColor">@color/white</color>
 </resources>
