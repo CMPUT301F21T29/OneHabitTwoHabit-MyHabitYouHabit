@@ -72,7 +72,7 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
         setProgressBar(holder, position);
         setDays(holder, position);
 
-        Habit h = newHabitList.get(position);
+        Habit h = newHabitList.get(position); 
 
         holder.checkbox.setOnClickListener(new View.OnClickListener() {
             @Override
