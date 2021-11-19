@@ -174,13 +174,15 @@ implements TouchingHandlingAdaptorHF{
     /**
      *This method is used to open a conformation screen with the user before a delete
      * @param position the position of the item being swiped
-     *
+     * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
+     * it will be ran before the user input, this way makes it so the user input does something
      */
     public void openDiolog(int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
         alertDialogBuilder.setMessage("Are you sure, You wanted to make decision");
         alertDialogBuilder.setPositiveButton("yes",
                 new DialogInterface.OnClickListener() {
+                    //If user wants to delete and has confirmed run this code with deletes the habit
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         Toast.makeText(context,"You clicked yes button",Toast.LENGTH_LONG).show();
@@ -200,6 +202,7 @@ implements TouchingHandlingAdaptorHF{
 
                     }
                 });
+        //If the user hits no they dont want to delete run this code
         alertDialogBuilder.setNegativeButton("No",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -209,6 +212,7 @@ implements TouchingHandlingAdaptorHF{
 
                     }
                 });
+        //if the user clciks outside the box run this code (same as saying no)
         alertDialogBuilder.setOnCancelListener(
                 new DialogInterface.OnCancelListener() {
                     @Override
