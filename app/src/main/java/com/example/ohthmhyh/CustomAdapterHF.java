@@ -51,7 +51,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_hf,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit,parent,false);
         Myviewholder holder = new Myviewholder(view, mOntouchListener);
 
         return holder;
