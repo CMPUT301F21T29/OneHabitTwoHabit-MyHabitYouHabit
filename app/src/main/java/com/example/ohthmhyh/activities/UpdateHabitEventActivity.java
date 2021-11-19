@@ -79,7 +79,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             }
         });
         // Get the HabitList from the database.
-        databaseAdapter = new DatabaseAdapter();
         databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
             @Override
             public void onHabitCallback(HabitList hList) {
@@ -89,12 +88,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 AutoCompleteTextView mActv = (AutoCompleteTextView) findViewById(R.id.AutoCompleteTextviewCE);
                 mActv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View arg1, int pos,
-                                            long id) {
-                        habit=habitList.getHabit(pos);
+                    public void onItemClick(AdapterView<?> parent, View arg1, int pos, long id) {
+                        habit = habitList.getHabit(pos);
                     }
                 });
-
             }
         });
 
@@ -114,9 +111,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     /**
      * This handles the drop down list for Habits
-     * Can tell if we are on edit or new Calls to the data base to get the habitevent list
+     * Can tell if we are on edit or new Calls to the data base to get the HabitEventList
      */
     private void makeNameList(){
         ArrayList<String> habitNameList = habitList.getHabitNames();
@@ -128,22 +126,24 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
         if (habitEventIndex >= 0) {
             //Wait for habitEventList to become non null
-            databaseAdapter = new DatabaseAdapter();
             databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
                 @Override
                 public void onHabitEventCallback(HabitEventList habitEvents) {
                     habitEventList = habitEvents;
                     for (int index = 0; index < habitList.size(); index++) {
-                        if (habitList.getHabit(index).getUHID() == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
-                            habitListAutoCompleteTextView.setText(habitList.getHabit(index).getName(), false);
+                        if (habitList.getHabit(index).getUHID()
+                                == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
+                            habitListAutoCompleteTextView.setText(
+                                    habitList.getHabit(index).getName(), false);
                         }
                     }
                 }
             });
-
-        }else//Default list view (not editing)
-            {habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0)
-                    .toString(),false);}
+        } else {
+            // Default list view (not editing)
+            habitListAutoCompleteTextView
+                    .setText(arrayAdapter.getItem(0).toString(),false);
+        }
 
         habitListAutoCompleteTextView.setAdapter(arrayAdapter);
     }
@@ -304,9 +304,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         });
     }
 
-
-
-
     /**
      * Verify the string is less than 20 characters long.
      * @param string Takes a string and make sure to get a string less then 20
@@ -332,8 +329,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lol_pic);
         }
 
-        if (habit==null){
-            habit = habitList.getHabit(0);}
+        if (habit == null) {
+            habit = habitList.getHabit(0);
+        }
 
         HabitEvent habitEvent;
         if (location == null) {

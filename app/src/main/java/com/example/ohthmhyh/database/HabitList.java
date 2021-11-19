@@ -3,7 +3,6 @@ package com.example.ohthmhyh.database;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * The entity class for a the users habits. This class represents all of the habits created
