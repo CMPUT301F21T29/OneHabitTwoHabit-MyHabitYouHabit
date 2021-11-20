@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.ohthmhyh.CERecycleviewAdapter;
 import com.example.ohthmhyh.CETouchHelp;
@@ -18,7 +19,6 @@ import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
  */
 public class HabitEventsFragment extends Fragment implements CERecycleviewAdapter.OntouchListener {
 
-    private FloatingActionButton fab;
+    private Button addHabitEventButton;
     private RecyclerView recyclerView;
     private CERecycleviewAdapter mAdapter;
     private HabitEventList habitEventList;
@@ -67,8 +67,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
             }
         });
 
-        fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton2);
-        fab.setOnClickListener(new View.OnClickListener() {
+        addHabitEventButton = view.findViewById(R.id.add_habit_event);
+        addHabitEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToUpdateHabitEventActivity(-1);
