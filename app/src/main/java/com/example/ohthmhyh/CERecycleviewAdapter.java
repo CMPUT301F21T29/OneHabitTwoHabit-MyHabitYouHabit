@@ -61,7 +61,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.Displaycomment.setText(Html.fromHtml("<i>Comment: </i>"+habitEventsList.getHabitEvent(position).getComment()));
+        holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> "+habitEventsList.getHabitEvent(position).getComment()));
         holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
         if (habitEventsList.getHabitEvent(position).getLatitude()==null
             || habitEventsList.getHabitEvent(position).getLongitude()==null){
@@ -71,7 +71,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
             Geocoder geocoder = new Geocoder(holder.itemView.getContext());
             try {
                 List<Address> addresses = geocoder.getFromLocation(habitEvent.getLatitude(),habitEvent.getLongitude(),1);
-                holder.DisplayLocation.setText(Html.fromHtml("<i>Location: </i>"+ addresses.get(0).getLocality()+ ", " +addresses.get(0).getCountryName()));
+                holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> "+ addresses.get(0).getLocality()+ ", " +addresses.get(0).getCountryName()));
             } catch (IOException e) {
                 holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> Unable to find the specific location"));
             }
@@ -130,7 +130,6 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         TextView Displaycomment;
         TextView DisplayHabit;
-        TextView ExtraDisplay;
         TextView DisplayLocation;
         ImageView DisplayUserpic;
         GestureDetector mGestureDetector;
