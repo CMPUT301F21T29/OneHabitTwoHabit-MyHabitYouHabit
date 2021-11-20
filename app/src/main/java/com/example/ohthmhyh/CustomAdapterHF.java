@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
  * A simple RecycleviewAdapter for the Habit list.
  */
 public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
-        implements TouchingHandlingAdaptorHF{
+        implements ItemTransportable {
     HabitList habitList;
     Context context;
     ItemTouchHelper mTouchhelper;

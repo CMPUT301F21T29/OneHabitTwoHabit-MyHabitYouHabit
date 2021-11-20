@@ -8,12 +8,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ohthmhyh.interfaces.ItemTransportable;
+
 public class CETouchHelp extends ItemTouchHelper.Callback {
-    private final CeitemHelpToucherAdapter madapter;
+    private final ItemTransportable madapter;
     /**
      *This is the creater for CEtouchHelp
      */
-    public CETouchHelp(CeitemHelpToucherAdapter adapter) {
+    public CETouchHelp(ItemTransportable adapter) {
         this.madapter = adapter;
     }
     @Override
@@ -63,7 +65,7 @@ public class CETouchHelp extends ItemTouchHelper.Callback {
      */
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-        madapter.onItemMove(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+        madapter.onItemMoved(viewHolder.getAdapterPosition(),target.getAdapterPosition());
         return true;
     }
     /**

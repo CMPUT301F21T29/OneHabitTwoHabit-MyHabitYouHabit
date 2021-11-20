@@ -8,12 +8,14 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ohthmhyh.interfaces.ItemTransportable;
+
 public class TouchingHandlingHF extends ItemTouchHelper.Callback {
-    private final TouchingHandlingAdaptorHF madapter;
+    private final ItemTransportable madapter;
     /**
      *This is the creater for TouchingHandlingHF
      */
-    public TouchingHandlingHF(TouchingHandlingAdaptorHF adapter) {
+    public TouchingHandlingHF(ItemTransportable adapter) {
         this.madapter = adapter;
     }
 
