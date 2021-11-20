@@ -48,7 +48,7 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_habit);
-        this.setTitle("Add/Update your Habit");
+        this.setTitle("Habit");
     }
 
     @Override
