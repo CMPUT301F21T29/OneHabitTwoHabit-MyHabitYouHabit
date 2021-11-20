@@ -57,14 +57,18 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Create a new alert dialog when Add a Habit button is clicked
+
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
+
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
+
         // Get the HabitList from the database.
         databaseAdapter = new DatabaseAdapter();
         databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
             @Override
             public void onHabitCallback(HabitList hList) {
                 habitList = hList;
+
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
                 adapter = new CustomAdapterHF(getContext(), HabitsFragment.this, habitList);
@@ -124,7 +128,6 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
         if (habitIndex >= 0) {
             // Pass the Habit to the UpdateHabitActivity.
             intent.putExtra(UpdateHabitActivity.ARG_HABIT, habitList.getHabit(habitIndex));
-
         }
         resultLauncher.launch(intent);
     }
