@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -59,6 +63,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private EditText commentEditText;
     private ImageView pictureImageView;
     private TextView locationTextView;
+    //private ActivityResultLauncher<Intent> resultLauncher;
 
     @Override
     protected void onResume() {
@@ -86,6 +91,12 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 makeAndEdit();
             }
         });
+
+    }
+
+    private void onMapClosed(Intent intent) {
+        this.location = (Location)intent.getExtras().get("LOCATION");
+        locationTextView.setText(String.valueOf(location.getLongitude()));
     }
 
     /**
@@ -195,6 +206,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         // Image Uri will not be null for RESULT_OK
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+        } else if (resultCode == MapActivity.LOCATIONOK) {
+            onMapClosed(data);
         } else {
             Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
         }
@@ -252,12 +265,20 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                         locationTextView.setText(
                                 "lat: " + location.getLatitude()
                                         + "Lon: "+ location.getLongitude());
+
+                        openMaps();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
+    }
+
+    private void openMaps() {
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        mapIntent.putExtra("LOCATION", location);
+        this.startActivityForResult(mapIntent, 0);
     }
 
     /**
@@ -319,7 +340,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             habitEventList.addHabitEvent(habitEvent);
         }
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
+
 }
