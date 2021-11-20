@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.ohthmhyh.fragments.FeedFragment;
@@ -38,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Log.d("MainActivity", "onCreate");
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be
         // shown as the "Habit Today" fragment.
@@ -71,17 +68,5 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("MainActivity", "onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("MainActivity", "onResume");
     }
 }
