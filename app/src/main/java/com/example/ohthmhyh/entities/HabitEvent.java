@@ -230,8 +230,12 @@ public class HabitEvent {
             String locality = addresses.get(0).getLocality();
             String country = addresses.get(0).getCountryName();
 
+            // If we have both the locality and country, then use them both. If we only have the
+            // country, then just use that.
             if (locality != null && country != null) {
                 locationString = locality + ", " + country;
+            } else if (country != null) {
+                locationString = country;
             }
         } catch (IOException e) {
             e.printStackTrace();
