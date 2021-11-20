@@ -44,7 +44,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.display_habit_event_list,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit_event,parent,false);
         Myviewholder holder =new Myviewholder(view, mOntouchListener);
 
         return holder;
