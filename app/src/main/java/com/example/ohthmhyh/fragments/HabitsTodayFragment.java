@@ -1,26 +1,17 @@
 package com.example.ohthmhyh.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 
 import com.example.ohthmhyh.CustomAdapterHTF;
-import com.example.ohthmhyh.activities.UpdateHabitActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
@@ -35,11 +26,6 @@ import java.util.ArrayList;
  */
 public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.OntouchListener {
 
-    
-    public static final String ARG_RETURNED_HABIT = "returned_habit_arg";
-
-    private int chosenHabitIndex = -1;
-    private ActivityResultLauncher<Intent> resultLauncher;
     private HabitList habitList;
     private CustomAdapterHTF adapter;
     private DatabaseAdapter databaseAdapter;
@@ -88,13 +74,8 @@ public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.On
                     }
                 }
 
-
-
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
-
-
-
 
                 adapter = new CustomAdapterHTF(getContext(), HabitsTodayFragment.this, newList, habitList);
                 ItemTouchHelper.Callback callback = new TouchingHandlingHTF(adapter);
@@ -105,54 +86,16 @@ public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.On
             }
         });
 
-
-
-        // Gets the result of the UpdateHabitActivity (the modified/new Habit).
-        resultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        // Called when the UpdateHabitActivity returns. If it returns with a
-                        // RESULT_OK, then we can add/edit a habit in the habitList.
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            Habit habit = (Habit) result.getData().getSerializableExtra(
-                                    ARG_RETURNED_HABIT);
-                            if (chosenHabitIndex < 0) {
-                                habitList.addHabit(habit);
-                            } else {
-                                habitList.replaceHabit(chosenHabitIndex, habit);
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                });
-
         return view;
     }
 
     /**
      * Called when an item in the RecyclerView is clicked.
-     * @param position the position we need to edit
+     * @param position The position of the item that was clicked.
      */
     @Override
     public void onItemClicked(int position) {
-        // goToUpdateHabitActivity(position); //we don't actually want to do anything when clicking a habit
+        // We don't actually want to do anything when clicking a habit
     }
 
-    /**
-     * Go to the UpdateHabitActivity, passing in the Habit's index in the HabitList, or -1 if you
-     * are referencing a Habit that does not currently exist in the HabitList (e.g. when adding a
-     * Habit).
-     * @param habitIndex The index of the Habit in the HabitList, -1 for no Habit.
-     */
-    private void goToUpdateHabitActivity(int habitIndex) {
-        chosenHabitIndex = habitIndex;
-        Intent intent = new Intent(getActivity(), UpdateHabitActivity.class);
-        if (habitIndex >= 0) {
-            // Pass the Habit to the UpdateHabitActivity.
-            intent.putExtra(UpdateHabitActivity.ARG_HABIT, habitList.getHabit(habitIndex));
-        }
-        resultLauncher.launch(intent);
-    }
 }
