@@ -57,7 +57,6 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         //Need to error check because somethings might be null
         holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
         holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
-        holder.ExtraDisplay.setText("Extra: ");
         if (habitEventsList.getHabitEvent(position).getLatitude()==null
             || habitEventsList.getHabitEvent(position).getLongitude()==null){
             holder.DisplayLocation.setText("Location: Na");
@@ -129,7 +128,6 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
             super(itemView);
             Displaycomment=itemView.findViewById(R.id.DisplayCommentCE);
             DisplayHabit=itemView.findViewById(R.id.DisplayHabitCE);
-            ExtraDisplay=itemView.findViewById(R.id.ExtraDisplayCE);
             DisplayLocation=itemView.findViewById(R.id.DisplayLocationCE);
             DisplayUserpic=itemView.findViewById(R.id.DisplayUserpicCE);
             //This is the name of the contrant layout in display HE list

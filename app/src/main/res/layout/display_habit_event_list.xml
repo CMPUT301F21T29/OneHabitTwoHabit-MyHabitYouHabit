@@ -4,58 +4,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Displayed_HabitEvent_list"
     android:layout_width="match_parent"
-    android:layout_height="135dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/DisplayUserpicCE"
-        android:layout_width="127dp"
-        android:layout_height="119dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="135dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_launcher_background"
-        app:layout_constraintStart_toEndOf="@+id/DisplayCommentCE"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/DisplayHabitCE"
-        android:layout_width="113dp"
-        android:layout_height="61dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Display habit"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/DisplayUserpicCE"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/DisplayCommentCE"
-        android:layout_width="125dp"
-        android:layout_height="60dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="28dp"
         android:text="Display comment"
-        app:layout_constraintStart_toEndOf="@+id/DisplayHabitCE"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/ExtraDisplayCE"
-        android:layout_width="111dp"
-        android:layout_height="59dp"
-        android:text="Extra"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toStartOf="@+id/DisplayUserpicCE"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DisplayHabitCE" />
+        app:layout_constraintTop_toBottomOf="@+id/DisplayLocationCE" />
 
     <TextView
         android:id="@+id/DisplayLocationCE"
-        android:layout_width="116dp"
-        android:layout_height="62dp"
-        android:layout_marginStart="20dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
         android:text="Display Location"
-        app:layout_constraintStart_toEndOf="@+id/ExtraDisplayCE"
-        app:layout_constraintTop_toBottomOf="@+id/DisplayCommentCE" />
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/DisplayUserpicCE"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/DisplayHabitCE" />
 
     <View
         android:id="@+id/divider"
         android:layout_width="409dp"
         android:layout_height="1dp"
-        android:layout_marginTop="8dp"
         android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/DisplayLocationCE" />
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
