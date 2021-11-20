@@ -221,7 +221,11 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(UpdateHabitEventActivity.this
                 , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             // Permission is granted.
-            getLocation();
+            if (this.location == null) {
+                getLocation();
+            } else {
+                openMaps();
+            }
         } else {
             // Permission is denied.
             ActivityCompat.requestPermissions(UpdateHabitEventActivity.this,
