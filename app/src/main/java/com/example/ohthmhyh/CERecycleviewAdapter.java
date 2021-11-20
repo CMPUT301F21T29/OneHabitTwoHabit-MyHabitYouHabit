@@ -3,6 +3,9 @@ package com.example.ohthmhyh;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.text.Html;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.entities.HabitEvent;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
@@ -55,14 +61,20 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
+        holder.Displaycomment.setText(Html.fromHtml("<i>Comment: </i>"+habitEventsList.getHabitEvent(position).getComment()));
         holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
         if (habitEventsList.getHabitEvent(position).getLatitude()==null
             || habitEventsList.getHabitEvent(position).getLongitude()==null){
-            holder.DisplayLocation.setText("Location: Na");
+            holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> Not provided"));
         } else{
             HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
-            holder.DisplayLocation.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
+            Geocoder geocoder = new Geocoder(holder.itemView.getContext());
+            try {
+                List<Address> addresses = geocoder.getFromLocation(habitEvent.getLatitude(),habitEvent.getLongitude(),1);
+                holder.DisplayLocation.setText(Html.fromHtml("<i>Location: </i>"+ addresses.get(0).getLocality()+ ", " +addresses.get(0).getCountryName()));
+            } catch (IOException e) {
+                holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> Unable to find the specific location"));
+            }
         }
 
 
