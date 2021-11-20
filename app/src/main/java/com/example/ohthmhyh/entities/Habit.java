@@ -338,5 +338,16 @@ public class Habit implements Serializable {
         }
         return opportunity;
     }
+
+    /**
+     * Returns true if the Habit is supposed to be done today, false otherwise.
+     * @return true if the Habit is supposed to be done today, false otherwise.
+     */
+    public boolean isDueToday() {
+        LocalDate today = LocalDate.now();
+        int dayOfWeekIndex = today.getDayOfWeek().getValue() % 7;
+        return (today.isAfter(StartDateAsLocalDate().minusDays(1)) &&
+                getSchedule().contains(Habit.Days.values()[dayOfWeekIndex]));
+    }
 }
 
