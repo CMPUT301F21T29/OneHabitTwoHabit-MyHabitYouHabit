@@ -10,7 +10,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -25,11 +24,12 @@ import com.example.ohthmhyh.database.HabitList;
  * A simple RecycleviewAdapter for the Habit list.
  */
 public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
-implements TouchingHandlingAdaptorHF{
+        implements TouchingHandlingAdaptorHF{
     HabitList habitList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
+
     /**
      * Creates the custom adapter instance
      * @param habitList The HabitList containing the habits
@@ -87,7 +87,7 @@ implements TouchingHandlingAdaptorHF{
      */
     @Override
     public void onItemSwiped(int position) {
-        openDiolog(position);
+        openDialog(position);
     }
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
@@ -176,21 +176,21 @@ implements TouchingHandlingAdaptorHF{
      * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
      * it will be ran before the user input, this way makes it so the user input does something
      */
-    private void openDiolog(int position){
+    private void openDialog(int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        alertDialogBuilder.setMessage("Are you sure, You wanted to make decision");
-        alertDialogBuilder.setPositiveButton("yes",
+        alertDialogBuilder.setMessage("This will also remove all associated Habit Events. Continue?");
+        alertDialogBuilder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     //If user wants to delete and has confirmed run this code with deletes the habit
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        Toast.makeText(context,"You clicked yes button",Toast.LENGTH_LONG).show();
                         DatabaseAdapter databaseAdapter = new DatabaseAdapter();
                         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
                             @Override
                             public void onHabitEventCallback(HabitEventList habitEvents) {
                                 for (int index = 0; index < habitEvents.size(); index++) {
-                                    if (habitList.getHabit(position).getUHID() == habitEvents.getHabitEvent(index).getHabitUHID()) {
+                                    if (habitList.getHabit(position).getUHID() ==
+                                            habitEvents.getHabitEvent(index).getHabitUHID()) {
                                         habitEvents.removeHabitEvent(index);
                                     }
                                 }
@@ -206,23 +206,11 @@ implements TouchingHandlingAdaptorHF{
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        Toast.makeText(context,"You clicked no button",Toast.LENGTH_LONG).show();
-                        notifyItemChanged(position);
-
-                    }
-                });
-        //if the user clciks outside the box run this code (same as saying no)
-        alertDialogBuilder.setOnCancelListener(
-                new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
                         notifyItemChanged(position);
                     }
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        System.out.println("asd");
-
     }
 }

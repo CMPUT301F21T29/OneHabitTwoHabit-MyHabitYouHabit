@@ -108,7 +108,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      */
     @Override
     public void onItemSwiped(int position) {
-        openDiolog(position);
+        openDialog(position);
     }
 
 
@@ -200,16 +200,16 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
      * it will be ran before the user input, this way makes it so the user input does something
      */
-    public void openDiolog(int position){
+    public void openDialog(int position){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        alertDialogBuilder.setMessage("Are you sure, You wanted to make decision");
-        alertDialogBuilder.setPositiveButton("yes",
+        alertDialogBuilder.setMessage("This will change the score of the associated Habit. Continue?");
+        alertDialogBuilder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
                     //If user wants to delete and has confirmed run this code with deletes the habit
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        Toast.makeText(context,"You clicked yes button",Toast.LENGTH_LONG).show();
                         habitEventsList.removeHabitEvent(position);
+                        // TODO: Update the score of the associated Habit.
                         notifyItemRemoved(position);
 
                     }
@@ -219,23 +219,11 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        Toast.makeText(context,"You clicked no button",Toast.LENGTH_LONG).show();
-                        notifyItemChanged(position);
-
-                    }
-                });
-        //if the user clciks outside the box run this code (same as saying no)
-        alertDialogBuilder.setOnCancelListener(
-                new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
                         notifyItemChanged(position);
                     }
                 });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-        System.out.println("asd");
-
     }
 }
