@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.fragments.HabitsTodayFragment;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_item_htf,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit_today,parent,false);
         Myviewholder holder = new Myviewholder(view, mOntouchListener);
 
         return holder;
