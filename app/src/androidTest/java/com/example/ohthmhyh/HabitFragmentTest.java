@@ -66,10 +66,10 @@ public class HabitFragmentTest {
     @Test
     public void testUpdateHabitActivityShowsUp() throws Exception {
         solo.clickOnButton("Add a Habit");
-        assertTrue(solo.searchText("Enter a Habit"));
-        assertTrue(solo.searchText("Enter description"));
+        assertTrue(solo.searchText("Enter the title here"));
+        assertTrue(solo.searchText("Type some description here"));
         assertTrue(solo.searchText("Enter a date"));
-        assertTrue(solo.searchText("This habit is"));
+        assertTrue(solo.searchText("Share this habit?"));
         assertTrue(solo.searchText("Done"));
     }
 
@@ -111,11 +111,10 @@ public class HabitFragmentTest {
         solo.clickOnButton("OK");
         solo.clickOnButton("Sun");
         solo.clickOnButton("Tue");
-        solo.clickOnButton("PUBLIC");
+        solo.clickOnButton("Yes, publicly");
         solo.clickOnButton("Done");
         assertTrue(solo.searchText(HABIT_NAME));
         assertTrue(solo.searchText("HabitDescription"));
-        assertTrue(solo.searchText("Done"));
 
         View row = solo.getText(HABIT_NAME);
         row.getLocationInWindow(location);
