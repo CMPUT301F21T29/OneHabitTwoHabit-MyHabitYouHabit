@@ -60,16 +60,9 @@ public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.On
                 //make smaller list of habits to put into the recycler view
                 ArrayList<Habit> newList = new ArrayList<>();
 
-                LocalDate today = LocalDate.now();
-
-                int DOWjav = LocalDate.now().getDayOfWeek().getValue(); //note that mon is 1 in this convention, sun is 7
-                int DOW = DOWjav % 7; //this is the convention our code uses, where sun is 0, and sat is 6
-
-                for (int i=0; i<hList.size(); i++){
+                for (int i = 0; i < hList.size(); i++){
                     Habit h = hList.getHabit(i);
-
-
-                    if ((today.isAfter(h.StartDateAsLocalDate().minusDays(1))) && (h.getSchedule().contains(Habit.Days.values()[DOW]))) {
+                    if (h.isDueToday()) {
                         newList.add(h);
                     }
                 }
