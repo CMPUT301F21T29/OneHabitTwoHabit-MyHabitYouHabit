@@ -66,15 +66,11 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         if (habitEventsList.getHabitEvent(position).getLatitude()==null
             || habitEventsList.getHabitEvent(position).getLongitude()==null){
             holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> Not provided"));
-        } else{
-            HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
+        } else {
             Geocoder geocoder = new Geocoder(holder.itemView.getContext());
-            try {
-                List<Address> addresses = geocoder.getFromLocation(habitEvent.getLatitude(),habitEvent.getLongitude(),1);
-                holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> "+ addresses.get(0).getLocality()+ ", " +addresses.get(0).getCountryName()));
-            } catch (IOException e) {
-                holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> Unable to find the specific location"));
-            }
+            HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
+            holder.DisplayLocation.setText(
+                    Html.fromHtml("<i>Location:</i> " + habitEvent.location(geocoder)));
         }
 
 

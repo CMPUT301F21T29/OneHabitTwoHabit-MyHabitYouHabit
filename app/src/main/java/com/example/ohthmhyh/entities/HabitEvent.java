@@ -2,6 +2,9 @@ package com.example.ohthmhyh.entities;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.text.Html;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,6 +18,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The habitEvent class is used to define a habit event.
@@ -206,6 +211,33 @@ public class HabitEvent {
      */
     public void setUPID(int UPID) {
         this.UPID = UPID;
+    }
+
+    /**
+     * Returns the location of this HabitEvent in a more human-friendly format.
+     * @param geocoder The geocoder used to obtain the location information.
+     * @return The location of this HabitEvent in a more human-friendly format.
+     */
+    public String location(Geocoder geocoder) {
+        String locationString = null;
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(getLatitude(), getLongitude(), 1);
+            String locality = addresses.get(0).getLocality();
+            String country = addresses.get(0).getCountryName();
+
+            if (locality != null && country != null) {
+                locationString = locality + ", " + country;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (locationString == null) {
+            locationString = "Unable to find the specific location";
+        }
+
+        return locationString;
     }
 
 }
