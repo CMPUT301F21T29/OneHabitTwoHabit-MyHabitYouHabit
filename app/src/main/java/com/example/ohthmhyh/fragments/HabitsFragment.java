@@ -57,13 +57,8 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Create a new alert dialog when Add a Habit button is clicked
-
         View view = inflater.inflate(R.layout.fragment_habits, container, false);
-
-
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
-
-
         // Get the HabitList from the database.
         databaseAdapter = new DatabaseAdapter();
         databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
@@ -123,11 +118,9 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
      * Habit).
      * @param habitIndex The index of the Habit in the HabitList, -1 for no Habit.
      */
-
     private void goToUpdateHabitActivity(int habitIndex) {
         chosenHabitIndex = habitIndex;
         Intent intent = new Intent(getActivity(), UpdateHabitActivity.class);
-
         if (habitIndex >= 0) {
             // Pass the Habit to the UpdateHabitActivity.
             intent.putExtra(UpdateHabitActivity.ARG_HABIT, habitList.getHabit(habitIndex));
