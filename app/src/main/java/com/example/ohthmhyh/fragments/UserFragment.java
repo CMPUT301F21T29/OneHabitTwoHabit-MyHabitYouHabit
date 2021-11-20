@@ -71,7 +71,7 @@ public class UserFragment extends Fragment {
         });
 
         // get the user data and put it into the proper views
-        DatabaseAdapter dba = new DatabaseAdapter();
+        DatabaseAdapter dba = DatabaseAdapter.getInstance();
         dba.pullUser(new DatabaseAdapter.ProfileCallback() {
             @Override
             public void onProfileCallback(User user) {

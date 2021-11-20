@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class HabitEventList {
 
     private ArrayList<HabitEvent> habitEventList;
-    private DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
     private int UPIDCounter;
 
     public HabitEventList() {

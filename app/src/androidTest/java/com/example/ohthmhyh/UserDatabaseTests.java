@@ -41,7 +41,7 @@ public class UserDatabaseTests {
     @Test
     public void TestSendFriendRequest_1() throws Exception{
         // push users to the DB
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         User user1 = new User(TestConstants.EXISTING_USER_USERNAME);
         User user2 = new User(TestConstants.EXISTING_USER_USERNAME2);
         dba.pushUser(user1);
@@ -77,7 +77,7 @@ public class UserDatabaseTests {
     @Test
     public void TestAcceptFriendRequest_1() throws Exception{
         // push users to the DB
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         User user1 = new User(TestConstants.EXISTING_USER_USERNAME);
         User user2 = new User(TestConstants.EXISTING_USER_USERNAME2);
         dba.pushUser(user1);
