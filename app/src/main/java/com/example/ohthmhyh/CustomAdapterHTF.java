@@ -344,23 +344,4 @@ public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myvi
             holder.sat.setAlpha(1f);
         }
     }
-
-//    public void onCheckboxClicked(View view) {
-//        // Is the view now checked?
-//        boolean checked = ((CheckBox) view).isChecked();
-//
-//        // Check which checkbox was clicked
-//        switch(view.getId()) {
-//            case R.id.checkBox_ht:
-//                if (checked) {
-//                    Log.d("tag", "box checked");
-//                }
-//                // Put some meat on the sandwich
-//
-//                else {
-//                    Log.d("tag", "box unchecked");
-//                }
-//        }
-//    }
-
 }
