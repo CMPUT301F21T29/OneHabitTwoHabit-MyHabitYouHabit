@@ -155,5 +155,4 @@ public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.On
         }
         resultLauncher.launch(intent);
     }
-
 }
