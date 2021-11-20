@@ -131,4 +131,5 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
         }
         resultLauncher.launch(intent);
     }
+
 }
