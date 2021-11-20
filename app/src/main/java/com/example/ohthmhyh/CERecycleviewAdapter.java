@@ -61,20 +61,14 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> "+habitEventsList.getHabitEvent(position).getComment()));
-        holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
-        if (habitEventsList.getHabitEvent(position).getLatitude()==null
-            || habitEventsList.getHabitEvent(position).getLongitude()==null){
-            holder.DisplayLocation.setText(Html.fromHtml("<i>Location:</i> Not provided"));
-        } else {
-            Geocoder geocoder = new Geocoder(holder.itemView.getContext());
-            HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
-            holder.DisplayLocation.setText(
-                    Html.fromHtml("<i>Location:</i> " + habitEvent.location(geocoder)));
-        }
+        HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
+        Geocoder geocoder = new Geocoder(holder.itemView.getContext());
+        holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
+        holder.DisplayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
+        holder.DisplayLocation.setText(
+                Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(geocoder)));
 
-
-        habitEventsList.getHabitEvent(position).getBitmapPic(new HabitEvent.BMPcallback() {
+        habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
             @Override
             public void onBMPcallback(Bitmap bitmap) {
                 holder.DisplayUserpic.setImageBitmap(bitmap);

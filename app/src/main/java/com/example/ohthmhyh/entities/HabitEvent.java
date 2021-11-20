@@ -218,7 +218,11 @@ public class HabitEvent {
      * @param geocoder The geocoder used to obtain the location information.
      * @return The location of this HabitEvent in a more human-friendly format.
      */
-    public String location(Geocoder geocoder) {
+    public String locationString(Geocoder geocoder) {
+        if (getLatitude() == null || getLongitude() == null) {
+            return "Not provided";
+        }
+
         String locationString = null;
 
         try {
