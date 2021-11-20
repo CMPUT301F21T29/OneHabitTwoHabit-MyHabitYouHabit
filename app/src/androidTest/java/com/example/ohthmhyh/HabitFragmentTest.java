@@ -115,7 +115,6 @@ public class HabitFragmentTest {
         solo.clickOnButton("Done");
         assertTrue(solo.searchText(HABIT_NAME));
         assertTrue(solo.searchText("HabitDescription"));
-        assertFalse(solo.searchText("Done"));
 
         View row = solo.getText(HABIT_NAME);
         row.getLocationInWindow(location);
