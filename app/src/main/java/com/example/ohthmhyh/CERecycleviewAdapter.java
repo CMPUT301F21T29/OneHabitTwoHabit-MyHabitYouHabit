@@ -62,11 +62,10 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
         //Todo
         //Need to error check because somethings might be null
         HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
-        Geocoder geocoder = new Geocoder(holder.itemView.getContext());
         holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
         holder.DisplayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
         holder.DisplayLocation.setText(
-                Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(geocoder)));
+                Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(holder.itemView.getContext())));
 
         habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
             @Override

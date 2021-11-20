@@ -1,5 +1,6 @@
 package com.example.ohthmhyh.entities;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -215,10 +216,10 @@ public class HabitEvent {
 
     /**
      * Returns the location of this HabitEvent in a more human-friendly format.
-     * @param geocoder The geocoder used to obtain the location information.
+     * @param context The context used to build the Geocoder object.
      * @return The location of this HabitEvent in a more human-friendly format.
      */
-    public String locationString(Geocoder geocoder) {
+    public String locationString(Context context) {
         if (getLatitude() == null || getLongitude() == null) {
             return "Not provided";
         }
@@ -226,6 +227,7 @@ public class HabitEvent {
         String locationString = null;
 
         try {
+            Geocoder geocoder = new Geocoder(context);
             List<Address> addresses = geocoder.getFromLocation(getLatitude(), getLongitude(), 1);
             String locality = addresses.get(0).getLocality();
             String country = addresses.get(0).getCountryName();
