@@ -24,4 +24,4 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedAndroidTest
+          script: adb shell am instrument -w -m -e package com.example.ohthmhyh -e debug false com.example.ohthmhyh.test/androidx.test.runner.AndroidJUnitRunner
