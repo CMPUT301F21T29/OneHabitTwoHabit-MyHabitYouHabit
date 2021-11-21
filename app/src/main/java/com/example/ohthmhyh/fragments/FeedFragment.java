@@ -22,7 +22,7 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 import java.util.ArrayList;
 
 
-public class FeedFragment extends Fragment implements HabitRecyclerViewAdapter.OntouchListener{
+public class FeedFragment extends Fragment{
 
 
     ArrayList<Habit> feedHabits;
@@ -52,14 +52,8 @@ public class FeedFragment extends Fragment implements HabitRecyclerViewAdapter.O
         HabitList habitList = new HabitList();
         habitList.setHabitList(feedHabits);
 
-        // set up the recyclerView adapter
-        adapter = new HabitRecyclerViewAdapter(view.getContext(), FeedFragment.this, habitList);
-        ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(feedRV);
-        adapter.setTouchhelper(itemTouchHelper);
-
         // set up the feed recyclerView
+        adapter = new HabitRecyclerViewAdapter(view.getContext(), habitList);
         feedRV.setLayoutManager(new LinearLayoutManager(view.getContext()));
         feedRV.setHasFixedSize(true);
         feedRV.setAdapter(adapter);
@@ -110,17 +104,6 @@ public class FeedFragment extends Fragment implements HabitRecyclerViewAdapter.O
                 }
             }
         });
-    }
-
-
-    /**
-     * Called when we tap an item in the feed recyclerView
-     * @param position the position of the item that was tapped
-     */
-    @Override
-    public void onItemClicked(int position) {
-        // TODO: remove this dependency if we don't need on-click functionality.
-        // doing so will require re-working the recyclerView adapter
     }
 
 }

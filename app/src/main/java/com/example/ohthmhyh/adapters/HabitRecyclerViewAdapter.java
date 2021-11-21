@@ -31,103 +31,22 @@ import java.util.ArrayList;
 /**
  * An adapter used for putting habit objects into elements of a RecyclerView.
  */
-public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.Myviewholder>
-        implements ItemTransportable {
-    HabitList habitList;
-    Context context;
-    ItemTouchHelper mTouchhelper;
-    OntouchListener mOntouchListener;
+public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.ViewHolder> {
 
     /**
-     * Creates the custom adapter instance
-     * @param habitList The HabitList containing the habits
-     * @param context Context from the activity
-     * @param mOntouchListener A thing that does touch actions
-     * The HabitEventRecyclerViewAdapter creater Needs and array, context and a touch Listener
+     * Used to provide a reference to the views (items) in the RecyclerView
      */
-    public HabitRecyclerViewAdapter(Context context, OntouchListener mOntouchListener, HabitList habitList) {
-        this.habitList = habitList;
-        this.context = context;
-        this.mOntouchListener = mOntouchListener;
-    }
-
-    @NonNull
-    @Override
-    public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit,parent,false);
-        Myviewholder holder = new Myviewholder(view, mOntouchListener);
-
-        return holder;
-    }
-
-    //sets the things in the display
-    @Override
-    public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        //Todo
-        //Need to error check because somethings might be null
-        holder.name.setText(habitList.getHabit(position).getName());
-        holder.description.setText(habitList.getHabit(position).getDescription());
-        setProgressBar(holder, position);
-        setDays(holder, position);
-    }
-
-    /**
-     * Returns the amount of items in the RecyclerView
-     * @return habitList.size()
-     */
-    @Override
-    public int getItemCount() {
-        return habitList.size();
-    }
-
-    /**
-     * This is used for moving items in the RecyclerView
-     * @param fromPosition When we move a item in the list this is the position
-     * @param toPosition This is where we move the item to
-     */
-    @Override
-    public void onItemMoved(int fromPosition, int toPosition) {
-        habitList.moveHabit(fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
-    }
-
-    /**
-     * This is used for deleting items in the RecyclerView
-     * @param  position the item to delete
-     */
-    @Override
-    public void onItemSwiped(int position) {
-        //TODO: Add confirmation alert dialog
-        habitList.removeHabit(position);
-        notifyItemRemoved(position);
-    }
-
-    public void setTouchhelper(ItemTouchHelper touchhelper){
-        this.mTouchhelper = touchhelper;
-    }
-
-    public class Myviewholder extends RecyclerView.ViewHolder implements
-            View.OnTouchListener,
-            GestureDetector.OnGestureListener
-    {
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        // views of the RecyclerView items/elements
         TextView name;
         TextView description;
         ProgressBar pb;
         TextView percent;
+        TextView sun, mon, tues, wed, thurs, fri, sat;
 
-        //days of week
-        TextView sun;
-        TextView mon;
-        TextView tues;
-        TextView wed;
-        TextView thurs;
-        TextView fri;
-        TextView sat;
-
-        GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
-        OntouchListener ontouchListener;
-        public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name_rv);
             description = itemView.findViewById(R.id.habit_description_rv);
@@ -143,78 +62,62 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
             fri = itemView.findViewById(R.id.fri);
             sat = itemView.findViewById(R.id.sat);
 
-            // TODO: This doesn't seem to portable. Try to increase portability
+            // TODO: This doesn't seem too portable. Try to increase portability
             //This is the name of the constraint layout in display HE list
             parentLayout = itemView.findViewById(R.id.rv_cl);
-
-            mGestureDetector = new GestureDetector(itemView.getContext(),this);
-
-            this.ontouchListener= ontouchListener;
-
-            itemView.setOnTouchListener(this);
-
         }
-
-        /**
-         * These are all possible gestures a user can do. Define what happens when these gestures
-         * are detected.
-         */
-        @Override
-        public boolean onDown(MotionEvent motionEvent) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent motionEvent) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent motionEvent) {
-            ontouchListener.onItemClicked(getAdapterPosition());
-            return true;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            return false;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent motionEvent) {
-            mTouchhelper.startDrag(this);
-        }
-
-        @Override
-        public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            return true;
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mGestureDetector.onTouchEvent(motionEvent);
-            return true;
-        }
-
-
     }
 
-    public interface OntouchListener{
-        /**
-         * This method is used to goto the edit screen
-         * @param position the position of the list we want to edit
-         */
-        void onItemClicked(int position);
+
+    HabitList habitList;
+    Context context;
+
+
+    /**
+     * Creates an instance of the custom RecyclerView adapter used for showing habits
+     * @param habitList The HabitList containing the habits
+     * @param context Context from the activity
+     */
+    public HabitRecyclerViewAdapter(Context context, HabitList habitList) {
+        this.habitList = habitList;
+        this.context = context;
     }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit, parent,false);
+
+        return new ViewHolder(view);
+    }
+
+    //sets the things in the display
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        // set the content of the views in the RecyclerView element
+        holder.name.setText(habitList.getHabit(position).getName());
+        holder.description.setText(habitList.getHabit(position).getDescription());
+        setProgressBar(holder, position);
+        setDays(holder, position);
+    }
+
+    /**
+     * Returns the amount of items in the RecyclerView
+     * @return habitList.size()
+     */
+    @Override
+    public int getItemCount() {
+        return habitList.size();
+    }
+
 
     /**
      * Contains the logic to set the progress bar, both in magnitude and colour
      * Also set the % value
-     * @author Matt
-     * @param holder the viewholder holding objects
+     * @param holder the ViewHolder holding objects
      * @param position the position of the habit in the list that we are using
      */
-    public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
+    public void setProgressBar(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         double progress = habitList.getHabit(position).getAdherence(LocalDate.now());
 
         //set colours of bar and text to grey
@@ -246,12 +149,12 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
     }
 
     /**
-     * contains the logic to bold and set text colour of applicable days in the week
-     * @author Matt
-     * @param holder the viewholder holding objects
-     * @param position the position of the habit in the list that we are using
+     * Contains the logic to bold and set text colour of applicable days in the week for which a
+     * a habit should be completed.
+     * @param holder the ViewHolder of the RecyclerView element
+     * @param position the position of the ViewHolder (element) in the RecyclerView
      */
-    public void setDays(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
+    public void setDays(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //Bold/change colour of the days for which a habit is applicable
 
         ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
