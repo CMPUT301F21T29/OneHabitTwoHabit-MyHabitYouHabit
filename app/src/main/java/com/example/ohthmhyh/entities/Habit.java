@@ -23,6 +23,7 @@ public class Habit implements Serializable {
     private ArrayList<Days> schedule = new ArrayList<Days>();
     private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
     private int completedCounter = 0;
+    private LocalDate lastTimeCompleted;
 
 
 
@@ -290,7 +291,10 @@ public class Habit implements Serializable {
     /**
      * Increments the completed counter whenever a habit was successfully completed
      */
-    public void logCompleted() {completedCounter++;}
+    public void logCompleted() {
+        completedCounter++;
+        lastTimeCompleted = LocalDate.now();
+    }
 
     /**
      * Decrements the completed counter
@@ -348,6 +352,10 @@ public class Habit implements Serializable {
         int dayOfWeekIndex = today.getDayOfWeek().getValue() % 7;
         return (today.isAfter(StartDateAsLocalDate().minusDays(1)) &&
                 getSchedule().contains(Habit.Days.values()[dayOfWeekIndex]));
+    }
+
+    public boolean isCompletedToday() {
+        return lastTimeCompleted.equals(LocalDate.now());
     }
 }
 
