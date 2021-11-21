@@ -1,7 +1,9 @@
 package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -19,6 +21,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
@@ -94,9 +98,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      */
     @Override
     public void onItemSwiped(int position) {
-        //TODO: Add confirmation alert dialog
-        habitList.removeHabit(position);
-        notifyItemRemoved(position);
+        openDialog(position);
     }
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
@@ -203,7 +205,51 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
          */
         void onItemClicked(int position);
     }
+    
+    /**
+     *This method is used to open a conformation screen with the user before a delete
+     * @param position the position of the item being swiped
+     * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
+     * it will be ran before the user input, this way makes it so the user input does something
+     */
+    private void openDialog(int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage("This will also remove all associated Habit Events. Continue?");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    //If user wants to delete and has confirmed run this code with deletes the habit
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+                        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+                            @Override
+                            public void onHabitEventCallback(HabitEventList habitEvents) {
+                                for (int index = 0; index < habitEvents.size(); index++) {
+                                    if (habitList.getHabit(position).getUHID() ==
+                                            habitEvents.getHabitEvent(index).getHabitUHID()) {
+                                        habitEvents.removeHabitEvent(index);
+                                    }
+                                }
+                                habitList.removeHabit(position);
+                                notifyItemRemoved(position);
+                            }
+                        });
 
+                    }
+                });
+        //If the user hits no they dont want to delete run this code
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        notifyItemChanged(position);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+    
     /**
      * Contains the logic to set the progress bar, both in magnitude and colour
      * Also set the % value
@@ -313,5 +359,4 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             holder.sat.setAlpha(1f);
         }
     }
-
 }

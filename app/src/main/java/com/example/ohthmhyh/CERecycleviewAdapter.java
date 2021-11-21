@@ -1,7 +1,9 @@
 package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -13,12 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.entities.HabitEvent;
 
@@ -104,8 +108,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      */
     @Override
     public void onItemSwiped(int position) {
-        habitEventsList.removeHabitEvent(position);
-        notifyItemRemoved(position);
+        openDialog(position);
     }
 
 
@@ -188,5 +191,37 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      * @param position the position of the list we want to edit
      */
         void onItemclicked(int position);
+    }
+    /**
+     *This method is used to open a conformation screen with the user before a delete
+     * @param position the position of the item being swiped
+     * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
+     * it will be ran before the user input, this way makes it so the user input does something
+     */
+    public void openDialog(int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage("This will change the score of the associated Habit. Continue?");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    //If user wants to delete and has confirmed run this code with deletes the habit
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        habitEventsList.removeHabitEvent(position);
+                        // TODO: Update the score of the associated Habit.
+                        notifyItemRemoved(position);
+
+                    }
+                });
+        //If the user hits no they dont want to delete run this code
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        notifyItemChanged(position);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
