@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.ohthmhyh.Constants;
+import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
@@ -27,9 +29,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * A simple RecycleviewAdapter for the Habit list.
+ * An adapter used for putting habit objects into elements of a RecyclerView.
  */
-public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
+public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.Myviewholder>
         implements ItemTransportable {
     HabitList habitList;
     Context context;
@@ -41,9 +43,9 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      * @param habitList The HabitList containing the habits
      * @param context Context from the activity
      * @param mOntouchListener A thing that does touch actions
-     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+     * The HabitEventRecyclerViewAdapter creater Needs and array, context and a touch Listener
      */
-    public CustomAdapterHF(Context context, OntouchListener mOntouchListener, HabitList habitList) {
+    public HabitRecyclerViewAdapter(Context context, OntouchListener mOntouchListener, HabitList habitList) {
         this.habitList = habitList;
         this.context = context;
         this.mOntouchListener = mOntouchListener;
@@ -70,7 +72,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     }
 
     /**
-     *Returns the amount of items in the Recycleview
+     * Returns the amount of items in the RecyclerView
      * @return habitList.size()
      */
     @Override
@@ -79,9 +81,9 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     }
 
     /**
-     *This is used for moving items in the Recycleview
+     * This is used for moving items in the RecyclerView
      * @param fromPosition When we move a item in the list this is the position
-     * @param toPosition This is where me wmove the item to
+     * @param toPosition This is where we move the item to
      */
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
@@ -90,7 +92,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     }
 
     /**
-     *This is used for deleting items in the Recycleview
+     * This is used for deleting items in the RecyclerView
      * @param  position the item to delete
      */
     @Override
@@ -141,8 +143,8 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
             fri = itemView.findViewById(R.id.fri);
             sat = itemView.findViewById(R.id.sat);
 
-
-            //This is the name of the contrant layout in display HE list
+            // TODO: This doesn't seem to portable. Try to increase portability
+            //This is the name of the constraint layout in display HE list
             parentLayout = itemView.findViewById(R.id.rv_cl);
 
             mGestureDetector = new GestureDetector(itemView.getContext(),this);
@@ -154,8 +156,8 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         }
 
         /**
-         *These are all possible motions a user can do
-         * With the corresponding actions
+         * These are all possible gestures a user can do. Define what happens when these gestures
+         * are detected.
          */
         @Override
         public boolean onDown(MotionEvent motionEvent) {
@@ -199,7 +201,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
 
     public interface OntouchListener{
         /**
-         *This method is used to goto the edit screen
+         * This method is used to goto the edit screen
          * @param position the position of the list we want to edit
          */
         void onItemClicked(int position);

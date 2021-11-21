@@ -14,8 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ohthmhyh.FriendRequestListAdapter;
-import com.example.ohthmhyh.FriendsListAdapter;
+import com.example.ohthmhyh.adapters.FriendRequestListAdapter;
+import com.example.ohthmhyh.adapters.FriendsListAdapter;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.User;
