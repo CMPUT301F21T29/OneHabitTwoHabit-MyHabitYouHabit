@@ -62,10 +62,6 @@ public class HabitTodayFragmentTest {
         assertFalse(solo.searchText("Add a Habit"));
     }
 
-    //make sure only today's habit's show up (both DOW and past / present / future)
-
-    //make sure you cannot delete / edit
-
 
     /**
      * Ensure that a user cannot edit, nor delete a habit from the habit today window
@@ -129,6 +125,8 @@ public class HabitTodayFragmentTest {
         toX = location[0];
         toY = fromY;
         solo.drag(fromX, toX, fromY, toY, 2);
+        Thread.sleep(500);  // Wait for everything to load.
+        solo.clickOnButton("OK");
         assertFalse(solo.searchText(HABIT_NAME));
     }
 
@@ -186,8 +184,9 @@ public class HabitTodayFragmentTest {
             toX = location[0];
             toY = fromY;
             solo.drag(fromX, toX, fromY, toY, 3);
+            Thread.sleep(500);  // Wait for everything to load.
+            solo.clickOnButton("OK");
             assertFalse(solo.searchText(Titles[i]));
-
         }
     }
 
@@ -200,59 +199,56 @@ public class HabitTodayFragmentTest {
     public void testHabitTodayInvalidDays() throws Exception {
         Thread.sleep(3000);  // Wait for everything to load.
         LocalDate date;
+        String title = "Invalid Day Test";
 
-        //Make 7 habits, one for every day of the week
+        //Make a habit due today, starting in the future.
         solo.clickOnView(solo.getView(R.id.habits_nav_item));
-        String[] Titles = {"Sunday Test", "Monday Test", "Tuesday Test", "Wednesday Test", "Thursday Test", "Friday Test", "Saturday Test"};
         String[] Days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-        for (int i=0; i<Titles.length; i++) {
-            solo.clickOnButton("Add a Habit");
-            solo.enterText((EditText) solo.getView(R.id.enter_habit_name), Titles[i]);
-            solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "Testing " + Days[i]);
-            solo.clickOnView(solo.getView(R.id.enter_date));
+        solo.clickOnButton("Add a Habit");
+        solo.enterText((EditText) solo.getView(R.id.enter_habit_name), title);
+        solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "Testing " + title);
+        solo.clickOnView(solo.getView(R.id.enter_date));
 
-            //Select date 1 week from today
-            LocalDate newDate = LocalDate.now().plusDays(7);
-            solo.setDatePicker(0, newDate.getYear(), newDate.getMonthValue()-1, newDate.getDayOfMonth());
+        //Select date 1 week from today
+        LocalDate newDate = LocalDate.now().plusDays(7);
+        solo.setDatePicker(0, newDate.getYear(), newDate.getMonthValue()-1, newDate.getDayOfMonth());
 
-            solo.clickOnButton("OK");
-            solo.clickOnButton(Days[i]);
-            solo.clickOnButton("Yes, publicly");
-            solo.clickOnButton("Done");
-            assertTrue(solo.searchText(Titles[i]));
-        }
+        solo.clickOnButton("OK");
+        date = LocalDate.now();
+        int DOWjav = date.getDayOfWeek().getValue(); //note that mon is 1 in this convention, sun is 7
+        int DOW = DOWjav % 7; //this is the convention our code uses, where sun is 0, and sat is 6
+
+        solo.clickOnButton(Days[DOW]);
+        solo.clickOnButton("Yes, publicly");
+        solo.clickOnButton("Done");
+        assertTrue(solo.searchText(title));
 
 
         //Make sure no habits show up in habits Today (since they all start in the future)
         solo.clickOnView(solo.getView(R.id.habits_today_nav_item));
         Thread.sleep(1000);  // Wait for everything to load.
-        date = LocalDate.now();
-        int DOWjav = date.getDayOfWeek().getValue(); //note that mon is 1 in this convention, sun is 7
-        int DOW = DOWjav % 7; //this is the convention our code uses, where sun is 0, and sat is 6
-        for (int i=0; i<Titles.length; i++) {
-            assertFalse(solo.searchText(Titles[i]));
-        }
+        assertFalse(solo.searchText(title));
 
 
 
-        //Delete all 7 habits
+        //Delete the 7 habit
         int fromX, toX, fromY, toY;
         int[] location = new int[2];
         View row;
         solo.clickOnView(solo.getView(R.id.habits_nav_item));
-        for (int i=0; i<Titles.length; i++) {
-            Thread.sleep(500);  // Wait for everything to load.
-            assertTrue(solo.searchText(Titles[i]));
-            row = solo.getText(Titles[i]);
-            row.getLocationInWindow(location);
-            // fail if the view with text cannot be located in the window
-            fromX = location[0] + 100;
-            fromY = location[1];
-            toX = location[0];
-            toY = fromY;
-            solo.drag(fromX, toX, fromY, toY, 3);
-            assertFalse(solo.searchText(Titles[i]));
-        }
+        Thread.sleep(500);  // Wait for everything to load.
+        assertTrue(solo.searchText(title));
+        row = solo.getText(title);
+        row.getLocationInWindow(location);
+        // fail if the view with text cannot be located in the window
+        fromX = location[0] + 100;
+        fromY = location[1];
+        toX = location[0];
+        toY = fromY;
+        solo.drag(fromX, toX, fromY, toY, 3);
+        Thread.sleep(500);  // Wait for everything to load.
+        solo.clickOnButton("OK");
+        assertFalse(solo.searchText(title));
     }
 
 
