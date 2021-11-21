@@ -1,17 +1,17 @@
 package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -20,9 +20,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
@@ -32,9 +29,11 @@ import java.util.ArrayList;
 /**
  * A simple RecycleviewAdapter for the Habit list.
  */
-public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
-        implements TouchingHandlingAdaptorHF{
+public class CustomAdapterHTF extends RecyclerView.Adapter<CustomAdapterHTF.Myviewholder> implements TouchingHandlingAdaptorHTF {
     HabitList habitList;
+    ArrayList<Habit> newHabitList;
+
+
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
@@ -46,16 +45,17 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      * @param mOntouchListener A thing that does touch actions
      * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
      */
-    public CustomAdapterHF(Context context, OntouchListener mOntouchListener, HabitList habitList) {
-        this.habitList = habitList;
+    public CustomAdapterHTF(Context context, OntouchListener mOntouchListener, ArrayList<Habit> newHabitList, HabitList habitList) {
+        this.newHabitList = newHabitList;
         this.context = context;
         this.mOntouchListener = mOntouchListener;
+        this.habitList = habitList;
     }
 
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit_today,parent,false);
         Myviewholder holder = new Myviewholder(view, mOntouchListener);
 
         return holder;
@@ -66,19 +66,42 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.name.setText(habitList.getHabit(position).getName());
-        holder.description.setText(habitList.getHabit(position).getDescription());
+
+        holder.name.setText(newHabitList.get(position).getName());
+        holder.description.setText(newHabitList.get(position).getDescription());
         setProgressBar(holder, position);
         setDays(holder, position);
+
+        Habit h = newHabitList.get(position);
+
+        holder.checkbox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(holder.checkbox.isChecked()){
+                    Log.d("tag", h.getName() + " checked");
+                    int index = habitList.getHabitIndex(h);
+
+                    h.logCompleted();
+                    habitList.setHabit(index, h);
+                } else {
+                    Log.d("tag", h.getName() + " unchecked");
+                    int index = habitList.getHabitIndex(h);
+
+                    h.undoCompleted();
+                    habitList.setHabit(index, h);
+                }
+            }
+        });
+
     }
 
     /**
-     *Returns the amount of items in the Recycleview
+     *Returns the amount of items in the Recyclerview
      * @return habitList.size()
      */
     @Override
     public int getItemCount() {
-        return habitList.size();
+        return newHabitList.size();
     }
 
     /**
@@ -88,8 +111,8 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      */
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
-        habitList.moveHabit(fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
+//        habitList.moveHabit(fromPosition, toPosition);
+//        notifyItemMoved(fromPosition, toPosition);
     }
 
     /**
@@ -98,7 +121,9 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      */
     @Override
     public void onItemSwiped(int position) {
-        openDialog(position);
+//        //TODO: Add confirmation alert dialog
+//        habitList.removeHabit(position);
+//        notifyItemRemoved(position);
     }
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
@@ -113,6 +138,8 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         TextView description;
         ProgressBar pb;
         TextView percent;
+        CheckBox checkbox;
+        //CheckBox checkbox;
 
         //days of week
         TextView sun;
@@ -128,23 +155,24 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
         OntouchListener ontouchListener;
         public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
             super(itemView);
-            name = itemView.findViewById(R.id.name_rv);
-            description = itemView.findViewById(R.id.habit_description_rv);
-            pb = (ProgressBar) itemView.findViewById(R.id.pb);
-            percent = itemView.findViewById(R.id.percent);
+            name = itemView.findViewById(R.id.name_rv_ht);
+            description = itemView.findViewById(R.id.habit_description_rv_ht);
+            pb = (ProgressBar) itemView.findViewById(R.id.pb_ht);
+            percent = itemView.findViewById(R.id.percent_ht);
+            checkbox = itemView.findViewById(R.id.checkBox_ht);
 
             //days of week
-            sun = itemView.findViewById(R.id.sun);
-            mon = itemView.findViewById(R.id.mon);
-            tues = itemView.findViewById(R.id.tues);
-            wed = itemView.findViewById(R.id.wed);
-            thurs = itemView.findViewById(R.id.thurs);
-            fri = itemView.findViewById(R.id.fri);
-            sat = itemView.findViewById(R.id.sat);
+            sun = itemView.findViewById(R.id.sun_ht);
+            mon = itemView.findViewById(R.id.mon_ht);
+            tues = itemView.findViewById(R.id.tues_ht);
+            wed = itemView.findViewById(R.id.wed_ht);
+            thurs = itemView.findViewById(R.id.thurs_ht);
+            fri = itemView.findViewById(R.id.fri_ht);
+            sat = itemView.findViewById(R.id.sat_ht);
 
 
             //This is the name of the contrant layout in display HE list
-            parentLayout = itemView.findViewById(R.id.rv_cl);
+            parentLayout = itemView.findViewById(R.id.rv_cl_ht);
 
             mGestureDetector = new GestureDetector(itemView.getContext(),this);
 
@@ -205,51 +233,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
          */
         void onItemClicked(int position);
     }
-    
-    /**
-     *This method is used to open a conformation screen with the user before a delete
-     * @param position the position of the item being swiped
-     * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
-     * it will be ran before the user input, this way makes it so the user input does something
-     */
-    private void openDialog(int position){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-        alertDialogBuilder.setMessage("This will also remove all associated Habit Events. Continue?");
-        alertDialogBuilder.setPositiveButton("Yes",
-                new DialogInterface.OnClickListener() {
-                    //If user wants to delete and has confirmed run this code with deletes the habit
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
-                        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-                            @Override
-                            public void onHabitEventCallback(HabitEventList habitEvents) {
-                                for (int index = 0; index < habitEvents.size(); index++) {
-                                    if (habitList.getHabit(position).getUHID() ==
-                                            habitEvents.getHabitEvent(index).getHabitUHID()) {
-                                        habitEvents.removeHabitEvent(index);
-                                    }
-                                }
-                                habitList.removeHabit(position);
-                                notifyItemRemoved(position);
-                            }
-                        });
 
-                    }
-                });
-        //If the user hits no they dont want to delete run this code
-        alertDialogBuilder.setNegativeButton("No",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        notifyItemChanged(position);
-                    }
-                });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-    
     /**
      * Contains the logic to set the progress bar, both in magnitude and colour
      * Also set the % value
@@ -258,7 +242,8 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      * @param position the position of the habit in the list that we are using
      */
     public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        double progress = habitList.getHabit(position).getAdherence(LocalDate.now());
+        double progress = newHabitList.get(position).getAdherence(LocalDate.now());
+
 
         //set colours of bar and text to grey
         holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGray));
@@ -297,7 +282,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
     public void setDays(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Bold/change colour of the days for which a habit is applicable
 
-        ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
+        ArrayList<Habit.Days> days = newHabitList.get(position).getSchedule();
 
         float minOpacity = 0.3f;
 

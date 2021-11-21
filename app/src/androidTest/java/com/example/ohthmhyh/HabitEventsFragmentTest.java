@@ -5,6 +5,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -13,7 +14,6 @@ import androidx.test.rule.ActivityTestRule;
 
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.activities.MainActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.robotium.solo.Solo;
 
@@ -65,7 +65,7 @@ public class HabitEventsFragmentTest {
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
 
         // Click on one of the add event button
-        solo.clickOnView((FloatingActionButton) solo.getView(R.id.floatingActionButton2));
+        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
@@ -77,7 +77,7 @@ public class HabitEventsFragmentTest {
      */
     @Test
     public void testAddHabitEventShowsUp() throws Exception {
-        solo.clickOnView((FloatingActionButton) solo.getView(R.id.floatingActionButton2));
+        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
         assertTrue(solo.searchText("Enter a comment"));
         assertTrue(solo.searchText("Click to add Image"));
         assertTrue(solo.searchText("Add location button"));
@@ -96,7 +96,7 @@ public class HabitEventsFragmentTest {
         Thread.sleep(3000);  // Wait for everything to load.
 
         // Click on one of the add event button
-        solo.clickOnView((FloatingActionButton) solo.getView(R.id.floatingActionButton2));
+        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
@@ -124,7 +124,7 @@ public class HabitEventsFragmentTest {
 
         // Check to see if comments is proper
         assertTrue(solo.searchText("TESTING COMMENT"));
-        assertTrue(solo.searchText("lat: 37.422065599999996Lon: -122.08408969999998"));
+        assertTrue(solo.searchText("Mountain View, United States"));
 
         // Delete
         View row = solo.getText("Comment: TESTING COMMENT");

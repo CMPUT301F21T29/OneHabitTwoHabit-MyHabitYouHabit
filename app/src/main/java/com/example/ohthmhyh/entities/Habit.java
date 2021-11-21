@@ -22,6 +22,8 @@ public class Habit implements Serializable {
     private long startDate;
     private ArrayList<Days> schedule = new ArrayList<Days>();
     private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
+    private int completedCounter = 0;
+
 
 
     /**
@@ -268,6 +270,84 @@ public class Habit implements Serializable {
                 ", schedule=" + schedule +
                 '}';
     }
-    
+
+    /**
+     * Gets the number of times a habit has been successfully completed
+     * @return number of times a habit has been successfully completed
+     */
+    public int getCompletedCounter() {
+        return completedCounter;
+    }
+
+    /**
+     * Sets the number of times a habit has been successfully completed
+     * @param completedCounter number of times a habit has been successfully completed
+     */
+    public void setCompletedCounter(int completedCounter) {
+        this.completedCounter = completedCounter;
+    }
+
+    /**
+     * Increments the completed counter whenever a habit was successfully completed
+     */
+    public void logCompleted() {completedCounter++;}
+
+    /**
+     * Decrements the completed counter
+     */
+    public void undoCompleted() {completedCounter--;}
+
+    /**
+     * Calculate and return the % adherance for the given habit
+     * This uses a basic completed / possible calculation.
+     *
+     * @return the % adherance to this habit
+     */
+    public double getAdherence(LocalDate today) {
+        LocalDate currentDay = today;
+        LocalDate startDay = LocalDate.ofEpochDay(startDate);
+        Double totalOpportunity = Double.valueOf(calculateOpportunity(startDay, currentDay));
+
+        //if opportunity is zero, return zero
+        //Theoretically this will never be called, as the opportunity is the valid days from when the
+        //habit started. And if you call it on the same day as creation it will =1.
+        if (totalOpportunity == 0) {return 0;}
+
+        return (completedCounter / (totalOpportunity)*100);
+
+    }
+
+    /**
+     * Given a starting date, end date, and a given habit's scedule, find how many days for which this
+     * habit was applicable. This is used to calculate an adherence score.
+     * @author Matt
+     * @param from The starting date
+     * @param to the ending date
+     * @return the number of days where the user had the opportunity to successfully complete the habit's task
+     */
+    public int calculateOpportunity(LocalDate from, LocalDate to) {
+        int opportunity = 0;
+        //iterate through the days, and see if it falls on an applicable day of the week
+        for (LocalDate date = from; date.isBefore(to.plusDays(1)); date = date.plusDays(1)) {
+            int DOWjav = date.getDayOfWeek().getValue(); //note that mon is 1 in this convention, sun is 7
+            int DOW = DOWjav % 7; //this is the convention our code uses, where sun is 0, and sat is 6
+
+            if (schedule.contains(Days.values()[DOW])) {
+                opportunity++;
+            }
+        }
+        return opportunity;
+    }
+
+    /**
+     * Returns true if the Habit is supposed to be done today, false otherwise.
+     * @return true if the Habit is supposed to be done today, false otherwise.
+     */
+    public boolean isDueToday() {
+        LocalDate today = LocalDate.now();
+        int dayOfWeekIndex = today.getDayOfWeek().getValue() % 7;
+        return (today.isAfter(StartDateAsLocalDate().minusDays(1)) &&
+                getSchedule().contains(Habit.Days.values()[dayOfWeekIndex]));
+    }
 }
 

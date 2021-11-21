@@ -5,6 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
+import android.text.Html;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +25,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.entities.HabitEvent;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
@@ -48,7 +54,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.display_habit_event_list,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit_event,parent,false);
         Myviewholder holder =new Myviewholder(view, mOntouchListener);
 
         return holder;
@@ -59,19 +65,13 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because somethings might be null
-        holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
-        holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
-        holder.ExtraDisplay.setText("Extra: ");
-        if (habitEventsList.getHabitEvent(position).getLatitude()==null
-            || habitEventsList.getHabitEvent(position).getLongitude()==null){
-            holder.DisplayLocation.setText("Location: Na");
-        } else{
-            HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
-            holder.DisplayLocation.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
-        }
+        HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
+        holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
+        holder.DisplayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
+        holder.DisplayLocation.setText(
+                Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(holder.itemView.getContext())));
 
-
-        habitEventsList.getHabitEvent(position).getBitmapPic(new HabitEvent.BMPcallback() {
+        habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
             @Override
             public void onBMPcallback(Bitmap bitmap) {
                 holder.DisplayUserpic.setImageBitmap(bitmap);
@@ -122,7 +122,6 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         TextView Displaycomment;
         TextView DisplayHabit;
-        TextView ExtraDisplay;
         TextView DisplayLocation;
         ImageView DisplayUserpic;
         GestureDetector mGestureDetector;
@@ -132,7 +131,6 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
             super(itemView);
             Displaycomment=itemView.findViewById(R.id.DisplayCommentCE);
             DisplayHabit=itemView.findViewById(R.id.DisplayHabitCE);
-            ExtraDisplay=itemView.findViewById(R.id.ExtraDisplayCE);
             DisplayLocation=itemView.findViewById(R.id.DisplayLocationCE);
             DisplayUserpic=itemView.findViewById(R.id.DisplayUserpicCE);
             //This is the name of the contrant layout in display HE list

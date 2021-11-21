@@ -5,6 +5,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="semiVisWhite">#80FFFFFF</color>
 
+    <color name="progressBarGreen">#50C878</color>
+    <color name="progressBarGray">#808080</color>
+    <color name="progressBarAmber">#FFBF00</color>
+
 
 
     <color name="primaryColor">@color/greenL3</color>
