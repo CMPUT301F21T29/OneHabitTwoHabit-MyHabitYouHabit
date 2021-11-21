@@ -14,8 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ohthmhyh.FriendRequestListAdapter;
-import com.example.ohthmhyh.FriendsListAdapter;
+import com.example.ohthmhyh.adapters.FriendRequestListAdapter;
+import com.example.ohthmhyh.adapters.FriendsListAdapter;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.User;
@@ -71,7 +71,7 @@ public class UserFragment extends Fragment {
         });
 
         // get the user data and put it into the proper views
-        DatabaseAdapter dba = new DatabaseAdapter();
+        DatabaseAdapter dba = DatabaseAdapter.getInstance();
         dba.pullUser(new DatabaseAdapter.ProfileCallback() {
             @Override
             public void onProfileCallback(User user) {

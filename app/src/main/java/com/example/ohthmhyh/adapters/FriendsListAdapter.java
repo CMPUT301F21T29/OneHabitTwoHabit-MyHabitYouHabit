@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
         TextView usernameTV = view.findViewById(R.id.item_friend);
 
         // set the content of the username text view
-        DatabaseAdapter dba = new DatabaseAdapter();
+        DatabaseAdapter dba = DatabaseAdapter.getInstance();
         dba.pullUsernameFromUID(getItem(position), new DatabaseAdapter.UsernameCallback() {
             @Override
             public void onUsernameCallback(String username) {

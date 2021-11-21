@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class FriendRequestListAdapter extends ArrayAdapter<String> {
         Button declineBtn = view.findViewById(R.id.decline_btn);
 
         // get the username from the database and put it into the text view
-        DatabaseAdapter dba = new DatabaseAdapter();
+        DatabaseAdapter dba = DatabaseAdapter.getInstance();
         dba.pullUsernameFromUID(getItem(position), new DatabaseAdapter.UsernameCallback() {
             @Override
             public void onUsernameCallback(String username) {

@@ -3,7 +3,6 @@ package com.example.ohthmhyh.database;
 import com.example.ohthmhyh.entities.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -59,30 +58,22 @@ public class DatabaseAdapter{
         void onHabitEventCallback(HabitEventList habitEvents);
     }
 
-    // instance variables
-    private static FirebaseFirestore db;
+
+    private static DatabaseAdapter instance = null;
     private static String UID;
+    private FirebaseFirestore db;
 
 
-    /**
-     * Create an instance of the database adapter. UID will automatically be set. This is the
-     * constructor you should probably be using.
-     */
-    public DatabaseAdapter(){
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        UID = user.getUid();
+    private DatabaseAdapter() {
         db = FirebaseFirestore.getInstance();
+        UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
 
-
-    /**
-     * Create an instance of the database adapter, specifying a UID. Ideally, this should only be
-     * used while testing as specifying the wrong UID can cause database errors.
-     * @param UID force the database to use this UID for pushing/pulling data
-     */
-    public DatabaseAdapter(String UID){
-        this.UID = UID;
-        db = FirebaseFirestore.getInstance();
+    public static DatabaseAdapter getInstance() {
+        if (instance == null || !UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            instance = new DatabaseAdapter();
+        }
+        return instance;
     }
 
 
@@ -219,6 +210,16 @@ public class DatabaseAdapter{
      * @param callback A callback which is called when the query completes
      */
     public void pullHabits(HabitCallback callback){
+        pullHabits(UID, callback);
+    }
+
+
+    /**
+     * Call this method to pull the users habits from the database
+     * @param callback A callback which is called when the query completes
+     * @param UID The uid of the user for which to pull habits
+     */
+    public void pullHabits(String UID, HabitCallback callback){
         DocumentReference habits = db.collection("Habits").document(UID);
         // get the users habits
         habits.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

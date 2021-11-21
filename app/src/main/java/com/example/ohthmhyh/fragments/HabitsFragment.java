@@ -18,25 +18,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.ohthmhyh.CustomAdapterHF;
+import com.example.ohthmhyh.adapters.HabitRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitActivity;
+import com.example.ohthmhyh.adapters.HabitRecyclerViewGestureAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.TouchingHandlingHF;
+import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchListener {
+public class HabitsFragment extends Fragment implements HabitRecyclerViewGestureAdapter.OnTouchListener {
 
     public static final String ARG_RETURNED_HABIT = "returned_habit_arg";
 
     private int chosenHabitIndex = -1;
     private ActivityResultLauncher<Intent> resultLauncher;
     private HabitList habitList;
-    private CustomAdapterHF adapter;
+    private HabitRecyclerViewGestureAdapter adapter;
     private DatabaseAdapter databaseAdapter;
 
     public HabitsFragment(){
@@ -63,7 +64,7 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
 
         // Get the HabitList from the database.
-        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter = DatabaseAdapter.getInstance();
         databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
             @Override
             public void onHabitCallback(HabitList hList) {
@@ -71,10 +72,10 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
 
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
-                adapter = new CustomAdapterHF(getContext(), HabitsFragment.this, habitList);
-                ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
+                adapter = new HabitRecyclerViewGestureAdapter(getContext(),  habitList, HabitsFragment.this);
+                ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-                adapter.setTouchhelper(itemTouchHelper);
+                adapter.setTouchHelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
                 recyclerView.setAdapter(adapter);
             }
