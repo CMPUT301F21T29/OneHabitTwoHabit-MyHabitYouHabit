@@ -46,7 +46,7 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
         View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
 
         // pull the habit events from the database
-        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter = DatabaseAdapter.getInstance();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
             @Override
             public void onHabitEventCallback(HabitEventList habitEvents) {

@@ -73,7 +73,7 @@ public class FriendRequestListAdapter extends ArrayAdapter<String> {
         Button declineBtn = view.findViewById(R.id.decline_btn);
 
         // get the username from the database and put it into the text view
-        DatabaseAdapter dba = new DatabaseAdapter();
+        DatabaseAdapter dba = DatabaseAdapter.getInstance();
         dba.pullUsernameFromUID(getItem(position), new DatabaseAdapter.UsernameCallback() {
             @Override
             public void onUsernameCallback(String username) {

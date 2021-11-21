@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     // Create a new user with their username, and
                                                     // also give them other data structures for
                                                     // their data.
-                                                    DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+                                                    DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
                                                     databaseAdapter.pushUser(new User(username));
                                                     databaseAdapter.pushHabits(new HabitList());
                                                     databaseAdapter.pushHabitEvents(new HabitEventList());

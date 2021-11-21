@@ -25,7 +25,7 @@ public class User {
      * variables when using this constructor.
      */
     public User(){
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
     }
 
 
@@ -39,7 +39,7 @@ public class User {
         this.username = username;
         this.friendList = new ArrayList<String>();
         this.friendRequests = new ArrayList<String>();
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
     }
 
     /**
