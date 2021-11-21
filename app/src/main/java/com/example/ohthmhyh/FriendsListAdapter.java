@@ -49,7 +49,7 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
         TextView usernameTV = view.findViewById(R.id.item_friend);
 
         // set the content of the username text view
-        DatabaseAdapter dba = new DatabaseAdapter();
+        DatabaseAdapter dba = DatabaseAdapter.getInstance();
         dba.pullUsernameFromUID(getItem(position), new DatabaseAdapter.UsernameCallback() {
             @Override
             public void onUsernameCallback(String username) {
