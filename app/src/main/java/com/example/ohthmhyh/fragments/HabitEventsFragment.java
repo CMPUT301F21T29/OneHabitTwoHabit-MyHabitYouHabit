@@ -14,11 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.ohthmhyh.CERecycleviewAdapter;
-import com.example.ohthmhyh.CETouchHelp;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +58,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
                 recyclerView.setLayoutManager(Mmanager);
                 recyclerView.setHasFixedSize(true);
                 mAdapter=new CERecycleviewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
-                ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
+                ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
                 ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
                 mAdapter.setTouchhelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
