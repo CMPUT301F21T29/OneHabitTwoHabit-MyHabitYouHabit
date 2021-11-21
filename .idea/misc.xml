@@ -3,49 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_edit_profile.xml" value="0.36666666666666664" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/create_habit_event.xml" value="0.36666666666666664" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/create_habit_habit_drop_down_menu.xml" value="0.3663949275362319" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_feed.xml" value="0.36666666666666664" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habit_events.xml" value="0.36666666666666664" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habits.xml" value="0.36666666666666664" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_user.xml" value="0.25" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/item_friend.xml" value="0.20520833333333333" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/item_friend_request.xml" value="0.3663949275362319" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/item_habit.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/drawable/ic_feed_foreground.xml" value="0.4451282051282051" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/drawable/ic_person_background.xml" value="0.5755208333333334" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_edit_profile.xml" value="0.24094202898550723" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_login.xml" value="0.2608695652173913" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_main.xml" value="0.2608695652173913" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/alert_addhabit.xml" value="0.5" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/alert_editprofile.xml" value="0.33" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/create_habit_event.xml" value="0.37552083333333336" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/display_habit_event_list.xml" value="0.37552083333333336" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_feed.xml" value="0.2608695652173913" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habit_events.xml" value="0.37552083333333336" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habits.xml" value="0.2572463768115942" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habits_today.xml" value="0.4003623188405797" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_user.xml" value="0.4" />
-        <entry key="..\:/Users/Ian/OneDrive - ualberta.ca/Documents/GitHub/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/recyclerview_item_hf.xml" value="0.37552083333333336" />
-        <entry key="app/src/main/res/drawable/ic_person_background.xml" value="0.23072916666666668" />
-        <entry key="app/src/main/res/drawable/ic_person_foreground.xml" value="0.23072916666666668" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.39828860197361105" />
-        <entry key="app/src/main/res/layout/alert_addhabit.xml" value="0.16905708570616002" />
-        <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.20052083333333334" />
-        <entry key="app/src/main/res/layout/fragment_habit_events.xml" value="0.20052083333333334" />
-        <entry key="app/src/main/res/layout/fragment_habits.xml" value="0.20052083333333334" />
-        <entry key="app/src/main/res/layout/fragment_habits_today.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_user.xml" value="0.20052083333333334" />
-        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.6961138439318296" />
+        <entry key="app/src/main/res/layout/item_habit.xml" value="0.33300219953197097" />
+        <entry key="app/src/main/res/layout/recyclerview_item_hf.xml" value="0.1527777777777778" />
       </map>
     </option>
-  </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
-    <output url="file://$PROJECT_DIR$/build/classes" />
-  </component>
-  <component name="ProjectType">
-    <option name="id" value="Android" />
   </component>
 </project>
