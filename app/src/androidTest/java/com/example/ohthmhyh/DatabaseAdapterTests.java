@@ -53,7 +53,7 @@ public class DatabaseAdapterTests{
     @Test
     public void pushUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         // test pushing a user to the DB
         User user = new User(TestConstants.EXISTING_USER_USERNAME);
         dba.pushUser(user);
@@ -69,7 +69,7 @@ public class DatabaseAdapterTests{
     @Test
     public void pullUserTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         // push a user to the DB
         User user = new User(TestConstants.EXISTING_USER_USERNAME);
         dba.pushUser(user);
@@ -92,7 +92,7 @@ public class DatabaseAdapterTests{
     @Test
     public void pushHabitListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         // push habits into the DB
         HabitList habits = new HabitList();
         habits.addHabit(Habit.makeDummyHabit());
@@ -110,7 +110,7 @@ public class DatabaseAdapterTests{
     @Test
     public void pullHabitListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
 
         // push habits into the DB
         HabitList habits = new HabitList();
@@ -138,7 +138,7 @@ public class DatabaseAdapterTests{
     @Test
     public void pushHabitEventListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         // push habits into the DB
         HabitEventList eventList = new HabitEventList();
         eventList.addHabitEvent(new HabitEvent(
@@ -169,7 +169,7 @@ public class DatabaseAdapterTests{
     @Test
     public void pullHabitEventListTest_1() throws Exception{
         // make a database adapter and force a UID because we're not logged in while testing
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         // push habits into the DB
         HabitEventList eventList = new HabitEventList();
         eventList.addHabitEvent(new HabitEvent(
@@ -217,7 +217,7 @@ public class DatabaseAdapterTests{
      */
     @Test
     public void testPullUIDFromUsername_1() throws Exception{
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         dba.pullUIDFromUsername(TestConstants.EXISTING_USER_USERNAME,
             new DatabaseAdapter.UIDCallback() {
                 @Override
@@ -235,7 +235,7 @@ public class DatabaseAdapterTests{
      */
     @Test
     public void testGetUsernameFromUID_1() throws Exception{
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         dba.pullUsernameFromUID("ZcJzv1lHwHSGIGNbQO4gaYVhITy1",
             new DatabaseAdapter.UsernameCallback() {
                 @Override
@@ -252,7 +252,7 @@ public class DatabaseAdapterTests{
      */
     @Test
     public void testSendFriendRequest_1() throws Exception{
-        dba = new DatabaseAdapter();
+        dba = DatabaseAdapter.getInstance();
         // push a user to the DB
         User user = new User(TestConstants.EXISTING_USER_USERNAME);
         dba.pushUser(user);

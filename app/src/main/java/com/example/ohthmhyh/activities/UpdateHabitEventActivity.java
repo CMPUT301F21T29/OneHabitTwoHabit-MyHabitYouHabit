@@ -78,7 +78,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_habit_event);
 
-        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter = DatabaseAdapter.getInstance();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
             @Override
             public void onHabitEventCallback(HabitEventList habitEvents) {
