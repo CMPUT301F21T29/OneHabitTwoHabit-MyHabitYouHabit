@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -23,7 +20,6 @@ import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,22 +34,24 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
      */
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // views of the RecyclerView items/elements
-        TextView name;
-        TextView description;
-        ProgressBar pb;
-        TextView percent;
-        TextView sun, mon, tues, wed, thurs, fri, sat;
+        private TextView name;
+        private TextView description;
+        private ProgressBar pb;
+        private TextView percent;
+        private TextView sun, mon, tues, wed, thurs, fri, sat;
 
-        ConstraintLayout parentLayout;
+        /**
+         * Make a new ViewHolder for providing references to a view (item) in the RecyclerView.
+         * @param view the parent view to this view
+         */
+        public ViewHolder(@NonNull View view) {
+            super(view);
 
-        public ViewHolder(@NonNull View itemView) {
-            super(itemView);
+            // get all of the views in the item_habit view
             name = itemView.findViewById(R.id.name_rv);
             description = itemView.findViewById(R.id.habit_description_rv);
             pb = (ProgressBar) itemView.findViewById(R.id.pb);
             percent = itemView.findViewById(R.id.percent);
-
-            //days of week
             sun = itemView.findViewById(R.id.sun);
             mon = itemView.findViewById(R.id.mon);
             tues = itemView.findViewById(R.id.tues);
@@ -61,10 +59,6 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
             thurs = itemView.findViewById(R.id.thurs);
             fri = itemView.findViewById(R.id.fri);
             sat = itemView.findViewById(R.id.sat);
-
-            // TODO: This doesn't seem too portable. Try to increase portability
-            //This is the name of the constraint layout in display HE list
-            parentLayout = itemView.findViewById(R.id.rv_cl);
         }
     }
 
@@ -83,6 +77,13 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         this.context = context;
     }
 
+
+    /**
+     * Creates new views (elements) in the RecyclerView
+     * @param parent The parent viewGroup which will hold the new view
+     * @param viewType The type of ViewHolder being used
+     * @return The completed ViewHolder
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -91,7 +92,12 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         return new ViewHolder(view);
     }
 
-    //sets the things in the display
+
+    /**
+     * Replaces the content of the views in the RecyclerView with the proper view for a habit.
+     * @param holder the view holder of the habit
+     * @param position the position of the habit view in the RecyclerView
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // set the content of the views in the RecyclerView element
@@ -100,6 +106,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         setProgressBar(holder, position);
         setDays(holder, position);
     }
+
 
     /**
      * Returns the amount of items in the RecyclerView
@@ -112,8 +119,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
 
 
     /**
-     * Contains the logic to set the progress bar, both in magnitude and colour
-     * Also set the % value
+     * Contains the logic to set the progress bar, both in magnitude and colour.
+     * Also sets the adherence percentage value.
      * @param holder the ViewHolder holding objects
      * @param position the position of the habit in the list that we are using
      */
@@ -128,25 +135,24 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.pb.setProgress(progressPercent);
         holder.percent.setText(String.valueOf(progressPercent) + "%");
 
-        //set colour based on progress
-        if (progress == Constants.ADHERENCE_TEXT_GREEN_THRESHOLD) {
+        // set the progress bar and percentage color based on how well we adhere to the schedule
+        if (progress >= Constants.ADHERENCE_PROGRESS_BAR_GREEN_THRESHOLD) {
+            //make progress bar and percentage green
+            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGreen)));
             holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGreen));
         }
-
-        if (progress >= Constants.ADHERENCE_PROGRESS_BAR_GREEN_THRESHOLD) {
-            //make progress bar green
-            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGreen)));
-        }
         else if (progress >= Constants.ADHERENCE_PROGRESS_BAR_AMBER_THRESHOLD) {
-            //make progress bar amber
-            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarAmber))); //amber
-
+            //make progress bar and percentage amber
+            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarAmber)));
+            holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarAmber));
         }
         else if (progress > Constants.ADHERENCE_PROGRESS_BAR_RED_THRESHOLD) {
-            //make progress bar red
+            //make progress bar and percentage red
             holder.pb.setProgressTintList(ColorStateList.valueOf(Color.RED));
+            holder.percent.setTextColor(ColorStateList.valueOf(Color.RED));
         }
     }
+
 
     /**
      * Contains the logic to bold and set text colour of applicable days in the week for which a
@@ -155,13 +161,11 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
      * @param position the position of the ViewHolder (element) in the RecyclerView
      */
     public void setDays(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        //Bold/change colour of the days for which a habit is applicable
 
         ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
+        final float minOpacity = 0.3f;
 
-        float minOpacity = 0.3f;
-
-        //set all to default params
+        // set all "day" views to default font
         holder.sun.setTypeface(null, Typeface.NORMAL);
         holder.mon.setTypeface(null, Typeface.NORMAL);
         holder.tues.setTypeface(null, Typeface.NORMAL);
@@ -169,6 +173,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.thurs.setTypeface(null, Typeface.NORMAL);
         holder.fri.setTypeface(null, Typeface.NORMAL);
         holder.sat.setTypeface(null, Typeface.NORMAL);
+
+        // set all "day" views to default opacity
         holder.sun.setAlpha(minOpacity);
         holder.mon.setAlpha(minOpacity);
         holder.tues.setAlpha(minOpacity);
@@ -177,6 +183,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.fri.setAlpha(minOpacity);
         holder.sat.setAlpha(minOpacity);
 
+        // Bold the days of the week for which this habit should occur
         if(days.contains(Habit.Days.Sun)){
             // bold / change colour
             holder.sun.setTypeface(null, Typeface.BOLD);
