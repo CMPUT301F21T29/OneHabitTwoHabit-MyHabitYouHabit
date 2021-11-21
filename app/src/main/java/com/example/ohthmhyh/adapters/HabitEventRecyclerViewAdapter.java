@@ -23,7 +23,7 @@ import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 /**
- * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
+ * An adapter used for putting habitEvent objects into elements of a RecyclerView.
  */
 public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.Myviewholder>
         implements ItemTransportable {
@@ -33,10 +33,10 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
     OntouchListener mOntouchListener;
 
     /**
+     * Constructor for an adapter capable of putting habits into a RecyclerView.
      * @param habitEventsList A array of habit event
      * @param context Context from the activity
      * @param mOntouchListener A thing that does touch actions
-     * The HabitEventRecyclerViewAdapter creater Needs and array, context and a touch Listener
      */
     public HabitEventRecyclerViewAdapter(HabitEventList habitEventsList, Context context, OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
@@ -57,7 +57,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
-        //Need to error check because somethings might be null
+        //Need to error check because some things might be null
         HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
         holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
         holder.DisplayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
@@ -71,7 +71,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
             }
         });
 
-        //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
+
     }
 
     /**

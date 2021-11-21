@@ -29,7 +29,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * A simple RecycleviewAdapter for the Habit list.
+ * An adapter used for putting habit objects into elements of a RecyclerView.
  */
 public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.Myviewholder>
         implements ItemTransportable {
@@ -72,7 +72,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
     }
 
     /**
-     *Returns the amount of items in the Recycleview
+     * Returns the amount of items in the RecyclerView
      * @return habitList.size()
      */
     @Override
@@ -81,9 +81,9 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
     }
 
     /**
-     *This is used for moving items in the Recycleview
+     * This is used for moving items in the RecyclerView
      * @param fromPosition When we move a item in the list this is the position
-     * @param toPosition This is where me wmove the item to
+     * @param toPosition This is where we move the item to
      */
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
@@ -92,7 +92,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
     }
 
     /**
-     *This is used for deleting items in the Recycleview
+     * This is used for deleting items in the RecyclerView
      * @param  position the item to delete
      */
     @Override
@@ -143,8 +143,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
             fri = itemView.findViewById(R.id.fri);
             sat = itemView.findViewById(R.id.sat);
 
-
-            //This is the name of the contrant layout in display HE list
+            // TODO: This doesn't seem to portable. Try to increase portability
+            //This is the name of the constraint layout in display HE list
             parentLayout = itemView.findViewById(R.id.rv_cl);
 
             mGestureDetector = new GestureDetector(itemView.getContext(),this);
@@ -156,8 +156,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         }
 
         /**
-         *These are all possible motions a user can do
-         * With the corresponding actions
+         * These are all possible gestures a user can do. Define what happens when these gestures
+         * are detected.
          */
         @Override
         public boolean onDown(MotionEvent motionEvent) {
@@ -201,7 +201,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
 
     public interface OntouchListener{
         /**
-         *This method is used to goto the edit screen
+         * This method is used to goto the edit screen
          * @param position the position of the list we want to edit
          */
         void onItemClicked(int position);
