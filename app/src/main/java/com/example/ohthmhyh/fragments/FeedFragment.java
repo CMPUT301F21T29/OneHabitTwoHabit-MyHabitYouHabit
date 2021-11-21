@@ -7,13 +7,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.ohthmhyh.CustomAdapterHF;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.adapters.HabitRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
@@ -23,11 +22,11 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 import java.util.ArrayList;
 
 
-public class FeedFragment extends Fragment implements CustomAdapterHF.OntouchListener{
+public class FeedFragment extends Fragment implements HabitRecyclerViewAdapter.OntouchListener{
 
 
     ArrayList<Habit> feedHabits;
-    CustomAdapterHF adapter;
+    HabitRecyclerViewAdapter adapter;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -54,7 +53,7 @@ public class FeedFragment extends Fragment implements CustomAdapterHF.OntouchLis
         habitList.setHabitList(feedHabits);
 
         // set up the recyclerView adapter
-        adapter = new CustomAdapterHF(view.getContext(), FeedFragment.this, habitList);
+        adapter = new HabitRecyclerViewAdapter(view.getContext(), FeedFragment.this, habitList);
         ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(feedRV);
