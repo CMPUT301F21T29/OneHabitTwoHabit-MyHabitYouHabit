@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/layout/item_habit.xml" value="0.33300219953197097" />
         <entry key="app/src/main/res/layout/recyclerview_item_hf.xml" value="0.1527777777777778" />
       </map>
     </option>

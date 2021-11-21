@@ -20,6 +20,7 @@ import android.widget.Button;
 
 import com.example.ohthmhyh.adapters.HabitRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitActivity;
+import com.example.ohthmhyh.adapters.HabitRecyclerViewGestureAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
@@ -29,14 +30,14 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HabitsFragment extends Fragment implements HabitRecyclerViewAdapter.OntouchListener {
+public class HabitsFragment extends Fragment implements HabitRecyclerViewGestureAdapter.OnTouchListener {
 
     public static final String ARG_RETURNED_HABIT = "returned_habit_arg";
 
     private int chosenHabitIndex = -1;
     private ActivityResultLauncher<Intent> resultLauncher;
     private HabitList habitList;
-    private HabitRecyclerViewAdapter adapter;
+    private HabitRecyclerViewGestureAdapter adapter;
     private DatabaseAdapter databaseAdapter;
 
     public HabitsFragment(){
@@ -71,10 +72,10 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewAdapter
 
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
-                adapter = new HabitRecyclerViewAdapter(getContext(), HabitsFragment.this, habitList);
+                adapter = new HabitRecyclerViewGestureAdapter(getContext(),  habitList, HabitsFragment.this);
                 ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-                adapter.setTouchhelper(itemTouchHelper);
+                adapter.setTouchHelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
                 recyclerView.setAdapter(adapter);
             }
