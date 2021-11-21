@@ -1,7 +1,11 @@
 package com.example.ohthmhyh.entities;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.text.Html;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,6 +19,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * The habitEvent class is used to define a habit event.
@@ -206,6 +212,42 @@ public class HabitEvent {
      */
     public void setUPID(int UPID) {
         this.UPID = UPID;
+    }
+
+    /**
+     * Returns the location of this HabitEvent in a more human-friendly format.
+     * @param context The context used to build the Geocoder object.
+     * @return The location of this HabitEvent in a more human-friendly format.
+     */
+    public String locationString(Context context) {
+        if (getLatitude() == null || getLongitude() == null) {
+            return "Not provided";
+        }
+
+        String locationString = null;
+
+        try {
+            Geocoder geocoder = new Geocoder(context);
+            List<Address> addresses = geocoder.getFromLocation(getLatitude(), getLongitude(), 1);
+            String locality = addresses.get(0).getLocality();
+            String country = addresses.get(0).getCountryName();
+
+            // If we have both the locality and country, then use them both. If we only have the
+            // country, then just use that.
+            if (locality != null && country != null) {
+                locationString = locality + ", " + country;
+            } else if (country != null) {
+                locationString = country;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (locationString == null) {
+            locationString = "Unable to find the specific location";
+        }
+
+        return locationString;
     }
 
 }

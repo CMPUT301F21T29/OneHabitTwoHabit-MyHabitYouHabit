@@ -13,7 +13,7 @@ public class HabitList{
     // instance variables
     private ArrayList<Habit> habitList;
     private int UHIDCounter;
-    private DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     /**
      * Construct a new HabitList for storing all of the users habits.

@@ -11,25 +11,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-import com.example.ohthmhyh.CERecycleviewAdapter;
-import com.example.ohthmhyh.CETouchHelp;
+import com.example.ohthmhyh.adapters.HabitEventRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HabitEventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HabitEventsFragment extends Fragment implements CERecycleviewAdapter.OntouchListener {
+public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
 
-    private FloatingActionButton fab;
+    private Button addHabitEventButton;
     private RecyclerView recyclerView;
-    private CERecycleviewAdapter mAdapter;
+    private HabitEventRecyclerViewAdapter mAdapter;
     private HabitEventList habitEventList;
     private DatabaseAdapter databaseAdapter;
 
@@ -46,7 +46,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
         View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
 
         // pull the habit events from the database
-        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter = DatabaseAdapter.getInstance();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
             @Override
             public void onHabitEventCallback(HabitEventList habitEvents) {
@@ -57,8 +57,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
                 LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
                 recyclerView.setLayoutManager(Mmanager);
                 recyclerView.setHasFixedSize(true);
-                mAdapter=new CERecycleviewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
-                ItemTouchHelper.Callback callback=new CETouchHelp(mAdapter);
+                mAdapter=new HabitEventRecyclerViewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
+                ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
                 ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
                 mAdapter.setTouchhelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -67,8 +67,8 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
             }
         });
 
-        fab = (FloatingActionButton) view.findViewById(R.id.floatingActionButton2);
-        fab.setOnClickListener(new View.OnClickListener() {
+        addHabitEventButton = view.findViewById(R.id.add_habit_event);
+        addHabitEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToUpdateHabitEventActivity(-1);

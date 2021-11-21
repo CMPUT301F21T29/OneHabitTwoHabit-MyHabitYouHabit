@@ -1,8 +1,9 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,26 +17,28 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.entities.HabitEvent;
+import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 /**
- * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
+ * An adapter used for putting habitEvent objects into elements of a RecyclerView.
  */
-public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder>
-        implements CeitemHelpToucherAdapter{
+public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.Myviewholder>
+        implements ItemTransportable {
     HabitEventList habitEventsList;
     Context context;
     ItemTouchHelper mTouchhelper;
     OntouchListener mOntouchListener;
 
     /**
+     * Constructor for an adapter capable of putting habits into a RecyclerView.
      * @param habitEventsList A array of habit event
      * @param context Context from the activity
      * @param mOntouchListener A thing that does touch actions
-     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
      */
-    public  CERecycleviewAdapter(HabitEventList habitEventsList, Context context, OntouchListener mOntouchListener){
+    public HabitEventRecyclerViewAdapter(HabitEventList habitEventsList, Context context, OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
         this.context=context;
         this.mOntouchListener=mOntouchListener;
@@ -44,7 +47,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     @NonNull
     @Override
     public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.display_habit_event_list,parent,false);
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit_event,parent,false);
         Myviewholder holder =new Myviewholder(view, mOntouchListener);
 
         return holder;
@@ -54,27 +57,21 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
     @Override
     public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
-        //Need to error check because somethings might be null
-        holder.Displaycomment.setText("Comment: "+habitEventsList.getHabitEvent(position).getComment());
-        holder.DisplayHabit.setText(String.valueOf(habitEventsList.getHabitEvent(position).getHabitUHID()));
-        holder.ExtraDisplay.setText("Extra: ");
-        if (habitEventsList.getHabitEvent(position).getLatitude()==null
-            || habitEventsList.getHabitEvent(position).getLongitude()==null){
-            holder.DisplayLocation.setText("Location: Na");
-        } else{
-            HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
-            holder.DisplayLocation.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
-        }
+        //Need to error check because some things might be null
+        HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
+        holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
+        holder.DisplayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
+        holder.DisplayLocation.setText(
+                Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(holder.itemView.getContext())));
 
-
-        habitEventsList.getHabitEvent(position).getBitmapPic(new HabitEvent.BMPcallback() {
+        habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
             @Override
             public void onBMPcallback(Bitmap bitmap) {
                 holder.DisplayUserpic.setImageBitmap(bitmap);
             }
         });
 
-        //holder.DisplayUserpic.Picasso.with(this).load(resultUri).into(pick);
+
     }
 
     /**
@@ -93,7 +90,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      * @param toPosition This is where we move the item to
      */
     @Override
-    public void onItemMove(int fromPosition, int toPosition) {
+    public void onItemMoved(int fromPosition, int toPosition) {
         habitEventsList.moveHabit(fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }
@@ -119,7 +116,6 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
 
         TextView Displaycomment;
         TextView DisplayHabit;
-        TextView ExtraDisplay;
         TextView DisplayLocation;
         ImageView DisplayUserpic;
         GestureDetector mGestureDetector;
@@ -129,7 +125,6 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
             super(itemView);
             Displaycomment=itemView.findViewById(R.id.DisplayCommentCE);
             DisplayHabit=itemView.findViewById(R.id.DisplayHabitCE);
-            ExtraDisplay=itemView.findViewById(R.id.ExtraDisplayCE);
             DisplayLocation=itemView.findViewById(R.id.DisplayLocationCE);
             DisplayUserpic=itemView.findViewById(R.id.DisplayUserpicCE);
             //This is the name of the contrant layout in display HE list
