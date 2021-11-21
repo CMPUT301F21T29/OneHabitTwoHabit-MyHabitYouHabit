@@ -1,6 +1,7 @@
 package com.example.ohthmhyh.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.ohthmhyh.R;
@@ -25,6 +27,9 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     }
 
 
+    /**
+     * Used to provide a reference to the views (items) in the RecyclerView
+     */
     public class ViewHolder extends HabitRecyclerViewAdapter.ViewHolder
             implements GestureDetector.OnGestureListener, View.OnTouchListener {
         OnTouchListener touchListener;
@@ -160,9 +165,24 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      */
     @Override
     public void onItemSwiped(int position) {
-        //TODO: Add confirmation alert dialog
-        habitList.removeHabit(position);
-        notifyItemRemoved(position);
+        // show a confirmation dialog when deleting
+        new AlertDialog.Builder(context)
+                .setMessage("Do you really want to delete this habit?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    // when "yes" is pressed, delete the habit
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        habitList.removeHabit(position);
+                        notifyItemRemoved(position);
+                    }})
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    // don't delete the habit when "no" is pressed, but undo the swipe animation
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        notifyDataSetChanged();
+                    }
+                }).show();
     }
 
 
