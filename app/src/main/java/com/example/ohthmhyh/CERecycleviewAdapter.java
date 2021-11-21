@@ -220,6 +220,12 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
                         notifyItemChanged(position);
                     }
                 });
+        alertDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                notifyItemChanged(position);
+            }
+        });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();

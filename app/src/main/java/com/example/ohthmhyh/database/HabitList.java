@@ -2,6 +2,7 @@ package com.example.ohthmhyh.database;
 
 import com.example.ohthmhyh.entities.Habit;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -158,8 +159,24 @@ public class HabitList{
     public ArrayList<String> getHabitNames(){
         ArrayList<String> habitNameList = new ArrayList<>();
         for (int i = 0; i < habitList.size(); i++){
-            habitNameList.add(habitList.get(i).getName());
+            if(habitList.get(i).isDueToday()||habitList.get(i).isCompletedToday()){
+                habitNameList.add(habitList.get(i).getName());}
         }
         return habitNameList;
+    }
+    public boolean findIfhabitIsCompletedToday(){
+
+        boolean HabitDoneToday=false;
+        if (habitList.size()==0){
+            return false;
+        }
+        for (int i = 0; i < habitList.size(); i++){
+            System.out.println("123asdasdasd"+habitList.get(i).isCompletedToday());
+            if(habitList.get(i).isCompletedToday()){
+                System.out.println("asdasdasd"+habitList.get(i).isCompletedToday());
+                HabitDoneToday=true;
+            }
+        }
+        return HabitDoneToday;
     }
 }

@@ -355,7 +355,8 @@ public class Habit implements Serializable {
     }
 
     public boolean isCompletedToday() {
-        return lastTimeCompleted.equals(LocalDate.now());
+        System.out.println("dqwdwad"+lastTimeCompleted.equals(LocalDate.now()));
+        return (lastTimeCompleted.equals(LocalDate.now()));
     }
 }
 

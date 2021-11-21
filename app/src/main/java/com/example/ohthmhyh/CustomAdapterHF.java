@@ -245,6 +245,12 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
                         notifyItemChanged(position);
                     }
                 });
+        alertDialogBuilder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                notifyItemChanged(position);
+            }
+        });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();

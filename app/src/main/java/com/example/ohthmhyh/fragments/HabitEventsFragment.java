@@ -11,14 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.ohthmhyh.CERecycleviewAdapter;
 import com.example.ohthmhyh.CETouchHelp;
+import com.example.ohthmhyh.activities.MainActivity;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.database.HabitList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,7 +76,22 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
         addHabitEventButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToUpdateHabitEventActivity(-1);
+                // Get the HabitList from the database.
+                databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
+                    @Override
+                    public void onHabitCallback(HabitList hList) {
+                        HabitList habitList = hList;
+                        if (habitList.findIfhabitIsCompletedToday()){
+                            goToUpdateHabitEventActivity(-1);
+                        }else {
+                            Toast.makeText(getActivity(), "No habits Complete Today",
+                                    Toast.LENGTH_LONG).show();
+                            Intent intent =new Intent(getActivity(), MainActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
+
             }
         });
 
