@@ -3,7 +3,6 @@ package com.example.ohthmhyh.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,12 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.adapters.HabitRecyclerViewAdapter;
+import com.example.ohthmhyh.adapters.HabitFeedRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.User;
-import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 import java.util.ArrayList;
 
@@ -26,7 +24,8 @@ public class FeedFragment extends Fragment{
 
 
     ArrayList<Habit> feedHabits;
-    HabitRecyclerViewAdapter adapter;
+    ArrayList<String> usernames;
+    HabitFeedRecyclerViewAdapter adapter;
 
     public FeedFragment() {
         // Required empty public constructor
@@ -42,7 +41,8 @@ public class FeedFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        feedHabits = new ArrayList<Habit>();
+        feedHabits = new ArrayList<>();
+        usernames = new ArrayList<>();
 
         // Inflate the layout and get views for this fragment
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
@@ -53,18 +53,13 @@ public class FeedFragment extends Fragment{
         habitList.setHabitList(feedHabits);
 
         // set up the feed recyclerView
-        adapter = new HabitRecyclerViewAdapter(view.getContext(), habitList);
+        adapter = new HabitFeedRecyclerViewAdapter(view.getContext(), habitList, usernames);
         feedRV.setLayoutManager(new LinearLayoutManager(view.getContext()));
         feedRV.setHasFixedSize(true);
         feedRV.setAdapter(adapter);
 
         // populate the feed from the database
         buildFeed();
-
-//        for(int i = 0; i<30; i++){
-//            feedHabits.add(Habit.makeDummyHabit());
-//            adapter.notifyItemInserted(adapter.getItemCount()+1);
-//        }
 
         return view;
     }
@@ -88,17 +83,25 @@ public class FeedFragment extends Fragment{
                     // UID of the user for which to get their public habits
                     String followingUID = user.getFriendList().get(i);
 
-                    // pull the habits of the user we follow
-                    dba.pullHabits(followingUID, new DatabaseAdapter.HabitCallback() {
+                    // pull username of user we are getting public habits for
+                    dba.pullUsernameFromUID(followingUID, new DatabaseAdapter.UsernameCallback() {
                         @Override
-                        public void onHabitCallback(HabitList hList) {
-                            for (Habit habit: hList.getHabitList()) {
-                                // add the habit to the feed if it is public
-                                if(!habit.getIsPrivate()){
-                                    feedHabits.add(habit);
-                                    adapter.notifyItemInserted(adapter.getItemCount()+1);
+                        public void onUsernameCallback(String username) {
+
+                            // pull the habits of the user we follow
+                            dba.pullHabits(followingUID, new DatabaseAdapter.HabitCallback() {
+                                @Override
+                                public void onHabitCallback(HabitList hList) {
+                                    for (Habit habit: hList.getHabitList()) {
+                                        // add the habit to the feed if it is public
+                                        if(!habit.getIsPrivate()){
+                                            feedHabits.add(habit);
+                                            usernames.add(username);
+                                            adapter.notifyItemInserted(adapter.getItemCount()+1);
+                                        }
+                                    }
                                 }
-                            }
+                            });
                         }
                     });
                 }

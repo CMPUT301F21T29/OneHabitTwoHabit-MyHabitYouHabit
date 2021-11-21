@@ -44,6 +44,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
             this.touchListener = touchListener;
             gestureDetector = new GestureDetector(view.getContext(), this);
             itemView.setOnTouchListener(this);
+            username.setVisibility(View.GONE);
         }
 
         /**

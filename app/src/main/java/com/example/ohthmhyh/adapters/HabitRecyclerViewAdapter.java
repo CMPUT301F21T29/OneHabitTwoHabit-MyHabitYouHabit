@@ -12,7 +12,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -27,17 +26,15 @@ import java.util.ArrayList;
 /**
  * An adapter used for putting habit objects into elements of a RecyclerView.
  */
-public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.ViewHolder> {
+public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.ViewHolder> {
 
     /**
      * Used to provide a reference to the views (items) in the RecyclerView
      */
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // views of the RecyclerView items/elements
-        private TextView name;
-        private TextView description;
+        protected TextView name, description, percent, username;
         private ProgressBar pb;
-        private TextView percent;
         private TextView sun, mon, tues, wed, thurs, fri, sat;
 
         /**
@@ -48,17 +45,18 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
             super(view);
 
             // get all of the views in the item_habit view
-            name = itemView.findViewById(R.id.name_rv);
-            description = itemView.findViewById(R.id.habit_description_rv);
-            pb = (ProgressBar) itemView.findViewById(R.id.pb);
-            percent = itemView.findViewById(R.id.percent);
-            sun = itemView.findViewById(R.id.sun);
-            mon = itemView.findViewById(R.id.mon);
-            tues = itemView.findViewById(R.id.tues);
-            wed = itemView.findViewById(R.id.wed);
-            thurs = itemView.findViewById(R.id.thurs);
-            fri = itemView.findViewById(R.id.fri);
-            sat = itemView.findViewById(R.id.sat);
+            name = view.findViewById(R.id.name_rv);
+            description = view.findViewById(R.id.habit_description_rv);
+            pb = (ProgressBar) view.findViewById(R.id.pb);
+            percent = view.findViewById(R.id.percent);
+            username = view.findViewById(R.id.creator_usernameTV);
+            sun = view.findViewById(R.id.sun);
+            mon = view.findViewById(R.id.mon);
+            tues = view.findViewById(R.id.tues);
+            wed = view.findViewById(R.id.wed);
+            thurs = view.findViewById(R.id.thurs);
+            fri = view.findViewById(R.id.fri);
+            sat = view.findViewById(R.id.sat);
         }
     }
 
