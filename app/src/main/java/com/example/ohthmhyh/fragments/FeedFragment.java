@@ -13,11 +13,11 @@ import android.view.ViewGroup;
 
 import com.example.ohthmhyh.CustomAdapterHF;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.TouchingHandlingHF;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.User;
+import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 import java.util.ArrayList;
 
@@ -54,7 +54,7 @@ public class FeedFragment extends Fragment implements CustomAdapterHF.OntouchLis
 
         // set up the recyclerView adapter
         adapter = new CustomAdapterHF(view.getContext(), FeedFragment.this, habitList);
-        ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
+        ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(feedRV);
         adapter.setTouchhelper(itemTouchHelper);
