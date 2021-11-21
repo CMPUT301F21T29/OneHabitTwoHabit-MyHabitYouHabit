@@ -108,7 +108,12 @@ public class UserFragment extends Fragment {
 
         // set the views
         usernameTV.setText(user.getUsername());
-        userBioTV.setText(user.getBio());
+
+        //check if there is a bio. If not show a message
+        if (user.getBio() != null)
+            userBioTV.setText(user.getBio());
+        else
+            userBioTV.setText("Click edit profile to set a bio");
         emptyRequestTV.setText("Looks like you're all caught up!");
         emptyFriendsTV.setText("You're not following anyone!");
 
