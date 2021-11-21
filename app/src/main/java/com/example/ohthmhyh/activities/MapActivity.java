@@ -36,13 +36,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Location location;
     private FloatingActionButton getLocationButton;
 
-    public static final int LOCATIONOK = -2;
+    public static final int LOCATIONOK = -2; // Required for result
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        // Get location from the EventActivity
         Intent location = getIntent();
         this.location = (Location)location.getExtras().get("LOCATION");
 
@@ -54,6 +55,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getLocationButton = findViewById(R.id.get_location);
     }
 
+    /**
+     * When map is ready, sets the location
+     * @param googleMap
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
@@ -62,8 +67,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         LatLng currLoc = new LatLng(this.location.getLatitude(), this.location.getLongitude());
         updateMarker(new LatLng(this.location.getLatitude(), this.location.getLongitude()));
 
+        // Making sure it's zoomed in properly
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currLoc, 15.0f));
 
+        // If a location is selected on the map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
@@ -72,6 +79,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         Button set_location = findViewById(R.id.set_location_button);
+
+        // If set location is clicked
         set_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +92,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
 
+        // If current location button is clicked
         getLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,16 +103,23 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    /**
+     * Updates the marker on the map
+     * @param currLoc location of the new marker
+     */
     private void updateMarker(LatLng currLoc) {
         location.setLatitude(currLoc.latitude);
         location.setLongitude(currLoc.longitude);
-        mMap.clear();
+        mMap.clear();   // Make sure the other markers are cleared.
         mMap.addMarker(new MarkerOptions()
                 .position(currLoc)
                 .title("Set Location"));
         mMap.animateCamera(CameraUpdateFactory.newLatLng(currLoc));
     }
 
+    /**
+     * gets the current location and sets it to the location variable
+     */
     @SuppressLint("MissingPermission")
     private void getLocation() {
         FusedLocationProviderClient fusedLocationProviderClient =
@@ -123,8 +140,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                                         Locale.getDefault());
                                 List<Address> addressList = geocoder.getFromLocation(
                                         currentLocation.getLatitude(), currentLocation.getLongitude(), 1);
-                                // To get everything do addressList.get(0).getLatitude
-                                // getLongitude, get(0).getCountry  getAddressLine
 
                                 updateMarker(new LatLng(addressList.get(0).getLatitude(), addressList.get(0).getLongitude()));
 
