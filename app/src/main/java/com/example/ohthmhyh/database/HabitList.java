@@ -124,4 +124,15 @@ public class HabitList{
         return UHIDCounter++;
     }
 
+    /**
+     * Get all the names of users habit and returns it
+     * @return A string array of all the names of habits
+     */
+    public ArrayList<String> getHabitNames(){
+        ArrayList<String> habitNameList = new ArrayList<>();
+        for (int i = 0; i < habitList.size(); i++){
+            habitNameList.add(habitList.get(i).getName());
+        }
+        return habitNameList;
+    }
 }

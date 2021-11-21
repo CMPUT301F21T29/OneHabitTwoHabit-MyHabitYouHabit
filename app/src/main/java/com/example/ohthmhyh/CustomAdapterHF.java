@@ -1,10 +1,9 @@
 package com.example.ohthmhyh;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.Typeface;
+import android.content.DialogInterface;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,6 +18,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
@@ -94,9 +95,7 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      */
     @Override
     public void onItemSwiped(int position) {
-        //TODO: Add confirmation alert dialog
-        habitList.removeHabit(position);
-        notifyItemRemoved(position);
+        openDialog(position);
     }
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
@@ -203,115 +202,47 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
          */
         void onItemClicked(int position);
     }
-
     /**
-     * Contains the logic to set the progress bar, both in magnitude and colour
-     * Also set the % value
-     * @author Matt
-     * @param holder the viewholder holding objects
-     * @param position the position of the habit in the list that we are using
+     *This method is used to open a conformation screen with the user before a delete
+     * @param position the position of the item being swiped
+     * The reason why it is like this is because dialogs are asynchronous so if the delete method is outside
+     * it will be ran before the user input, this way makes it so the user input does something
      */
-    public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        double progress = habitList.getHabit(position).getAdherence(LocalDate.now());
+    private void openDialog(int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage("This will also remove all associated Habit Events. Continue?");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    //If user wants to delete and has confirmed run this code with deletes the habit
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        DatabaseAdapter databaseAdapter = new DatabaseAdapter();
+                        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+                            @Override
+                            public void onHabitEventCallback(HabitEventList habitEvents) {
+                                for (int index = 0; index < habitEvents.size(); index++) {
+                                    if (habitList.getHabit(position).getUHID() ==
+                                            habitEvents.getHabitEvent(index).getHabitUHID()) {
+                                        habitEvents.removeHabitEvent(index);
+                                    }
+                                }
+                                habitList.removeHabit(position);
+                                notifyItemRemoved(position);
+                            }
+                        });
 
-        //set colours of bar and text to grey
-        holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGray));
-        holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGray)));
+                    }
+                });
+        //If the user hits no they dont want to delete run this code
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        notifyItemChanged(position);
+                    }
+                });
 
-        int progressPercent = (int) progress;
-        holder.pb.setProgress(progressPercent);
-        holder.percent.setText(String.valueOf(progressPercent) + "%");
-
-        //set colour based on progress
-        if (progress == Constants.ADHERENCE_TEXT_GREEN_THRESHOLD) {
-            holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGreen));
-        }
-
-        if (progress >= Constants.ADHERENCE_PROGRESS_BAR_GREEN_THRESHOLD) {
-            //make progress bar green
-            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGreen)));
-        }
-        else if (progress >= Constants.ADHERENCE_PROGRESS_BAR_AMBER_THRESHOLD) {
-            //make progress bar amber
-            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarAmber))); //amber
-
-        }
-        else if (progress > Constants.ADHERENCE_PROGRESS_BAR_RED_THRESHOLD) {
-            //make progress bar red
-            holder.pb.setProgressTintList(ColorStateList.valueOf(Color.RED));
-        }
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
-
-    /**
-     * contains the logic to bold and set text colour of applicable days in the week
-     * @author Matt
-     * @param holder the viewholder holding objects
-     * @param position the position of the habit in the list that we are using
-     */
-    public void setDays(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        //Bold/change colour of the days for which a habit is applicable
-
-        ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
-
-        float minOpacity = 0.3f;
-
-        //set all to default params
-        holder.sun.setTypeface(null, Typeface.NORMAL);
-        holder.mon.setTypeface(null, Typeface.NORMAL);
-        holder.tues.setTypeface(null, Typeface.NORMAL);
-        holder.wed.setTypeface(null, Typeface.NORMAL);
-        holder.thurs.setTypeface(null, Typeface.NORMAL);
-        holder.fri.setTypeface(null, Typeface.NORMAL);
-        holder.sat.setTypeface(null, Typeface.NORMAL);
-        holder.sun.setAlpha(minOpacity);
-        holder.mon.setAlpha(minOpacity);
-        holder.tues.setAlpha(minOpacity);
-        holder.wed.setAlpha(minOpacity);
-        holder.thurs.setAlpha(minOpacity);
-        holder.fri.setAlpha(minOpacity);
-        holder.sat.setAlpha(minOpacity);
-
-        if(days.contains(Habit.Days.Sun)){
-            // bold / change colour
-            holder.sun.setTypeface(null, Typeface.BOLD);
-            holder.sun.setAlpha(1f);
-        }
-
-        if(days.contains(Habit.Days.Mon)){
-            // bold / change colour
-            holder.mon.setTypeface(null, Typeface.BOLD);
-            holder.mon.setAlpha(1f);
-        }
-
-        if(days.contains(Habit.Days.Tue)){
-            // bold / change colour
-            holder.tues.setTypeface(null, Typeface.BOLD);
-            holder.tues.setAlpha(1f);
-        }
-
-        if(days.contains(Habit.Days.Wed)){
-            // bold / change colour
-            holder.wed.setTypeface(null, Typeface.BOLD);
-            holder.wed.setAlpha(1f);
-        }
-
-        if(days.contains(Habit.Days.Thu)){
-            // bold / change colour
-            holder.thurs.setTypeface(null, Typeface.BOLD);
-            holder.thurs.setAlpha(1f);
-        }
-
-        if(days.contains(Habit.Days.Fri)){
-            // bold / change colour
-            holder.fri.setTypeface(null, Typeface.BOLD);
-            holder.fri.setAlpha(1f);
-        }
-
-        if(days.contains(Habit.Days.Sat)){
-            // bold / change colour
-            holder.sat.setTypeface(null, Typeface.BOLD);
-            holder.sat.setAlpha(1f);
-        }
-    }
-
 }
