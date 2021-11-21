@@ -219,6 +219,16 @@ public class DatabaseAdapter{
      * @param callback A callback which is called when the query completes
      */
     public void pullHabits(HabitCallback callback){
+        pullHabits(UID, callback);
+    }
+
+
+    /**
+     * Call this method to pull the users habits from the database
+     * @param callback A callback which is called when the query completes
+     * @param UID The uid of the user for which to pull habits
+     */
+    public void pullHabits(String UID, HabitCallback callback){
         DocumentReference habits = db.collection("Habits").document(UID);
         // get the users habits
         habits.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
