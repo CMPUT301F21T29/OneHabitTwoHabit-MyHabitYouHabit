@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.ohthmhyh.CERecycleviewAdapter;
+import com.example.ohthmhyh.adapters.HabitEventRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
@@ -25,11 +25,11 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
  * Use the {@link HabitEventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HabitEventsFragment extends Fragment implements CERecycleviewAdapter.OntouchListener {
+public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
 
     private Button addHabitEventButton;
     private RecyclerView recyclerView;
-    private CERecycleviewAdapter mAdapter;
+    private HabitEventRecyclerViewAdapter mAdapter;
     private HabitEventList habitEventList;
     private DatabaseAdapter databaseAdapter;
 
@@ -57,7 +57,7 @@ public class HabitEventsFragment extends Fragment implements CERecycleviewAdapte
                 LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
                 recyclerView.setLayoutManager(Mmanager);
                 recyclerView.setHasFixedSize(true);
-                mAdapter=new CERecycleviewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
+                mAdapter=new HabitEventRecyclerViewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
                 ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
                 ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
                 mAdapter.setTouchhelper(itemTouchHelper);
