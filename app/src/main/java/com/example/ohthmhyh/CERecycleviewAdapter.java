@@ -3,8 +3,6 @@ package com.example.ohthmhyh;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.location.Address;
-import android.location.Geocoder;
 import android.text.Html;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -21,15 +19,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.entities.HabitEvent;
-
-import java.io.IOException;
-import java.util.List;
+import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 /**
  * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
  */
 public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder>
-        implements CeitemHelpToucherAdapter{
+        implements ItemTransportable {
     HabitEventList habitEventsList;
     Context context;
     ItemTouchHelper mTouchhelper;
@@ -93,7 +89,7 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      * @param toPosition This is where we move the item to
      */
     @Override
-    public void onItemMove(int fromPosition, int toPosition) {
+    public void onItemMoved(int fromPosition, int toPosition) {
         habitEventsList.moveHabit(fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
     }

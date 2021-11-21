@@ -24,7 +24,7 @@ import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.TouchingHandlingHF;
+import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,7 +72,7 @@ public class HabitsFragment extends Fragment implements CustomAdapterHF.OntouchL
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
                 adapter = new CustomAdapterHF(getContext(), HabitsFragment.this, habitList);
-                ItemTouchHelper.Callback callback = new TouchingHandlingHF(adapter);
+                ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
                 adapter.setTouchhelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
