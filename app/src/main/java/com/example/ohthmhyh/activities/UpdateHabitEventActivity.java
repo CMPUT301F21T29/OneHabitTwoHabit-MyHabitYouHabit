@@ -344,6 +344,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             habitEventList.addHabitEvent(habitEvent);
         }
 
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 }
