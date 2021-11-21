@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
@@ -24,7 +25,7 @@ import com.example.ohthmhyh.interfaces.ItemTransportable;
 /**
  * A simple Recycler view Adapter used to populate the recycler view on the habit event screen
  */
-public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdapter.Myviewholder>
+public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.Myviewholder>
         implements ItemTransportable {
     HabitEventList habitEventsList;
     Context context;
@@ -35,9 +36,9 @@ public class CERecycleviewAdapter extends RecyclerView.Adapter<CERecycleviewAdap
      * @param habitEventsList A array of habit event
      * @param context Context from the activity
      * @param mOntouchListener A thing that does touch actions
-     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+     * The HabitEventRecyclerViewAdapter creater Needs and array, context and a touch Listener
      */
-    public  CERecycleviewAdapter(HabitEventList habitEventsList, Context context, OntouchListener mOntouchListener){
+    public HabitEventRecyclerViewAdapter(HabitEventList habitEventsList, Context context, OntouchListener mOntouchListener){
         this.habitEventsList=habitEventsList;
         this.context=context;
         this.mOntouchListener=mOntouchListener;

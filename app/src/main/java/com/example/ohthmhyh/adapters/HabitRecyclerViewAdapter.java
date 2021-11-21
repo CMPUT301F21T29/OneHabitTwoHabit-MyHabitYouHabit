@@ -1,4 +1,4 @@
-package com.example.ohthmhyh;
+package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +19,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.example.ohthmhyh.Constants;
+import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 /**
  * A simple RecycleviewAdapter for the Habit list.
  */
-public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myviewholder>
+public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.Myviewholder>
         implements ItemTransportable {
     HabitList habitList;
     Context context;
@@ -41,9 +43,9 @@ public class CustomAdapterHF extends RecyclerView.Adapter<CustomAdapterHF.Myview
      * @param habitList The HabitList containing the habits
      * @param context Context from the activity
      * @param mOntouchListener A thing that does touch actions
-     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+     * The HabitEventRecyclerViewAdapter creater Needs and array, context and a touch Listener
      */
-    public CustomAdapterHF(Context context, OntouchListener mOntouchListener, HabitList habitList) {
+    public HabitRecyclerViewAdapter(Context context, OntouchListener mOntouchListener, HabitList habitList) {
         this.habitList = habitList;
         this.context = context;
         this.mOntouchListener = mOntouchListener;
