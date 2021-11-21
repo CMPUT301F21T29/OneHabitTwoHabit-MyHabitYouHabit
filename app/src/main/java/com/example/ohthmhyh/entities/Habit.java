@@ -23,7 +23,7 @@ public class Habit implements Serializable {
     private ArrayList<Days> schedule = new ArrayList<Days>();
     private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
     private int completedCounter = 0;
-    private LocalDate lastTimeCompleted;
+    private LocalDate lastTimeCompleted = StartDateAsLocalDate().minusDays(1);
 
 
 
