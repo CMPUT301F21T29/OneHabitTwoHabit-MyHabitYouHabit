@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +81,7 @@ public class FeedFragment extends Fragment implements CustomAdapterHF.OntouchLis
      * Builds up the habit feed from the database.
      */
     public void buildFeed(){
-        DatabaseAdapter dba = new DatabaseAdapter();
+        DatabaseAdapter dba = DatabaseAdapter.getInstance();
 
         // get the user so we know who they follow
         dba.pullUser(new DatabaseAdapter.ProfileCallback() {
