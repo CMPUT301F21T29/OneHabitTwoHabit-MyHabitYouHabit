@@ -3,64 +3,92 @@ package com.example.ohthmhyh.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.ohthmhyh.CustomAdapterHTF;
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.TouchingHandlingHTF;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HabitsTodayFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
-public class HabitsTodayFragment extends Fragment {
+public class HabitsTodayFragment extends Fragment implements CustomAdapterHTF.OntouchListener {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private HabitList habitList;
+    private CustomAdapterHTF adapter;
+    private DatabaseAdapter databaseAdapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public HabitsTodayFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HabitsTodayFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HabitsTodayFragment newInstance(String param1, String param2) {
-        HabitsTodayFragment fragment = new HabitsTodayFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public HabitsTodayFragment(){/* Required empty public constructor*/}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
+    /**
+     * this creates the fragment
+     * this also sets the recyclerView
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_habits_today, container, false);
+        // Create a new alert dialog when Add a Habit button is clicked
+
+        View view = inflater.inflate(R.layout.fragment_habits_today, container, false);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_htf);
+
+        // Get the HabitList from the database.
+        databaseAdapter = new DatabaseAdapter();
+        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
+            @Override
+            public void onHabitCallback(HabitList hList) {
+                habitList = hList;
+
+                //make smaller list of habits to put into the recycler view
+                ArrayList<Habit> newList = new ArrayList<>();
+
+                for (int i = 0; i < hList.size(); i++){
+                    Habit h = hList.getHabit(i);
+                    if (h.isDueToday()) {
+                        newList.add(h);
+                    }
+                }
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setHasFixedSize(true);
+
+                adapter = new CustomAdapterHTF(getContext(), HabitsTodayFragment.this, newList, habitList);
+                ItemTouchHelper.Callback callback = new TouchingHandlingHTF(adapter);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+                adapter.setTouchhelper(itemTouchHelper);
+                itemTouchHelper.attachToRecyclerView(recyclerView);
+                recyclerView.setAdapter(adapter);
+            }
+        });
+
+        return view;
     }
+
+    /**
+     * Called when an item in the RecyclerView is clicked.
+     * @param position The position of the item that was clicked.
+     */
+    @Override
+    public void onItemClicked(int position) {
+        // We don't actually want to do anything when clicking a habit
+    }
+
 }
