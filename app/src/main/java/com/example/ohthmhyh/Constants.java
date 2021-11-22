@@ -23,6 +23,16 @@ public class Constants {
     public static final int HABIT_DESCRIPTION_MAX_LENGTH = 30;
 
     /**
+     * The minimum length of a habit event's comment.
+     */
+    public static final int HABIT_EVENT_COMMENT_MIN_LENGTH = 0;
+
+    /**
+     * The maximum length of a habit event's comment.
+     */
+    public static final int HABIT_EVENT_COMMENT_MAX_LENGTH = 20;
+
+    /**
      * The % adherence score for which the text (ex "100%") on a progress bar will become green
      */
     public static final int ADHERENCE_TEXT_GREEN_THRESHOLD = 100;
