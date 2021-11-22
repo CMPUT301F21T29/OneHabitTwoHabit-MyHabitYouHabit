@@ -1,11 +1,9 @@
 package com.example.ohthmhyh.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -31,12 +29,17 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * An Activity that shows a map. The user is able to select a location on the map and this activity
+ * will return the selected location to the calling Activity.
+ */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
     private Location location;
     private FloatingActionButton getLocationButton;
 
-    public static final int LOCATIONOK = -2; // Required for result
+    public static final int LOCATION_OK = -2; // Required for result
+    public static final String ARG_LOCATION = "location_arg";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         // Get location from the EventActivity
         Intent location = getIntent();
-        this.location = (Location)location.getExtras().get("LOCATION");
+        this.location = (Location)location.getExtras().get(ARG_LOCATION);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -63,7 +66,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
+        // Put the marker in the current location.
         LatLng currLoc = new LatLng(this.location.getLatitude(), this.location.getLongitude());
         updateMarker(new LatLng(this.location.getLatitude(), this.location.getLongitude()));
 
@@ -85,9 +88,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 Intent exit = new Intent();
-                exit.putExtra("LOCATION", location);
+                exit.putExtra(ARG_LOCATION, location);
 
-                setResult(MapActivity.LOCATIONOK, exit);
+                setResult(MapActivity.LOCATION_OK, exit);
                 finish();
             }
         });

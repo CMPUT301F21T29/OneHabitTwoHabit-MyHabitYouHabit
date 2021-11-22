@@ -22,10 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,7 +91,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     }
 
     private void onMapClosed(Intent intent) {
-        this.location = (Location)intent.getExtras().get("LOCATION");
+        this.location = (Location) intent.getExtras().get(MapActivity.ARG_LOCATION);
         locationTextView.setText(String.valueOf(location.getLongitude()));
     }
 
@@ -206,7 +202,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         // Image Uri will not be null for RESULT_OK
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
-        } else if (resultCode == MapActivity.LOCATIONOK) {
+        } else if (resultCode == MapActivity.LOCATION_OK) {
             onMapClosed(data);
         } else {
             Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
@@ -281,7 +277,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
 
     private void openMaps() {
         Intent mapIntent = new Intent(this, MapActivity.class);
-        mapIntent.putExtra("LOCATION", location);
+        mapIntent.putExtra(MapActivity.ARG_LOCATION, location);
         this.startActivityForResult(mapIntent, 0);
     }
 
