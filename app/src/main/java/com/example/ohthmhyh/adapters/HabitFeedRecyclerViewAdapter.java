@@ -2,6 +2,7 @@ package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -34,6 +35,7 @@ public class HabitFeedRecyclerViewAdapter extends HabitRecyclerViewAdapter{
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // set the content of the views in the RecyclerView element
         super.onBindViewHolder(holder, position);
+        holder.username.setVisibility(View.VISIBLE);
         holder.username.setText(usernames.get(position));
     }
 
