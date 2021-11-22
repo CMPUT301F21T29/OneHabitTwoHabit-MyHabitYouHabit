@@ -125,7 +125,7 @@ public class HabitTodayFragmentTest {
         toX = location[0];
         toY = fromY;
         solo.drag(fromX, toX, fromY, toY, 2);
-        Thread.sleep(1000);  // Wait for everything to load.
+        Thread.sleep(2000);  // Wait for everything to load.
         solo.clickOnButton("OK");
         assertFalse(solo.searchText(HABIT_NAME));
     }
@@ -174,7 +174,7 @@ public class HabitTodayFragmentTest {
         View row;
         solo.clickOnView(solo.getView(R.id.habits_nav_item));
         for (int i=0; i<Titles.length; i++) {
-            Thread.sleep(1000);  // Wait for everything to load.
+            Thread.sleep(2000);  // Wait for everything to load.
             assertTrue(solo.searchText(Titles[i]));
             row = solo.getText(Titles[i]);
             row.getLocationInWindow(location);
@@ -184,7 +184,7 @@ public class HabitTodayFragmentTest {
             toX = location[0];
             toY = fromY;
             solo.drag(fromX, toX, fromY, toY, 3);
-            Thread.sleep(1000);  // Wait for everything to load.
+            Thread.sleep(2000);  // Wait for everything to load.
             solo.clickOnButton("OK");
             assertFalse(solo.searchText(Titles[i]));
         }
@@ -236,7 +236,7 @@ public class HabitTodayFragmentTest {
         int[] location = new int[2];
         View row;
         solo.clickOnView(solo.getView(R.id.habits_nav_item));
-        Thread.sleep(1000);  // Wait for everything to load.
+        Thread.sleep(2000);  // Wait for everything to load.
         assertTrue(solo.searchText(title));
         row = solo.getText(title);
         row.getLocationInWindow(location);
@@ -246,7 +246,7 @@ public class HabitTodayFragmentTest {
         toX = location[0];
         toY = fromY;
         solo.drag(fromX, toX, fromY, toY, 3);
-        Thread.sleep(1000);  // Wait for everything to load.
+        Thread.sleep(2000);  // Wait for everything to load.
         solo.clickOnButton("OK");
         assertFalse(solo.searchText(title));
     }
