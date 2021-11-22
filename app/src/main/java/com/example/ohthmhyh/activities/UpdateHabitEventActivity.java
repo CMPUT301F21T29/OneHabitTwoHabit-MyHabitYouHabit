@@ -279,7 +279,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
 
         // No image was given.
         if (bitmap == null){
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lol_pic);
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.habit_event_default_img);
         }
 
         // TODO: Associate the HabitEvent with an actual Habit.
