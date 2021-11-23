@@ -1,13 +1,16 @@
 package com.example.ohthmhyh.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -117,6 +120,28 @@ public class UserFragment extends Fragment {
         FriendsListAdapter friendsAdapter = new FriendsListAdapter(getActivity(),
                 R.layout.item_friend, user.getFriendList());
         friendsLV.setAdapter(friendsAdapter);
+
+        // When a friend is tapped, ask if they should be removed
+        friendsLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TextView uname = view.findViewById(R.id.item_friend);
+                String username = uname.getText().toString();
+
+                // show a confirmation dialog when deleting
+                new AlertDialog.Builder(view.getContext())
+                        .setMessage("Remove " + username + " as a friend?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            // when "yes" is pressed, delete the friend
+                            @Override
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                user.removeFriend(position);
+                                friendsAdapter.notifyDataSetChanged();
+                            }})
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }
+        });
 
         // fill the friend request list view
         requestLV.setEmptyView(emptyRequestTV);
