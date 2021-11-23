@@ -113,7 +113,7 @@ public class HabitEventsFragmentTest {
 
         solo.sleep(1000);
 
-        solo.clickOnView(solo.getView(R.id.set_location_button));
+        solo.clickOnView((Button)solo.getView(R.id.set_location_button));
 
         solo.sleep(1000);
 
