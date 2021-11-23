@@ -48,10 +48,6 @@ public class FeedFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
         RecyclerView feedRV = view.findViewById(R.id.feed_RV);
 
-        // make the feedHabits into a HabitList for compatibility with the recyclerView adapter
-        HabitList habitList = new HabitList();
-        habitList.setHabitList(feedHabits);
-
         // set up the feed recyclerView
         adapter = new HabitFeedRecyclerViewAdapter(view.getContext(), feedHabits, usernames);
         feedRV.setLayoutManager(new LinearLayoutManager(view.getContext()));
