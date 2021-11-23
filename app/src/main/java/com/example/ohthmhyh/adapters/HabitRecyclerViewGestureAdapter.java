@@ -123,6 +123,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     }
 
 
+    private HabitList habitList;
     private OnTouchListener touchListener;
     private ItemTouchHelper touchHelper;
 
@@ -136,7 +137,8 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      */
     public HabitRecyclerViewGestureAdapter(Context context, HabitList habitList,
                                            ArrayList<Habit> content, OnTouchListener touchListener) {
-        super(context, habitList, content);
+        super(context, content);
+        this.habitList = habitList;
         this.touchListener = touchListener;
     }
 

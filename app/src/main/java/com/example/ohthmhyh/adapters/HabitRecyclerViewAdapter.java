@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.time.LocalDate;
@@ -65,20 +64,16 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
 
 
     protected ArrayList<Habit> content;
-    protected HabitList habitList;
     protected Context context;
 
 
     /**
      * Creates an instance of the custom RecyclerView adapter used for showing habits
      * @param context Context from the activity
-     * @param habitList The HabitList containing all the Habits
      * @param content The list of Habits to display in the RecyclerView
      */
-    public HabitRecyclerViewAdapter(
-            Context context, HabitList habitList, ArrayList<Habit> content) {
+    public HabitRecyclerViewAdapter(Context context, ArrayList<Habit> content) {
         this.context = context;
-        this.habitList = habitList;
         this.content = content;
     }
 

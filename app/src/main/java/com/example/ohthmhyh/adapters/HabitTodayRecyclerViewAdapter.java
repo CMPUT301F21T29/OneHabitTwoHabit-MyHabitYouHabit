@@ -17,6 +17,8 @@ import java.util.ArrayList;
  */
 public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
 
+    private HabitList habitList;
+    
     /**
      * Creates the custom adapter instance
      * @param context Context from the activity
@@ -25,7 +27,8 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
      */
     public HabitTodayRecyclerViewAdapter(Context context, HabitList habitList,
                                          ArrayList<Habit> content) {
-        super(context, habitList, content);
+        super(context, content);
+        this.habitList = habitList;
     }
 
     //sets the things in the display
