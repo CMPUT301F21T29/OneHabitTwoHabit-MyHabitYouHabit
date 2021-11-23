@@ -35,8 +35,7 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
 
         Habit h = habitList.getHabit(position);
 
-        // Hide the username TextView but show the Checkbox.
-        holder.username.setVisibility(View.INVISIBLE);
+        // Hide the username TextView but show the Checkbox
         holder.checkbox.setVisibility(View.VISIBLE);
 
         holder.checkbox.setOnClickListener(new View.OnClickListener() {
