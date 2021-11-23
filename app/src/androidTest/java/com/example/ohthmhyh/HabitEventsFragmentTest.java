@@ -189,7 +189,7 @@ public class HabitEventsFragmentTest {
 
         solo.sleep(3000);
 
-        solo.clicklo
+        solo.clickLongOnScreen(500, 500, 2);
 
         solo.sleep(3000);
 
