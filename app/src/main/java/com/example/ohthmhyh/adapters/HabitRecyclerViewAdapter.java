@@ -103,8 +103,8 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
         // set the content of the views in the RecyclerView element
         holder.name.setText(content.get(position).getName());
         holder.description.setText(content.get(position).getDescription());
-        holder.username.setVisibility(View.INVISIBLE);  // The username is invisible by default.
-        holder.checkbox.setVisibility(View.INVISIBLE);  // Checkbox is invisible by default.
+        holder.username.setVisibility(View.GONE);  // The username is invisible by default.
+        holder.checkbox.setVisibility(View.GONE);  // Checkbox is invisible by default.
         setProgressBar(holder, position);
         setDays(holder, position);
     }
