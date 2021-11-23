@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.time.LocalDate;
@@ -64,18 +63,18 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
     }
 
 
-    HabitList habitList;
-    Context context;
+    protected ArrayList<Habit> content;
+    protected Context context;
 
 
     /**
      * Creates an instance of the custom RecyclerView adapter used for showing habits
-     * @param habitList The HabitList containing the habits
      * @param context Context from the activity
+     * @param content The list of Habits to display in the RecyclerView
      */
-    public HabitRecyclerViewAdapter(Context context, HabitList habitList) {
-        this.habitList = habitList;
+    public HabitRecyclerViewAdapter(Context context, ArrayList<Habit> content) {
         this.context = context;
+        this.content = content;
     }
 
 
@@ -102,8 +101,8 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         // set the content of the views in the RecyclerView element
-        holder.name.setText(habitList.getHabit(position).getName());
-        holder.description.setText(habitList.getHabit(position).getDescription());
+        holder.name.setText(content.get(position).getName());
+        holder.description.setText(content.get(position).getDescription());
         holder.username.setVisibility(View.GONE);  // The username is invisible by default.
         holder.checkbox.setVisibility(View.GONE);  // Checkbox is invisible by default.
         setProgressBar(holder, position);
@@ -113,11 +112,11 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
 
     /**
      * Returns the amount of items in the RecyclerView
-     * @return habitList.size()
+     * @return content.size()
      */
     @Override
     public int getItemCount() {
-        return habitList.size();
+        return content.size();
     }
 
 
@@ -128,7 +127,7 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
      * @param position the position of the habit in the list that we are using
      */
     public void setProgressBar(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        double progress = habitList.getHabit(position).getAdherence(LocalDate.now());
+        double progress = content.get(position).getAdherence(LocalDate.now());
 
         //set colours of bar and text to grey
         holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGray));
@@ -165,7 +164,7 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
      */
     public void setDays(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
+        ArrayList<Habit.Days> days = content.get(position).getSchedule();
         final float minOpacity = 0.3f;
 
         // set all "day" views to default font

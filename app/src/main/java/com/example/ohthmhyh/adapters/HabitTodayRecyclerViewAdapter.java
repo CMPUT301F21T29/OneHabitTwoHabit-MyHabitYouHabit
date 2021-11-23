@@ -10,19 +10,25 @@ import androidx.annotation.NonNull;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
+import java.util.ArrayList;
+
 /**
  * A simple RecycleviewAdapter for the Habit list.
  */
 public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
 
+    private HabitList habitList;
+    
     /**
      * Creates the custom adapter instance
-     * @param habitList The HabitList containing the habits
      * @param context Context from the activity
-     * The CERecycleviewAdapter creater Needs and array, context and a touch Listener
+     * @param habitList The HabitList containing the habits
+     * @param content The Habits to display in the RecyclerView
      */
-    public HabitTodayRecyclerViewAdapter(Context context, HabitList habitList) {
-        super(context, habitList);
+    public HabitTodayRecyclerViewAdapter(Context context, HabitList habitList,
+                                         ArrayList<Habit> content) {
+        super(context, content);
+        this.habitList = habitList;
     }
 
     //sets the things in the display
@@ -33,7 +39,7 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
 
         super.onBindViewHolder(holder, position);
 
-        Habit h = habitList.getHabit(position);
+        Habit habit = content.get(position);
 
         // Hide the username TextView but show the Checkbox
         holder.checkbox.setVisibility(View.VISIBLE);
@@ -42,17 +48,17 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
             @Override
             public void onClick(View view) {
                 if(holder.checkbox.isChecked()){
-                    Log.d("tag", h.getName() + " checked");
-                    int index = habitList.getHabitIndex(h);
+                    Log.d("tag", habit.getName() + " checked");
+                    int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
 
-                    h.logCompleted();
-                    habitList.setHabit(index, h);
+                    habit.logCompleted();
+                    habitList.setHabit(index, habit);
                 } else {
-                    Log.d("tag", h.getName() + " unchecked");
-                    int index = habitList.getHabitIndex(h);
+                    Log.d("tag", habit.getName() + " unchecked");
+                    int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
 
-                    h.undoCompleted();
-                    habitList.setHabit(index, h);
+                    habit.undoCompleted();
+                    habitList.setHabit(index, habit);
                 }
             }
         });
