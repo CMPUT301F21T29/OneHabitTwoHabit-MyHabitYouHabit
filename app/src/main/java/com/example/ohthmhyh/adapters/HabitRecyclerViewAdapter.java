@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -34,6 +35,7 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // views of the RecyclerView items/elements
         protected TextView name, description, percent, username;
+        protected CheckBox checkbox;
         private ProgressBar pb;
         private TextView sun, mon, tues, wed, thurs, fri, sat;
 
@@ -50,6 +52,7 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
             pb = (ProgressBar) view.findViewById(R.id.pb);
             percent = view.findViewById(R.id.percent);
             username = view.findViewById(R.id.creator_usernameTV);
+            checkbox = view.findViewById(R.id.checkBox_ht);
             sun = view.findViewById(R.id.sun);
             mon = view.findViewById(R.id.mon);
             tues = view.findViewById(R.id.tues);
@@ -101,6 +104,8 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
         // set the content of the views in the RecyclerView element
         holder.name.setText(habitList.getHabit(position).getName());
         holder.description.setText(habitList.getHabit(position).getDescription());
+        holder.username.setVisibility(View.INVISIBLE);  // The username is invisible by default.
+        holder.checkbox.setVisibility(View.INVISIBLE);  // Checkbox is invisible by default.
         setProgressBar(holder, position);
         setDays(holder, position);
     }

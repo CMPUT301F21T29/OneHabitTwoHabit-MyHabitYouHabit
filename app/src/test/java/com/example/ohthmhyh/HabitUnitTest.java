@@ -250,6 +250,55 @@ public class HabitUnitTest {
         assertEquals(100, h.getAdherence(LocalDate.of(2021, 11, 18))); //100% because we have completed 3/3
     }
 
+    /**
+     * Test that the Habit is due today.
+     */
+    @Test
+    public void testHabitDueToday() {
+        Habit habit = new Habit();
+
+        // Set the schedule.
+        ArrayList<Habit.Days> schedule = new ArrayList<>();
+        schedule.add(Habit.Days.Mon);
+        schedule.add(Habit.Days.Tue);
+        schedule.add(Habit.Days.Wed);
+        schedule.add(Habit.Days.Thu);
+        schedule.add(Habit.Days.Fri);
+        schedule.add(Habit.Days.Sat);
+        schedule.add(Habit.Days.Sun);
+        habit.setSchedule(schedule);
+
+        // Set the start date.
+        LocalDate startDate = LocalDate.of(2021, 11, 11);
+        habit.setStartDate(startDate.toEpochDay());
+
+        assertTrue(habit.isDueToday());
+    }
+
+    /**
+     * Test that the Habit is not due today.
+     */
+    @Test
+    public void testHabitNotDueToday() {
+        Habit habit = new Habit();
+        
+        // Set the schedule.
+        ArrayList<Habit.Days> schedule = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        int dayOfWeekIndex = today.getDayOfWeek().getValue() % 7;
+        if (dayOfWeekIndex == 0) {
+            schedule.add(Habit.Days.Sat);
+        } else {
+            schedule.add(Habit.Days.Sun);
+        }
+        habit.setSchedule(schedule);
+
+        // Set the start date.
+        LocalDate startDate = LocalDate.of(2021, 11, 11);
+        habit.setStartDate(startDate.toEpochDay());
+
+        assertFalse(habit.isDueToday());
+    }
 
 }
 
