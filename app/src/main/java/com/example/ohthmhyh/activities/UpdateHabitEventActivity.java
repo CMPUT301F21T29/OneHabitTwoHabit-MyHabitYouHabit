@@ -93,7 +93,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
 
     private void onMapClosed(Intent intent) {
         this.location = (Location) intent.getExtras().get(MapActivity.ARG_LOCATION);
-        locationTextView.setText(String.valueOf(location.getLongitude()));
+        locationTextView.setText("lat: " + String.valueOf(location.getLatitude()) + "Lon: " + String.valueOf(location.getLongitude()));
     }
 
     /**

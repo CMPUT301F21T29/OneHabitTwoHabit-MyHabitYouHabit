@@ -113,6 +113,10 @@ public class HabitEventsFragmentTest {
 
         solo.sleep(1000);
 
+        solo.clickOnView(solo.getView(R.id.set_location_button));
+
+        solo.sleep(1000);
+
         assertTrue(solo.searchText("lat: 37.422065599999996Lon: -122.08408969999998"));
 
         // Create event
