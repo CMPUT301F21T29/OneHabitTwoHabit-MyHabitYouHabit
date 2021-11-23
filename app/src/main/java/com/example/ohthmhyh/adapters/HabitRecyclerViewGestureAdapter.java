@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.HabitList;
+import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
+
+import java.util.ArrayList;
 
 public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         implements ItemTransportable {
@@ -127,11 +130,13 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     /**
      * Creates the custom adapter instance
      * @param context          Context from the activity
-     * @param touchListener A thing that does touch actions
      * @param habitList        The HabitList containing the habits
+     * @param content          The Habits to display in the RecyclerView
+     * @param touchListener    A thing that does touch actions
      */
-    public HabitRecyclerViewGestureAdapter(Context context, HabitList habitList, OnTouchListener touchListener) {
-        super(context, habitList);
+    public HabitRecyclerViewGestureAdapter(Context context, HabitList habitList,
+                                           ArrayList<Habit> content, OnTouchListener touchListener) {
+        super(context, habitList, content);
         this.touchListener = touchListener;
     }
 
@@ -174,6 +179,10 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
                     // when "yes" is pressed, delete the habit
                     @Override
                     public void onClick(DialogInterface dialog, int whichButton) {
+                        // Remove the Habit from the content.
+                        content.remove(position);
+
+                        // Remove the Habit from the database.
                         habitList.removeHabit(position);
                         notifyItemRemoved(position);
                     }})
@@ -194,7 +203,13 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      */
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
+        // Move the Habit in the content.
+        Habit habitToMove = content.remove(fromPosition);
+        content.add(toPosition, habitToMove);
+
+        // Move the Habit in the database.
         habitList.moveHabit(fromPosition, toPosition);
+
         notifyItemMoved(fromPosition, toPosition);
     }
 

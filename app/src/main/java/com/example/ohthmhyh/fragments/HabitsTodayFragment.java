@@ -23,7 +23,6 @@ import java.util.ArrayList;
  */
 public class HabitsTodayFragment extends Fragment {
 
-    private HabitList habitList;
     private HabitTodayRecyclerViewAdapter adapter;
     private DatabaseAdapter databaseAdapter;
 
@@ -62,11 +61,7 @@ public class HabitsTodayFragment extends Fragment {
                     }
                 }
 
-                // Make the habitsToday into a HabitList for compatibility with the recyclerView adapter
-                HabitList habitList = new HabitList();
-                habitList.setHabitList(habitsToday);
-
-                adapter = new HabitTodayRecyclerViewAdapter(getContext(), habitList);
+                adapter = new HabitTodayRecyclerViewAdapter(getContext(), hList, habitsToday);
                 recyclerView.setAdapter(adapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);

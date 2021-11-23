@@ -27,6 +27,8 @@ import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -37,6 +39,7 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewGesture
     private int chosenHabitIndex = -1;
     private ActivityResultLauncher<Intent> resultLauncher;
     private HabitList habitList;
+    private ArrayList<Habit> listOfHabits;
     private HabitRecyclerViewGestureAdapter adapter;
     private DatabaseAdapter databaseAdapter;
 
@@ -70,9 +73,16 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewGesture
             public void onHabitCallback(HabitList hList) {
                 habitList = hList;
 
+                // Populate the ArrayList of Habits with all the Habits in the database.
+                listOfHabits = new ArrayList<>();
+                for (int i = 0; i < habitList.size(); i++) {
+                    listOfHabits.add(habitList.getHabit(i));
+                }
+
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
-                adapter = new HabitRecyclerViewGestureAdapter(getContext(),  habitList, HabitsFragment.this);
+                adapter = new HabitRecyclerViewGestureAdapter(
+                        getContext(),  habitList, listOfHabits, HabitsFragment.this);
                 ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
                 adapter.setTouchHelper(itemTouchHelper);
@@ -96,8 +106,16 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewGesture
                             Habit habit = (Habit) result.getData().getSerializableExtra(
                                     ARG_RETURNED_HABIT);
                             if (chosenHabitIndex < 0) {
+                                // Add the Habit to the ArrayList of Habits.
+                                listOfHabits.add(habit);
+
+                                // Also add this Habit to the database.
                                 habitList.addHabit(habit);
                             } else {
+                                // Replace this Habit in the ArrayList of Habits.
+                                listOfHabits.set(chosenHabitIndex, habit);
+
+                                // Also replace this Habit in the database.
                                 habitList.replaceHabit(chosenHabitIndex, habit);
                             }
                             adapter.notifyDataSetChanged();
@@ -128,7 +146,7 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewGesture
         Intent intent = new Intent(getActivity(), UpdateHabitActivity.class);
         if (habitIndex >= 0) {
             // Pass the Habit to the UpdateHabitActivity.
-            intent.putExtra(UpdateHabitActivity.ARG_HABIT, habitList.getHabit(habitIndex));
+            intent.putExtra(UpdateHabitActivity.ARG_HABIT, listOfHabits.get(habitIndex));
         }
         resultLauncher.launch(intent);
     }

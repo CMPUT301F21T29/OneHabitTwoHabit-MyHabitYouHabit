@@ -53,7 +53,8 @@ public class FeedFragment extends Fragment{
         habitList.setHabitList(feedHabits);
 
         // set up the feed recyclerView
-        adapter = new HabitFeedRecyclerViewAdapter(view.getContext(), habitList, usernames);
+        adapter = new HabitFeedRecyclerViewAdapter(
+                view.getContext(), habitList, feedHabits, usernames);
         feedRV.setLayoutManager(new LinearLayoutManager(view.getContext()));
         feedRV.setHasFixedSize(true);
         feedRV.setAdapter(adapter);
