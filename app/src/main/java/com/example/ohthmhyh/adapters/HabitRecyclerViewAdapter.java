@@ -37,6 +37,7 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
         protected CheckBox checkbox;
         private ProgressBar pb;
         private TextView sun, mon, tues, wed, thurs, fri, sat;
+
         /**
          * Make a new ViewHolder for providing references to a view (item) in the RecyclerView.
          * @param view the parent view to this view
