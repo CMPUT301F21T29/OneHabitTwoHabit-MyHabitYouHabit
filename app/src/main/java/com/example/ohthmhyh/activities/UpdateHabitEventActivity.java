@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -30,6 +31,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.database.HabitEventList;
@@ -42,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -50,7 +53,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     public static final String ARG_HABIT_EVENT_INDEX = "habit_event_index_arg";
 
     private Bitmap bitmap = null;
-    private Habit habit = Habit.makeDummyHabit();  // This is temp
     private HabitEventList habitEventList;
     private DatabaseAdapter databaseAdapter;
     private Location location = null;
@@ -61,18 +63,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private ImageView pictureImageView;
     private TextView locationTextView;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Down here is for dropdown menu. Need to get the habit.
-        String[] habitList = {"Habit one", "Habit two", "Habit three"};
-        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(
-                this, R.layout.create_habit_habit_drop_down_menu, habitList);
-        habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
-        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
-    }
+    private Habit habit = null;
+    private HabitList habitList;
+    private HabitList validHabits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +80,58 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 makeAndEdit();
             }
         });
+        // Get the HabitList from the database.
+        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
+            @Override
+            public void onHabitCallback(HabitList hList) {
+                habitList = hList;
+                validHabits=habitList.getValidHabitForDay();
+                makeNameList();
+                //OnItemClickListener that gets position of item
+                AutoCompleteTextView mActv = (AutoCompleteTextView) findViewById(R.id.AutoCompleteTextviewCE);
+                mActv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View arg1, int pos, long id) {
+                        habit = validHabits.getHabit(pos);
+                    }
+                });
+            }
+        });
+    }
+    /**
+     * This handles the drop down list for Habits
+     * Can tell if we are on edit or new Calls to the data base to get the HabitEventList
+     */
+    private void makeNameList(){
+        ArrayList<String> habitNameList = validHabits.getHabitNames();
+        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(
+                this, R.layout.create_habit_habit_drop_down_menu, habitNameList);
+
+        Intent intent = getIntent();
+        habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
+        if (habitEventIndex >= 0) {
+            //Wait for habitEventList to become non null
+            databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+                @Override
+                public void onHabitEventCallback(HabitEventList habitEvents) {
+                    habitEventList = habitEvents;
+                    for (int index = 0; index < validHabits.size(); index++) {
+                        if (validHabits.getHabit(index).getUHID()
+                                == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
+                            habitListAutoCompleteTextView.setText(
+                                    validHabits.getHabit(index).getName(), false);
+                        }
+                    }
+                }
+            });
+        } else {
+            // Default list view (not editing)
+            habitListAutoCompleteTextView
+                    .setText(arrayAdapter.getItem(0).toString(),false);
+        }
+
+        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.app.AlertDialog;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.time.LocalDate;
@@ -37,7 +42,7 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
         protected CheckBox checkbox;
         private ProgressBar pb;
         private TextView sun, mon, tues, wed, thurs, fri, sat;
-
+        private DatabaseAdapter databaseAdapter;
         /**
          * Make a new ViewHolder for providing references to a view (item) in the RecyclerView.
          * @param view the parent view to this view
