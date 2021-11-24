@@ -176,7 +176,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      */
     @Override
     public void onItemSwiped(int position) {
-        openDiolog(position);
+        openDialog(position);
 
     }
 
@@ -201,7 +201,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      *This method is used to open a conformation screen with the user before a delete
      * @param position the position of the item being swiped
      */
-    private void openDiolog(int position){
+    private void openDialog(int position){
         android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
         alertDialogBuilder.setMessage("Do you really want to delete this habit?");
         alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);

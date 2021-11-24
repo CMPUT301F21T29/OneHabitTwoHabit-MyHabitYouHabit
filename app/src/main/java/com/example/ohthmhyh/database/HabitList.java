@@ -151,7 +151,7 @@ public class HabitList{
         return UHIDCounter++;
     }
 
-    public ArrayList<String> getHabitNames() {
+    public ArrayList<String> HabitNames() {
         ArrayList<String> nameOfHabit=new ArrayList<>();
         for (int i=0; i<habitList.size(); i++) {
             nameOfHabit.add( habitList.get(i).getName() );
@@ -160,8 +160,8 @@ public class HabitList{
     }
 
 
-    public HabitList getValidHabitForDay() {
-        HabitList doneHabitsOnADay=new HabitList();
+    public HabitList ValidHabitForDay() {
+        HabitList doneHabitsOnADay= new HabitList();
         for (int i=0; i<habitList.size(); i++) {
             if (habitList.get(i).isDueToday()&&habitList.get(i).wasCompletedToday())
             doneHabitsOnADay.addHabit( habitList.get(i));

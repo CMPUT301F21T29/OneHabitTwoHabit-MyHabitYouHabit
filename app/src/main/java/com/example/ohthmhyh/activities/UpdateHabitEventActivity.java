@@ -85,7 +85,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             @Override
             public void onHabitCallback(HabitList hList) {
                 habitList = hList;
-                validHabits=habitList.getValidHabitForDay();
+                validHabits=habitList.ValidHabitForDay();
                 makeNameList();
                 //OnItemClickListener that gets position of item
                 AutoCompleteTextView mActv = (AutoCompleteTextView) findViewById(R.id.AutoCompleteTextviewCE);
@@ -103,7 +103,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
      * Can tell if we are on edit or new Calls to the data base to get the HabitEventList
      */
     private void makeNameList(){
-        ArrayList<String> habitNameList = validHabits.getHabitNames();
+        ArrayList<String> habitNameList = validHabits.HabitNames();
         habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
         ArrayAdapter arrayAdapter = new ArrayAdapter(
                 this, R.layout.create_habit_habit_drop_down_menu, habitNameList);
