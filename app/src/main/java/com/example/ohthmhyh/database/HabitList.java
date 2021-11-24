@@ -161,7 +161,7 @@ public class HabitList{
 
 
     public HabitList getValidHabitForDay() {
-        HabitList doneHabitsOnADay= new HabitList();
+        HabitList doneHabitsOnADay=new HabitList();
         for (int i=0; i<habitList.size(); i++) {
             if (habitList.get(i).isDueToday()&&habitList.get(i).wasCompletedToday())
             doneHabitsOnADay.addHabit( habitList.get(i));
