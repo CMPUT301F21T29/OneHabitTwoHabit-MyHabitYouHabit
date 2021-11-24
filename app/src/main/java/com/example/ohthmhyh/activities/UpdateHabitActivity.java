@@ -107,7 +107,7 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
         Intent intent = getIntent();
         if (intent.hasExtra(ARG_HABIT)) {
             Habit habit = (Habit) intent.getSerializableExtra(ARG_HABIT);
-            showHabit(habit);
+            showExistingHabit(habit);
         }
     }
 
@@ -169,7 +169,7 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
      * Show the Habit by changing the attributes of the views that describe things about the Habit.
      * @param habit The Habit to show through the views.
      */
-    private void showHabit(Habit habit) {
+    private void showExistingHabit(Habit habit) {
         nameEditText.setText(habit.getName());
         descriptionEditText.setText(habit.getDescription());
         dateTextView.setText(dateToString(habit.StartDateAsLocalDate()));
@@ -183,5 +183,8 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
         if (schedule.contains(Habit.Days.Fri)) fridayToggleButton.setChecked(true);
         if (schedule.contains(Habit.Days.Sat)) saturdayToggleButton.setChecked(true);
         if (schedule.contains(Habit.Days.Sun)) sundayToggleButton.setChecked(true);
+
+        // Since the Habit already exists, its date cannot be edited.
+        dateTextView.setEnabled(false);
     }
 }
