@@ -160,7 +160,10 @@ public class HabitList{
         return nameOfHabit;
     }
 
-
+    /**
+     * Get a list of habits done today
+     * @return If a list of habits that are completed and due today
+     */
     public HabitList ValidHabitForDay() {
         HabitList doneHabitsOnADay= new HabitList();
         for (int i=0; i<habitList.size(); i++) {
@@ -171,6 +174,7 @@ public class HabitList{
     }
     /**
      * Increments the completed counter whenever a habit was successfully completed
+     * Updates when the last time a habit was comlpeted
      */
     public void logCompleted(int pos) {
         int num=habitList.get(pos).getCompletedCounter();

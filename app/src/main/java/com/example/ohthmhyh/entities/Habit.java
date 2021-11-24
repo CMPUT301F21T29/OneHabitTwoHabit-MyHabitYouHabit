@@ -356,8 +356,8 @@ public class Habit implements Serializable {
                 getSchedule().contains(Habit.Days.values()[dayOfWeekIndex]));
     }
     /**
-     * Returns true if the Habit is supposed to be done today, false otherwise.
-     * @return true if the Habit is supposed to be done today, false otherwise.
+     * Returns true if the Habit was done today, flase if it was not completed
+     * @return true if the Habit was done today, flase if it was not completed
      */
     public boolean wasCompletedToday() {
         long today = LocalDate.now().toEpochDay();

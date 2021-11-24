@@ -219,7 +219,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 location.setLongitude(habitEvent.getLongitude());
             }
 
-            // TODO: Set the habit associated with this HabitEvent.
         }
     }
 

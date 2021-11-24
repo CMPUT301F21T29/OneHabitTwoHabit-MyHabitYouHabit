@@ -115,6 +115,9 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
         }
         getActivity().startActivity(intent);
     }
+    /**
+     * Call this method to goto main Activity while displaying a dialog pop up
+     */
     private void gotoMainActivity(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
