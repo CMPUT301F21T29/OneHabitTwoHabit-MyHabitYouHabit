@@ -51,7 +51,7 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
                     Log.d("tag", habit.getName() + " checked");
                     int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
 
-                    habit.logCompleted();
+                    habitList.logCompleted(index);
                     habitList.setHabit(index, habit);
                 } else {
                     Log.d("tag", habit.getName() + " unchecked");

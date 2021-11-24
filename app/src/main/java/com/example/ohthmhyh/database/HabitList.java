@@ -2,6 +2,7 @@ package com.example.ohthmhyh.database;
 
 import com.example.ohthmhyh.entities.Habit;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -163,9 +164,19 @@ public class HabitList{
     public HabitList ValidHabitForDay() {
         HabitList doneHabitsOnADay= new HabitList();
         for (int i=0; i<habitList.size(); i++) {
-            if (habitList.get(i).isDueToday()&&habitList.get(i).wasCompletedToday())
-            doneHabitsOnADay.addHabit( habitList.get(i));
+            if (habitList.get(i).isDueToday()&&habitList.get(i).wasCompletedToday()){
+                doneHabitsOnADay.getHabitList().add( habitList.get(i));}
         }
         return doneHabitsOnADay;
     }
+    /**
+     * Increments the completed counter whenever a habit was successfully completed
+     */
+    public void logCompleted(int pos) {
+        int num=habitList.get(pos).getCompletedCounter();
+        habitList.get(pos).setCompletedCounter(num+1);
+        habitList.get(pos).setLastDayCompleted(LocalDate.now().toEpochDay());
+        databaseAdapter.pushHabits(this);
+    }
+
 }

@@ -207,17 +207,22 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
         alertDialogBuilder.setPositiveButton("yes",
                 new DialogInterface.OnClickListener() {
-                    //If user wants to delete and has confirmed run this code with deletes the habit
+                    //If user wants to delete and has confirmed run this code which deletes the habit and habit Event
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        Toast.makeText(context,"You clicked yes button",Toast.LENGTH_LONG).show();
                         databaseAdapter = DatabaseAdapter.getInstance();
                         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
                             @Override
                             public void onHabitEventCallback(HabitEventList habitEvents) {
+                                ArrayList<Integer> positionsToDelete=new ArrayList<>();
                                 for (int index = 0; index < habitEvents.size(); index++) {
                                     if (content.get(position).getUHID() == habitEvents.getHabitEvent(index).getHabitUHID()) {
-                                        habitEvents.removeHabitEvent(index);
+                                        positionsToDelete.add(index);
+                                    }
+                                }
+                                if (positionsToDelete.size()>0){
+                                    for (int i=positionsToDelete.size()-1;i>=0;i--){
+                                        habitEvents.removeHabitEvent(positionsToDelete.get(i));
                                     }
                                 }
                                 habitList.removeHabit(position);
@@ -233,7 +238,6 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        Toast.makeText(context,"You clicked no button",Toast.LENGTH_LONG).show();
                         notifyItemChanged(position);
 
                     }

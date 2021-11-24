@@ -1,6 +1,8 @@
 package com.example.ohthmhyh.entities;
 
 
+import com.example.ohthmhyh.database.DatabaseAdapter;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class Habit implements Serializable {
     private ArrayList<Days> schedule = new ArrayList<Days>();
     private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
     private int completedCounter = 0;
-    private String acompleted="null";
+    private long lastDayCompleted=0;
 
 
     /**
@@ -178,6 +180,13 @@ public class Habit implements Serializable {
         return startDate;
     }
 
+    public long getLastDayCompleted() {
+        return lastDayCompleted;
+    }
+
+    public void setLastDayCompleted(long lastDayCompleted) {
+        this.lastDayCompleted = lastDayCompleted;
+    }
 
     /**
      * Sets the intended completion schedule of the habit.
@@ -290,14 +299,6 @@ public class Habit implements Serializable {
     }
 
     /**
-     * Increments the completed counter whenever a habit was successfully completed
-     */
-    public void logCompleted() {
-        completedCounter++;
-        acompleted=LocalDate.now().toString();
-    }
-
-    /**
      * Decrements the completed counter
      */
     public void undoCompleted() {completedCounter--;}
@@ -354,12 +355,16 @@ public class Habit implements Serializable {
         return (today.isAfter(StartDateAsLocalDate().minusDays(1)) &&
                 getSchedule().contains(Habit.Days.values()[dayOfWeekIndex]));
     }
+    /**
+     * Returns true if the Habit is supposed to be done today, false otherwise.
+     * @return true if the Habit is supposed to be done today, false otherwise.
+     */
     public boolean wasCompletedToday() {
-        LocalDate today = LocalDate.now();
-       if (acompleted==null) {
+        long today = LocalDate.now().toEpochDay();
+       if (lastDayCompleted==0) {
             return  false;}
 
-        return acompleted.equals(today.toString());
+        return lastDayCompleted==(today);
     }
 }
 
