@@ -12,10 +12,10 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Profile"
-        android:textColor="@color/greenD2"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
+        android:text="User Profile"
+        android:textColor="@color/greenD2"
         android:textSize="25dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -35,7 +35,7 @@
             android:layout_marginTop="16dp"
             android:text="--name--"
             android:textColor="@color/black"
-            android:textSize="25dp"
+            android:textSize="20dp"
             android:textStyle="bold|italic"
             app:layout_constraintEnd_toStartOf="@+id/user_image"
             app:layout_constraintStart_toStartOf="parent"
@@ -47,6 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="5dp"
             android:text="--bio--"
             android:textColor="@color/secondaryColor"
             android:textSize="20dp"
@@ -59,22 +60,23 @@
             android:id="@+id/user_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="5dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginBottom="15dp"
             android:background="@drawable/ic_person_background"
             android:src="@drawable/ic_person_foreground"
-            app:layout_constraintBottom_toBottomOf="@+id/button_sign_out"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"></ImageView>
+            app:layout_constraintStart_toEndOf="@+id/username_TV"
+            app:layout_constraintTop_toTopOf="parent"></ImageView>
 
         <Button
             android:id="@+id/user_editprofile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
             android:text="Edit Profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/button_sign_out"
@@ -87,8 +89,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
             android:text="Sign out"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/user_editprofile"
@@ -100,9 +102,9 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_info"
+        android:layout_below="@+id/user_info"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:text="Follow Requests"
         android:textColor="@color/greenD2"
         android:textSize="25dp"
@@ -114,18 +116,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/textView5"
+        android:layout_alignParentBottom="false"
         android:minHeight="20dp"
         android:orientation="vertical">
 
         <ListView
             android:id="@+id/friend_request_LV"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="60dp" />
 
         <TextView
             android:id="@+id/empty_request_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:textAlignment="viewStart" />
 
     </LinearLayout>
@@ -158,6 +164,9 @@
             android:id="@+id/empty_friend_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:textAlignment="viewStart" />
 
     </LinearLayout>
@@ -169,9 +178,9 @@
         android:layout_below="@id/user_suggest"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/browser_actions_bg_grey"
         android:text="Search for a friend:"
-        android:textSize="15dp"
+        android:textColor="@color/greenD2"
+        android:textSize="25dp"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="266dp" />
 
@@ -182,7 +191,6 @@
         android:layout_below="@id/textView7"
         android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
-        android:background="@color/browser_actions_bg_grey"
         android:hint="Enter friend's username"
         android:textSize="15dp"></EditText>
 
