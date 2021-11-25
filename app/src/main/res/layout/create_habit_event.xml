@@ -79,12 +79,8 @@
         android:id="@+id/Display_Habit_Ce"
         android:layout_width="185dp"
         android:layout_height="167dp"
+        android:layout_marginStart="20dp"
         android:text="TextView"
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/PickHabitCE"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-        android:layout_width="188dp"
-        android:layout_height="104dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/pickImage"
         app:layout_constraintTop_toTopOf="parent" />
