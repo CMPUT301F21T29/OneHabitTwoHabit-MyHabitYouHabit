@@ -20,23 +20,27 @@ import android.widget.Button;
 
 import com.example.ohthmhyh.adapters.HabitRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitActivity;
+import com.example.ohthmhyh.adapters.HabitRecyclerViewGestureAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
+import java.util.ArrayList;
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HabitsFragment extends Fragment implements HabitRecyclerViewAdapter.OntouchListener {
+public class HabitsFragment extends Fragment implements HabitRecyclerViewGestureAdapter.OnTouchListener {
 
     public static final String ARG_RETURNED_HABIT = "returned_habit_arg";
 
     private int chosenHabitIndex = -1;
     private ActivityResultLauncher<Intent> resultLauncher;
     private HabitList habitList;
-    private HabitRecyclerViewAdapter adapter;
+    private ArrayList<Habit> listOfHabits;
+    private HabitRecyclerViewGestureAdapter adapter;
     private DatabaseAdapter databaseAdapter;
 
     public HabitsFragment(){
@@ -69,12 +73,19 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewAdapter
             public void onHabitCallback(HabitList hList) {
                 habitList = hList;
 
+                // Populate the ArrayList of Habits with all the Habits in the database.
+                listOfHabits = new ArrayList<>();
+                for (int i = 0; i < habitList.size(); i++) {
+                    listOfHabits.add(habitList.getHabit(i));
+                }
+
                 recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
                 recyclerView.setHasFixedSize(true);
-                adapter = new HabitRecyclerViewAdapter(getContext(), HabitsFragment.this, habitList);
+                adapter = new HabitRecyclerViewGestureAdapter(
+                        getContext(),  habitList, listOfHabits, HabitsFragment.this);
                 ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
                 ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-                adapter.setTouchhelper(itemTouchHelper);
+                adapter.setTouchHelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
                 recyclerView.setAdapter(adapter);
             }
@@ -95,8 +106,16 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewAdapter
                             Habit habit = (Habit) result.getData().getSerializableExtra(
                                     ARG_RETURNED_HABIT);
                             if (chosenHabitIndex < 0) {
+                                // Add the Habit to the ArrayList of Habits.
+                                listOfHabits.add(habit);
+
+                                // Also add this Habit to the database.
                                 habitList.addHabit(habit);
                             } else {
+                                // Replace this Habit in the ArrayList of Habits.
+                                listOfHabits.set(chosenHabitIndex, habit);
+
+                                // Also replace this Habit in the database.
                                 habitList.replaceHabit(chosenHabitIndex, habit);
                             }
                             adapter.notifyDataSetChanged();
@@ -127,7 +146,7 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewAdapter
         Intent intent = new Intent(getActivity(), UpdateHabitActivity.class);
         if (habitIndex >= 0) {
             // Pass the Habit to the UpdateHabitActivity.
-            intent.putExtra(UpdateHabitActivity.ARG_HABIT, habitList.getHabit(habitIndex));
+            intent.putExtra(UpdateHabitActivity.ARG_HABIT, listOfHabits.get(habitIndex));
         }
         resultLauncher.launch(intent);
     }

@@ -128,7 +128,7 @@ public class HabitFragmentTest {
         toY = fromY;
 
         solo.drag(fromX, toX, fromY, toY, 2);
-
+        solo.clickOnButton("OK");
         assertFalse(solo.searchText(HABIT_NAME));
     }
 

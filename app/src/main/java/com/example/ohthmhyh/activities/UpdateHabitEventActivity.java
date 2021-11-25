@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
@@ -128,7 +129,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         pictureImageView = (ImageView) findViewById(R.id.pickImage);
 
         // Set attributes for the views in the Activity.
-        commentEditText.addTextChangedListener(new LengthTextWatcher(commentEditText, 0, 20));
+        commentEditText.addTextChangedListener(
+                new LengthTextWatcher(
+                        commentEditText, Constants.HABIT_EVENT_COMMENT_MIN_LENGTH,
+                        Constants.HABIT_EVENT_COMMENT_MAX_LENGTH));
         pictureImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,14 +265,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     }
 
     /**
-     * Verify the string is less than 20 characters long.
-     * @param string Takes a string and make sure to get a string less then 20
-     */
-    private static Boolean validComment(String string){
-        return string.length() <= 20;
-    }
-
-    /**
      * Call this method to get read all the data from screen and make
      * habit event
      */
@@ -276,13 +272,14 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         String comment = commentEditText.getText().toString();
 
         // Return if the comment is not the right length.
-        if (!validComment(comment)) {
+        if (comment.length() < Constants.HABIT_EVENT_COMMENT_MIN_LENGTH ||
+                comment.length() > Constants.HABIT_EVENT_COMMENT_MAX_LENGTH) {
             return;
         }
 
         // No image was given.
         if (bitmap == null){
-            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lol_pic);
+            bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.habit_event_default_img);
         }
 
         // TODO: Associate the HabitEvent with an actual Habit.

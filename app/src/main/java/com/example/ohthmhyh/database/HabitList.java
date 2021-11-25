@@ -60,6 +60,33 @@ public class HabitList{
         return habitList.get(index);
     }
 
+
+    /**
+     * Get the index of a habit in the habitlist
+     *
+     * This is useful for modifying parameters in a habitList (synced with server) using a non-synced habit
+     * @param h the habit which we are trying to match
+     * @return index of habit if successful, -1 if not
+     */
+    public int getHabitIndex(Habit h) {
+        for (int i=0; i<habitList.size(); i++) {
+            if (habitList.get(i).equals(h)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Set a habit in the list without removing it
+     * @param index the index of the habit you want to set
+     * @param h the habit you'd like to set
+     */
+    public void setHabit(int index, Habit h) {
+        habitList.set(index, h);
+        databaseAdapter.pushHabits(this);
+    }
+
     /**
      * Removes a habit from the list and updates the database with the changes
      * @param index The index of the habit to remove

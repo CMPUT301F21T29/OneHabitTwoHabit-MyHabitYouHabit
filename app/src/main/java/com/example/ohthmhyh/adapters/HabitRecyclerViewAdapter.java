@@ -5,25 +5,20 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,191 +26,108 @@ import java.util.ArrayList;
 /**
  * An adapter used for putting habit objects into elements of a RecyclerView.
  */
-public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.Myviewholder>
-        implements ItemTransportable {
-    HabitList habitList;
-    Context context;
-    ItemTouchHelper mTouchhelper;
-    OntouchListener mOntouchListener;
+public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.ViewHolder> {
 
     /**
-     * Creates the custom adapter instance
-     * @param habitList The HabitList containing the habits
-     * @param context Context from the activity
-     * @param mOntouchListener A thing that does touch actions
-     * The HabitEventRecyclerViewAdapter creater Needs and array, context and a touch Listener
+     * Used to provide a reference to the views (items) in the RecyclerView
      */
-    public HabitRecyclerViewAdapter(Context context, OntouchListener mOntouchListener, HabitList habitList) {
-        this.habitList = habitList;
-        this.context = context;
-        this.mOntouchListener = mOntouchListener;
+    public static class ViewHolder extends RecyclerView.ViewHolder{
+        // views of the RecyclerView items/elements
+        protected TextView name, description, percent, username;
+        protected CheckBox checkbox;
+        private ProgressBar pb;
+        private TextView sun, mon, tues, wed, thurs, fri, sat;
+
+        /**
+         * Make a new ViewHolder for providing references to a view (item) in the RecyclerView.
+         * @param view the parent view to this view
+         */
+        public ViewHolder(@NonNull View view) {
+            super(view);
+
+            // get all of the views in the item_habit view
+            name = view.findViewById(R.id.name_rv);
+            description = view.findViewById(R.id.habit_description_rv);
+            pb = (ProgressBar) view.findViewById(R.id.pb);
+            percent = view.findViewById(R.id.percent);
+            username = view.findViewById(R.id.creator_usernameTV);
+            checkbox = view.findViewById(R.id.checkBox_ht);
+            sun = view.findViewById(R.id.sun);
+            mon = view.findViewById(R.id.mon);
+            tues = view.findViewById(R.id.tues);
+            wed = view.findViewById(R.id.wed);
+            thurs = view.findViewById(R.id.thurs);
+            fri = view.findViewById(R.id.fri);
+            sat = view.findViewById(R.id.sat);
+        }
     }
 
+
+    protected ArrayList<Habit> content;
+    protected Context context;
+
+
+    /**
+     * Creates an instance of the custom RecyclerView adapter used for showing habits
+     * @param context Context from the activity
+     * @param content The list of Habits to display in the RecyclerView
+     */
+    public HabitRecyclerViewAdapter(Context context, ArrayList<Habit> content) {
+        this.context = context;
+        this.content = content;
+    }
+
+
+    /**
+     * Creates new views (elements) in the RecyclerView
+     * @param parent The parent viewGroup which will hold the new view
+     * @param viewType The type of ViewHolder being used
+     * @return The completed ViewHolder
+     */
     @NonNull
     @Override
-    public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit,parent,false);
-        Myviewholder holder = new Myviewholder(view, mOntouchListener);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit, parent,false);
 
-        return holder;
+        return new ViewHolder(view);
     }
 
-    //sets the things in the display
+
+    /**
+     * Replaces the content of the views in the RecyclerView with the proper view for a habit.
+     * @param holder the view holder of the habit
+     * @param position the position of the habit view in the RecyclerView
+     */
     @Override
-    public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        //Todo
-        //Need to error check because somethings might be null
-        holder.name.setText(habitList.getHabit(position).getName());
-        holder.description.setText(habitList.getHabit(position).getDescription());
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        // set the content of the views in the RecyclerView element
+        holder.name.setText(content.get(position).getName());
+        holder.description.setText(content.get(position).getDescription());
+        holder.username.setVisibility(View.GONE);  // The username is invisible by default.
+        holder.checkbox.setVisibility(View.GONE);  // Checkbox is invisible by default.
         setProgressBar(holder, position);
         setDays(holder, position);
     }
 
+
     /**
      * Returns the amount of items in the RecyclerView
-     * @return habitList.size()
+     * @return content.size()
      */
     @Override
     public int getItemCount() {
-        return habitList.size();
+        return content.size();
     }
+
 
     /**
-     * This is used for moving items in the RecyclerView
-     * @param fromPosition When we move a item in the list this is the position
-     * @param toPosition This is where we move the item to
-     */
-    @Override
-    public void onItemMoved(int fromPosition, int toPosition) {
-        habitList.moveHabit(fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
-    }
-
-    /**
-     * This is used for deleting items in the RecyclerView
-     * @param  position the item to delete
-     */
-    @Override
-    public void onItemSwiped(int position) {
-        //TODO: Add confirmation alert dialog
-        habitList.removeHabit(position);
-        notifyItemRemoved(position);
-    }
-
-    public void setTouchhelper(ItemTouchHelper touchhelper){
-        this.mTouchhelper = touchhelper;
-    }
-
-    public class Myviewholder extends RecyclerView.ViewHolder implements
-            View.OnTouchListener,
-            GestureDetector.OnGestureListener
-    {
-        TextView name;
-        TextView description;
-        ProgressBar pb;
-        TextView percent;
-
-        //days of week
-        TextView sun;
-        TextView mon;
-        TextView tues;
-        TextView wed;
-        TextView thurs;
-        TextView fri;
-        TextView sat;
-
-        GestureDetector mGestureDetector;
-        ConstraintLayout parentLayout;
-        OntouchListener ontouchListener;
-        public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
-            super(itemView);
-            name = itemView.findViewById(R.id.name_rv);
-            description = itemView.findViewById(R.id.habit_description_rv);
-            pb = (ProgressBar) itemView.findViewById(R.id.pb);
-            percent = itemView.findViewById(R.id.percent);
-
-            //days of week
-            sun = itemView.findViewById(R.id.sun);
-            mon = itemView.findViewById(R.id.mon);
-            tues = itemView.findViewById(R.id.tues);
-            wed = itemView.findViewById(R.id.wed);
-            thurs = itemView.findViewById(R.id.thurs);
-            fri = itemView.findViewById(R.id.fri);
-            sat = itemView.findViewById(R.id.sat);
-
-            // TODO: This doesn't seem to portable. Try to increase portability
-            //This is the name of the constraint layout in display HE list
-            parentLayout = itemView.findViewById(R.id.rv_cl);
-
-            mGestureDetector = new GestureDetector(itemView.getContext(),this);
-
-            this.ontouchListener= ontouchListener;
-
-            itemView.setOnTouchListener(this);
-
-        }
-
-        /**
-         * These are all possible gestures a user can do. Define what happens when these gestures
-         * are detected.
-         */
-        @Override
-        public boolean onDown(MotionEvent motionEvent) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent motionEvent) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent motionEvent) {
-            ontouchListener.onItemClicked(getAdapterPosition());
-            return true;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            return false;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent motionEvent) {
-            mTouchhelper.startDrag(this);
-        }
-
-        @Override
-        public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-            return true;
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mGestureDetector.onTouchEvent(motionEvent);
-            return true;
-        }
-
-
-    }
-
-    public interface OntouchListener{
-        /**
-         * This method is used to goto the edit screen
-         * @param position the position of the list we want to edit
-         */
-        void onItemClicked(int position);
-    }
-
-    /**
-     * Contains the logic to set the progress bar, both in magnitude and colour
-     * Also set the % value
-     * @author Matt
-     * @param holder the viewholder holding objects
+     * Contains the logic to set the progress bar, both in magnitude and colour.
+     * Also sets the adherence percentage value.
+     * @param holder the ViewHolder holding objects
      * @param position the position of the habit in the list that we are using
      */
-    public void setProgressBar(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        double progress = habitList.getHabit(position).getAdherence(LocalDate.now());
+    public void setProgressBar(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        double progress = content.get(position).getAdherence(LocalDate.now());
 
         //set colours of bar and text to grey
         holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGray));
@@ -225,40 +137,37 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.pb.setProgress(progressPercent);
         holder.percent.setText(String.valueOf(progressPercent) + "%");
 
-        //set colour based on progress
-        if (progress == Constants.ADHERENCE_TEXT_GREEN_THRESHOLD) {
+        // set the progress bar and percentage color based on how well we adhere to the schedule
+        if (progress >= Constants.ADHERENCE_PROGRESS_BAR_GREEN_THRESHOLD) {
+            //make progress bar and percentage green
+            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGreen)));
             holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarGreen));
         }
-
-        if (progress >= Constants.ADHERENCE_PROGRESS_BAR_GREEN_THRESHOLD) {
-            //make progress bar green
-            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarGreen)));
-        }
         else if (progress >= Constants.ADHERENCE_PROGRESS_BAR_AMBER_THRESHOLD) {
-            //make progress bar amber
-            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarAmber))); //amber
-
+            //make progress bar and percentage amber
+            holder.pb.setProgressTintList(ColorStateList.valueOf(context.getResources().getColor(R.color.progressBarAmber)));
+            holder.percent.setTextColor(context.getResources().getColor(R.color.progressBarAmber));
         }
         else if (progress > Constants.ADHERENCE_PROGRESS_BAR_RED_THRESHOLD) {
-            //make progress bar red
+            //make progress bar and percentage red
             holder.pb.setProgressTintList(ColorStateList.valueOf(Color.RED));
+            holder.percent.setTextColor(ColorStateList.valueOf(Color.RED));
         }
     }
 
+
     /**
-     * contains the logic to bold and set text colour of applicable days in the week
-     * @author Matt
-     * @param holder the viewholder holding objects
-     * @param position the position of the habit in the list that we are using
+     * Contains the logic to bold and set text colour of applicable days in the week for which a
+     * a habit should be completed.
+     * @param holder the ViewHolder of the RecyclerView element
+     * @param position the position of the ViewHolder (element) in the RecyclerView
      */
-    public void setDays(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
-        //Bold/change colour of the days for which a habit is applicable
+    public void setDays(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        ArrayList<Habit.Days> days = habitList.getHabit(position).getSchedule();
+        ArrayList<Habit.Days> days = content.get(position).getSchedule();
+        final float minOpacity = 0.3f;
 
-        float minOpacity = 0.3f;
-
-        //set all to default params
+        // set all "day" views to default font
         holder.sun.setTypeface(null, Typeface.NORMAL);
         holder.mon.setTypeface(null, Typeface.NORMAL);
         holder.tues.setTypeface(null, Typeface.NORMAL);
@@ -266,6 +175,8 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.thurs.setTypeface(null, Typeface.NORMAL);
         holder.fri.setTypeface(null, Typeface.NORMAL);
         holder.sat.setTypeface(null, Typeface.NORMAL);
+
+        // set all "day" views to default opacity
         holder.sun.setAlpha(minOpacity);
         holder.mon.setAlpha(minOpacity);
         holder.tues.setAlpha(minOpacity);
@@ -274,6 +185,7 @@ public class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecycler
         holder.fri.setAlpha(minOpacity);
         holder.sat.setAlpha(minOpacity);
 
+        // Bold the days of the week for which this habit should occur
         if(days.contains(Habit.Days.Sun)){
             // bold / change colour
             holder.sun.setTypeface(null, Typeface.BOLD);
