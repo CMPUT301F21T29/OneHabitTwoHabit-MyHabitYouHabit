@@ -3,6 +3,7 @@ package com.example.ohthmhyh.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -40,6 +41,7 @@ import com.example.ohthmhyh.watchers.LengthTextWatcher;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -65,6 +67,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private EditText commentEditText;
     private ImageView pictureImageView;
     private TextView locationTextView;
+    //private ActivityResultLauncher<Intent> resultLauncher;
 
     private Habit habit;
     private HabitList habitList;
@@ -122,6 +125,16 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             displayHabitView.setText("Habit"+habitList.getHabit(habitIndex).getName());
             habit=habitList.getHabit(habitIndex);
         }
+
+    }
+
+    /**
+     * When map is closed and not cancalled, this method gets called
+     * @param intent contains the location data selected from the map
+     */
+    private void onMapClosed(Intent intent) {
+        this.location = (Location) intent.getExtras().get(MapActivity.ARG_LOCATION);
+        locationTextView.setText(locationString(location));
     }
 
     /**
@@ -203,10 +216,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 locationTextView.setText("");
                 location = null;
             } else {
-                locationTextView.setText("lat: "+habitEvent.getLatitude()+ "Lon: "+ habitEvent.getLongitude());
                 location = new Location("");
                 location.setLatitude(habitEvent.getLatitude());
                 location.setLongitude(habitEvent.getLongitude());
+                locationTextView.setText(locationString(location));
             }
 
         }
@@ -233,6 +246,11 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         // Image Uri will not be null for RESULT_OK
         } else if (resultCode == ImagePicker.RESULT_ERROR) {
             Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+        } else if (resultCode == MapActivity.LOCATION_OK) {
+            if (data == null) {
+                return;
+            }
+            onMapClosed(data);
         } else {
             Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
         }
@@ -246,7 +264,11 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(UpdateHabitEventActivity.this
                 , Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             // Permission is granted.
-            getLocation();
+            if (this.location == null) {
+                getLocation();
+            } else {
+                openMaps();
+            }
         } else {
             // Permission is denied.
             ActivityCompat.requestPermissions(UpdateHabitEventActivity.this,
@@ -287,15 +309,22 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                         location.setLatitude(addressList.get(0).getLatitude());
                         location.setLongitude(addressList.get(0).getLongitude());
 
-                        locationTextView.setText(
-                                "lat: " + location.getLatitude()
-                                        + "Lon: "+ location.getLongitude());
+                        openMaps();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
+    }
+
+    /**
+     * Call this method to open the google map to select a location
+     */
+    private void openMaps() {
+        Intent mapIntent = new Intent(this, MapActivity.class);
+        mapIntent.putExtra(MapActivity.ARG_LOCATION, location);
+        this.startActivityForResult(mapIntent, 0);
     }
 
     /**
@@ -357,4 +386,40 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    // TODO: This is very similar to the HabitEvent's locationString method. Would be good to
+    //       eventually aggregate this functionality somehow.
+    /**
+     * Returns the location cordinates in a more human-friendly format.
+     * @param location that needs to be converted
+     * @return The location of this HabitEvent in a more human-friendly format.
+     */
+    public String locationString(Location location) {
+        String locationString = null;
+
+        try {
+            Geocoder geocoder = new Geocoder(UpdateHabitEventActivity.this,
+                    Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            String locality = addresses.get(0).getLocality();
+            String country = addresses.get(0).getCountryName();
+
+            // If we have both the locality and country, then use them both. If we only have the
+            // country, then just use that.
+            if (locality != null && country != null) {
+                locationString = locality + ", " + country;
+            } else if (country != null) {
+                locationString = country;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (locationString == null) {
+            locationString = "Unable to find the specific location";
+        }
+
+        return locationString;
+    }
+
 }

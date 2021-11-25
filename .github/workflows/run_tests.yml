@@ -12,7 +12,7 @@ jobs:
         with:
           java-version: '11'
       - name: Unit tests
-        run: ./gradlew test
+        run: touch local.properties && ./gradlew test
   instrumentation-tests:
     runs-on: [macos-latest]
     steps:
@@ -24,4 +24,4 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: ./gradlew connectedAndroidTest
+          script: touch local.properties && ./gradlew connectedAndroidTest
