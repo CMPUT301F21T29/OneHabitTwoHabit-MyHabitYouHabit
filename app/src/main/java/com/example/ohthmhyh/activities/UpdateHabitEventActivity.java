@@ -44,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -51,21 +52,22 @@ import java.util.Locale;
 public class UpdateHabitEventActivity extends AppCompatActivity {
 
     public static final String ARG_HABIT_EVENT_INDEX = "habit_event_index_arg";
+    public static final String ARG_HABIT_INDEX = "habit_index_arg";
 
     private Bitmap bitmap = null;
     private HabitEventList habitEventList;
     private DatabaseAdapter databaseAdapter;
     private Location location = null;
     private int habitEventIndex;
+    private int habitIndex;
 
-    private AutoCompleteTextView habitListAutoCompleteTextView;
+    private TextView displayHabitView;
     private EditText commentEditText;
     private ImageView pictureImageView;
     private TextView locationTextView;
 
-    private Habit habit = null;
+    private Habit habit;
     private HabitList habitList;
-    private HabitList validHabits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +87,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             @Override
             public void onHabitCallback(HabitList hList) {
                 habitList = hList;
-                validHabits=habitList.ValidHabitForDay();
-                makeNameList();
-                //OnItemClickListener that gets position of item
-                AutoCompleteTextView mActv = (AutoCompleteTextView) findViewById(R.id.AutoCompleteTextviewCE);
-                mActv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View arg1, int pos, long id) {
-                        habit = validHabits.getHabit(pos);
-                    }
-                });
+                displayHabit();
+
             }
         });
     }
@@ -102,36 +96,32 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
      * This handles the drop down list for Habits
      * Can tell if we are on edit or new Calls to the data base to get the HabitEventList
      */
-    private void makeNameList(){
-        ArrayList<String> habitNameList = validHabits.HabitNames();
-        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(
-                this, R.layout.create_habit_habit_drop_down_menu, habitNameList);
+    private void displayHabit(){
+        displayHabitView = (TextView) findViewById(R.id.Display_Habit_Ce);
 
         Intent intent = getIntent();
         habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
-        if (habitEventIndex >= 0) {
+        habitIndex= intent.getIntExtra(ARG_HABIT_INDEX, -1);
+        if (habitEventIndex >= 0) {//This is edit so display right habit
             //Wait for habitEventList to become non null
             databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
                 @Override
                 public void onHabitEventCallback(HabitEventList habitEvents) {
                     habitEventList = habitEvents;
-                    for (int index = 0; index < validHabits.size(); index++) {
-                        if (validHabits.getHabit(index).getUHID()
+                    for (int index = 0; index < habitList.size(); index++) {
+                        if (habitList.getHabit(index).getUHID()
                                 == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
-                            habitListAutoCompleteTextView.setText(
-                                    validHabits.getHabit(index).getName(), false);
+                            displayHabitView.setText("Habit"+habitList.getHabit(index).getName());
+                            habit=habitList.getHabit(index);
                         }
                     }
                 }
             });
         } else {
             // Default list view (not editing)
-            habitListAutoCompleteTextView
-                    .setText(arrayAdapter.getItem(0).toString(),false);
+            displayHabitView.setText("Habit"+habitList.getHabit(habitIndex).getName());
+            habit=habitList.getHabit(habitIndex);
         }
-
-        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
     }
 
     /**
@@ -325,9 +315,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         if (bitmap == null){
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.habit_event_default_img);
         }
-        if (habit == null) {
-            habit = validHabits.getHabit(0);
-        }
+
 
         HabitEvent habitEvent;
         if (location == null) {
@@ -350,9 +338,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             );
         }
 
-        // Show which Habit was chosen
-        String habitTitle = habitListAutoCompleteTextView.getText().toString();
-        Toast.makeText(this, habitTitle, Toast.LENGTH_LONG).show();
 
         if (habitEventIndex >= 0){  // Editing the HabitEvent.
             // Replace the HabitEvent at the given position.
@@ -360,7 +345,14 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         } else {  // Adding the HabitEvent.
             // Add HabitEvent into the HabitEventList.
             habitEventList.addHabitEvent(habitEvent);
+            //This updates the log of the habit
+            int num=habitList.getHabit(habitIndex).getCompletedCounter();
+            habitList.getHabit(habitIndex).setCompletedCounter(num+1);
+            habitList.getHabit(habitIndex).setLastDayCompleted(LocalDate.now().toEpochDay());
+            habitList.setHabit(habitIndex, habit);
         }
+
+
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

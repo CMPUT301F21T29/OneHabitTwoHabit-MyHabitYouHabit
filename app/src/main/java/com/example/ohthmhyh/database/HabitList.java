@@ -1,5 +1,8 @@
 package com.example.ohthmhyh.database;
 
+import android.content.Intent;
+
+import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.time.LocalDate;
@@ -172,15 +175,6 @@ public class HabitList{
         }
         return doneHabitsOnADay;
     }
-    /**
-     * Increments the completed counter whenever a habit was successfully completed
-     * Updates when the last time a habit was comlpeted
-     */
-    public void logCompleted(int pos) {
-        int num=habitList.get(pos).getCompletedCounter();
-        habitList.get(pos).setCompletedCounter(num+1);
-        habitList.get(pos).setLastDayCompleted(LocalDate.now().toEpochDay());
-        databaseAdapter.pushHabits(this);
-    }
+
 
 }

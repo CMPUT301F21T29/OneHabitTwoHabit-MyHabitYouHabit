@@ -75,25 +75,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Add_Location_text" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/PickHabitCE"
-        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
-        android:layout_width="188dp"
-        android:layout_height="104dp"
+    <TextView
+        android:id="@+id/Display_Habit_Ce"
+        android:layout_width="185dp"
+        android:layout_height="167dp"
+        android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/pickImage"
-        app:startIconDrawable="@drawable/ic_baseline_add_circle_outline_24"
-        android:hint="Select habit"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <AutoCompleteTextView
-            android:id="@+id/AutoCompleteTextviewCE"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:inputType="none" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
