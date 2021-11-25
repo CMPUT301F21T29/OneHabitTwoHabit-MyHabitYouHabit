@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,171 +11,159 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Profile"
-        android:textColor="@color/greenD2"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
-        android:textSize="25dp" />
+        android:text="User Profile"
+        android:textColor="@color/greenD2"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/user_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView"
         android:background="@color/primaryColor"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="57dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <TextView
             android:id="@+id/username_TV"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
             android:text="--name--"
             android:textColor="@color/black"
             android:textSize="20dp"
-            android:textStyle="bold" />
+            android:textStyle="bold|italic"
+            app:layout_constraintBaseline_toBaselineOf="@+id/button_sign_out"
+            app:layout_constraintEnd_toStartOf="@+id/button_sign_out"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/user_biography_TV"
+        <Button
+            android:id="@+id/button_sign_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/username_TV"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:text="--bio--"
-            android:textColor="@color/black"
-            android:textSize="18dp" />
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="Sign out"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <ImageView
-            android:id="@+id/user_image"
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/user_info">
+
+        <TextView
+            android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/ic_person_background"
-            android:src="@drawable/ic_person_foreground"></ImageView>
+            android:layout_marginStart="5dp"
+            android:text="Follow Requests"
+            android:textColor="@color/greenD2"
+            android:textSize="25dp" />
 
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_info"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:text="Follow Requests"
-        android:textColor="@color/greenD2"
-        android:textSize="25dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="266dp" />
-
-    <LinearLayout
-        android:id="@+id/user_request"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/textView5"
-        android:minHeight="20dp"
-        android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/friend_request_LV"
+        <LinearLayout
+            android:id="@+id/user_request"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:minHeight="20dp"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/friend_request_LV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/empty_request_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="viewStart" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/empty_request_list"
-            android:layout_width="match_parent"
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="viewStart" />
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:text="Following"
+            android:textColor="@color/greenD2"
+            android:textSize="25dp" />
 
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_request"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:text="Following"
-        android:textColor="@color/greenD2"
-        android:textSize="25dp" />
-
-    <LinearLayout
-        android:id="@+id/user_suggest"
-        android:layout_below="@id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="20dp"
-        android:orientation="vertical">
-
-        <ListView
-            android:id="@+id/friends_LV"
+        <LinearLayout
+            android:id="@+id/user_suggest"
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="match_parent"
+            android:minHeight="20dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/empty_friend_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="viewStart" />
+            <ListView
+                android:id="@+id/friends_LV"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp" />
 
+            <TextView
+                android:id="@+id/empty_friend_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textAlignment="viewStart" />
+
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_suggest"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/browser_actions_bg_grey"
         android:text="Search for a friend:"
-        android:textSize="15dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="266dp" />
+        android:textColor="@color/greenD2"
+        android:textSize="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/friend_Search_ET"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/friend_Search_ET"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textView7"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/browser_actions_bg_grey"
+        android:layout_marginStart="10dp"
         android:hint="Enter friend's username"
-        android:textSize="15dp"></EditText>
+        android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/send_request_btn"
+        app:layout_constraintStart_toStartOf="parent"></EditText>
 
     <Button
         android:id="@+id/send_request_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/friend_Search_ET"
-        android:layout_alignParentRight="true"
-        android:text="Request to follow"></Button>
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Request to follow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"></Button>
 
-    <Button
-        android:id="@+id/user_editprofile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        android:layout_toLeftOf="@id/button_sign_out"
-        android:text="Edit Profile"></Button>
-
-    <Button
-        android:id="@+id/button_sign_out"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        android:text="Sign out"
-        />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
