@@ -42,13 +42,13 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
     //sets the things in the display
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        //Todo
-        //Need to error check because somethings might be null
 
         super.onBindViewHolder(holder, position);
 
         Habit habit = content.get(position);
-
+        if (habit.wasCompletedToday()){
+            holder.checkbox.setChecked(true);
+        }
         // Hide the username TextView but show the Checkbox
         holder.checkbox.setVisibility(View.VISIBLE);
 
