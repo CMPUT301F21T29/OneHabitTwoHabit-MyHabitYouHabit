@@ -103,7 +103,7 @@ public class UserDatabaseTests {
                         @Override
                         public void onProfileCallback(User user2) {
                             // the nasty string is the UID of user1
-                            int index = user2.getFriendRequests().indexOf("ZcJzv1lHwHSGIGNbQO4gaYVhITy1");
+                            int index = user2.getFriendRequests().indexOf("2uxnFdVOeAbPdVHjUASc9FjShpm1");
                             user2.acceptFriendRequest(index);
                         }
                     });
@@ -113,11 +113,11 @@ public class UserDatabaseTests {
         Thread.sleep(3000);  // Wait above to finish
 
         // now user1 should have user2 in their friends list. Nasty string is UID of user1
-        dba.pullUser("ZcJzv1lHwHSGIGNbQO4gaYVhITy1", new DatabaseAdapter.ProfileCallback() {
+        dba.pullUser("2uxnFdVOeAbPdVHjUASc9FjShpm1", new DatabaseAdapter.ProfileCallback() {
             @Override
             public void onProfileCallback(User user) {
                 // make sure the UID of user2 is in user1's friend list
-                assertTrue(user.getFriendList().contains("0daedC91Z0dGFwSvNIZoQLqmOlq2"));
+                assertTrue(user.getFriendList().contains("HZVcAii3GcMVgRWyi575m1z6sBK2"));
             }
         });
     }
