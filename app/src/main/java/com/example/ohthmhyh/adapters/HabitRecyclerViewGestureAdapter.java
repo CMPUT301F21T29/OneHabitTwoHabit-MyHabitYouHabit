@@ -7,10 +7,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.ohthmhyh.R;
@@ -24,14 +22,13 @@ import java.util.ArrayList;
 
 public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         implements ItemTransportable {
-        private DatabaseAdapter databaseAdapter;
+
     /**
      * A listener/callback that is called when items in the RecyclerView are tapped
      */
     public interface OnTouchListener{
         void onItemClicked(int position);
     }
-
 
     /**
      * Used to provide a reference to the views (items) in the RecyclerView
@@ -126,6 +123,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     }
 
 
+    private DatabaseAdapter databaseAdapter;
     private HabitList habitList;
     private OnTouchListener touchListener;
     private ItemTouchHelper touchHelper;
@@ -203,25 +201,27 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      */
     private void openDialog(int position){
         android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
-        alertDialogBuilder.setMessage("Do you really want to delete this habit?");
+        alertDialogBuilder.setMessage(
+                "Deleting this habit will remove associated events. Continue?");
         alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
-        alertDialogBuilder.setPositiveButton("yes",
+        alertDialogBuilder.setPositiveButton("Yes",
                 new DialogInterface.OnClickListener() {
-                    //If user wants to delete and has confirmed run this code which deletes the habit and habit Event
+                    // If user wants to delete and has confirmed, run this code which deletes the
+                    // Habit and HabitEvent.
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
                         databaseAdapter = DatabaseAdapter.getInstance();
                         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
                             @Override
                             public void onHabitEventCallback(HabitEventList habitEvents) {
-                                ArrayList<Integer> positionsToDelete=new ArrayList<>();
+                                ArrayList<Integer> positionsToDelete = new ArrayList<>();
                                 for (int index = 0; index < habitEvents.size(); index++) {
                                     if (content.get(position).getUHID() == habitEvents.getHabitEvent(index).getHabitUHID()) {
                                         positionsToDelete.add(index);
                                     }
                                 }
                                 if (positionsToDelete.size()>0){
-                                    for (int i=positionsToDelete.size()-1;i>=0;i--){
+                                    for (int i = positionsToDelete.size() - 1; i >= 0; i--){
                                         habitEvents.removeHabitEvent(positionsToDelete.get(i));
                                     }
                                 }
@@ -233,7 +233,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
 
                     }
                 });
-        //If the user hits no they dont want to delete run this code
+        // If the user hits no they don't want to delete run this code
         alertDialogBuilder.setNegativeButton("No",
                 new DialogInterface.OnClickListener() {
                     @Override
@@ -242,7 +242,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
 
                     }
                 });
-        //if the user clciks outside the box run this code (same as saying no)
+        // If the user clicks outside the box run this code (same as saying no)
         alertDialogBuilder.setOnCancelListener(
                 new DialogInterface.OnCancelListener() {
                     @Override
