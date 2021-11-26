@@ -99,8 +99,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         Intent intent = getIntent();
         habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
         habitIndex= intent.getIntExtra(ARG_HABIT_INDEX, -1);
-        if (habitEventIndex >= 0) {//This is edit so display right habit
-            //Wait for habitEventList to become non null
+        if (habitEventIndex >= 0) {  // This is edit so display right habit
+            // Wait for habitEventList to become non null
             databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
                 @Override
                 public void onHabitEventCallback(HabitEventList habitEvents) {
@@ -108,16 +108,16 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                     for (int index = 0; index < habitList.size(); index++) {
                         if (habitList.getHabit(index).getUHID()
                                 == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
-                            displayHabitView.setText("Habit"+habitList.getHabit(index).getName());
-                            habit=habitList.getHabit(index);
+                            displayHabitView.setText("Habit: " + habitList.getHabit(index).getName());
+                            habit = habitList.getHabit(index);
                         }
                     }
                 }
             });
         } else {
             // Default list view (not editing)
-            displayHabitView.setText("Habit"+habitList.getHabit(habitIndex).getName());
-            habit=habitList.getHabit(habitIndex);
+            displayHabitView.setText("Habit: " + habitList.getHabit(habitIndex).getName());
+            habit = habitList.getHabit(habitIndex);
         }
 
     }
@@ -369,13 +369,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             // Add HabitEvent into the HabitEventList.
             habitEventList.addHabitEvent(habitEvent);
             //This updates the log of the habit
-            int num=habitList.getHabit(habitIndex).getCompletedCounter();
-            habitList.getHabit(habitIndex).setCompletedCounter(num+1);
+            habitList.getHabit(habitIndex).logCompleted();
             habitList.getHabit(habitIndex).setLastDayCompleted(LocalDate.now().toEpochDay());
             habitList.setHabit(habitIndex, habit);
         }
-
-
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
