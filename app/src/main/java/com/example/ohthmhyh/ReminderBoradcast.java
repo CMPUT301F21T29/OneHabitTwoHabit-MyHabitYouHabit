@@ -10,7 +10,9 @@ import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
+/**
+ * this creates the actual notification that one sees
+ */
 public class ReminderBoradcast extends BroadcastReceiver {
 
     @Override

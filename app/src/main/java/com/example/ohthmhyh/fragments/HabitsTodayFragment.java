@@ -50,6 +50,7 @@ public class HabitsTodayFragment extends Fragment {
     /**
      * this creates the fragment
      * this also sets the recyclerView
+     * Also makes the floating action button
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -103,6 +104,9 @@ public class HabitsTodayFragment extends Fragment {
         return view;
     }
 
+    /**
+     * this creates the Notification Channel
+     */
     private void createNotificationChannel()
     {
     if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
