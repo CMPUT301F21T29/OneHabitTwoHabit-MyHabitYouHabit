@@ -63,17 +63,9 @@
         android:id="@+id/Add_Location_text"
         android:layout_width="196dp"
         android:layout_height="70dp"
-        android:text="Add Location Optinal"
+        android:text="Add a location"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Add_location_button" />
-
-    <TextView
-        android:id="@+id/testLocationthing"
-        android:layout_width="196dp"
-        android:layout_height="64dp"
-        android:text="sdadsa"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Add_Location_text" />
 
     <TextView
         android:id="@+id/Display_Habit_Ce"
