@@ -356,16 +356,17 @@ public class Habit implements Serializable {
         return (today.isAfter(StartDateAsLocalDate().minusDays(1)) &&
                 getSchedule().contains(Habit.Days.values()[dayOfWeekIndex]));
     }
+
     /**
-     * Returns true if the Habit was done today, flase if it was not completed
-     * @return true if the Habit was done today, flase if it was not completed
+     * Returns true if the Habit was done today, false if it was not completed.
+     * @return true if the Habit was done today, false if it was not completed.
      */
     public boolean wasCompletedToday() {
         long today = LocalDate.now().toEpochDay();
-       if (lastDayCompleted==0) {
-            return  false;}
-
-        return lastDayCompleted==(today);
+        if (lastDayCompleted == 0) {
+            return false;
+        }
+        return lastDayCompleted == today;
     }
 }
 
