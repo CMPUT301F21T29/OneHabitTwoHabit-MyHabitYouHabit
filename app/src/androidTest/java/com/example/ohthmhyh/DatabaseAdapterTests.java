@@ -223,7 +223,7 @@ public class DatabaseAdapterTests{
                 @Override
                 public void onUIDCallback(String UID) {
                     Log.e("THE UID IS", UID);
-                    assertEquals(UID, "ZcJzv1lHwHSGIGNbQO4gaYVhITy1");
+                    assertEquals(UID, "2uxnFdVOeAbPdVHjUASc9FjShpm1");
                 }
         });
     }
@@ -236,7 +236,7 @@ public class DatabaseAdapterTests{
     @Test
     public void testGetUsernameFromUID_1() throws Exception{
         dba = DatabaseAdapter.getInstance();
-        dba.pullUsernameFromUID("ZcJzv1lHwHSGIGNbQO4gaYVhITy1",
+        dba.pullUsernameFromUID("2uxnFdVOeAbPdVHjUASc9FjShpm1",
             new DatabaseAdapter.UsernameCallback() {
                 @Override
                 public void onUsernameCallback(String username) {
