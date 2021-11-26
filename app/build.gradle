@@ -35,9 +35,6 @@ android {
         }
         unitTests.returnDefaultValues = true
     }
-    lintOptions {
-        abortOnError false
-    }
 }
 
 dependencies {
