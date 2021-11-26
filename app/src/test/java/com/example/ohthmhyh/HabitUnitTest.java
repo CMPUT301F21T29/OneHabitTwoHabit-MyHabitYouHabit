@@ -1,6 +1,5 @@
 package com.example.ohthmhyh;
 
-import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -225,32 +224,31 @@ public class HabitUnitTest {
      * @author Matt
      * @throws Exception
      */
-//    @Test
-//    @Ignore
-//    public void Test_getAdherence() {
-//        Habit h = new Habit();
-//        ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
-//        sched.add(Habit.Days.Thu);
-//        sched.add(Habit.Days.Wed);
-//        h.setSchedule(sched);
-//
-//        LocalDate startDate = LocalDate.of(2021, 11, 11);
-//        h.setStartDate(startDate.toEpochDay());
-//
-//        assertEquals(0, h.getAdherence(LocalDate.of(2021, 11, 18))); //is zero because we have completed 0/3
-//
-//        h.logCompleted();
-//        h.logCompleted();
-//
-//        double t1 = 2;
-//        double t2 = 3;
-//
-//        assertEquals((t1/t2)*100, h.getAdherence(LocalDate.of(2021, 11, 18))); //66.6% because we have completed 2/3
-//
-//        h.logCompleted();
-//
-//        assertEquals(100, h.getAdherence(LocalDate.of(2021, 11, 18))); //100% because we have completed 3/3
-//    }
+    @Test
+    public void Test_getAdherence() {
+        Habit h = new Habit();
+        ArrayList<Habit.Days> sched = new ArrayList<Habit.Days>();
+        sched.add(Habit.Days.Thu);
+        sched.add(Habit.Days.Wed);
+        h.setSchedule(sched);
+
+        LocalDate startDate = LocalDate.of(2021, 11, 11);
+        h.setStartDate(startDate.toEpochDay());
+
+        assertEquals(0, h.getAdherence(LocalDate.of(2021, 11, 18))); //is zero because we have completed 0/3
+
+        h.logCompleted();
+        h.logCompleted();
+
+        double t1 = 2;
+        double t2 = 3;
+
+        assertEquals((t1/t2)*100, h.getAdherence(LocalDate.of(2021, 11, 18))); //66.6% because we have completed 2/3
+
+        h.logCompleted();
+
+        assertEquals(100, h.getAdherence(LocalDate.of(2021, 11, 18))); //100% because we have completed 3/3
+    }
 
     /**
      * Test that the Habit is due today.

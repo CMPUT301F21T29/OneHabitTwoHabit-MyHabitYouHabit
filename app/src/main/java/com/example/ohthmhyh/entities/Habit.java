@@ -1,8 +1,6 @@
 package com.example.ohthmhyh.entities;
 
 
-import com.example.ohthmhyh.database.DatabaseAdapter;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,8 +12,6 @@ import java.util.Random;
  * represent a habit.
  */
 public class Habit implements Serializable {
-
-
 
     // define days with an enum to avoid mapping days to numbers
     public enum Days {Sun, Mon, Tue, Wed, Thu, Fri, Sat};
@@ -297,6 +293,11 @@ public class Habit implements Serializable {
     public void setCompletedCounter(int completedCounter) {
         this.completedCounter = completedCounter;
     }
+
+    /**
+     * Increments the completed counter whenever a habit was successfully completed
+     */
+    public void logCompleted() {completedCounter++;}
 
     /**
      * Decrements the completed counter
