@@ -76,7 +76,6 @@ public class HabitEventsFragmentTest {
      * Ensure the dialog to add/edit/view a habit shows up.
      * @throws Exception
      */
-    @Ignore
     @Test
     public void testAddHabitEventShowsUp() throws Exception {
         solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
