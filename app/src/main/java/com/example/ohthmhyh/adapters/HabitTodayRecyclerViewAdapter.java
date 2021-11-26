@@ -96,11 +96,12 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
                         alertDialog.show();
                     }
                     else{//Goto make a habit Event.
+                        // Uncheck the checkbox in case they decide to back-out of the event.
+                        holder.checkbox.setChecked(false);
+
                         Intent intent = new Intent(context, UpdateHabitEventActivity.class);
                         intent.putExtra(UpdateHabitEventActivity.ARG_HABIT_INDEX, index);
                         context.startActivity(intent);}
-
-
                 }
                 else {
 //                    Log.d("tag", habit.getName() + " unchecked");
