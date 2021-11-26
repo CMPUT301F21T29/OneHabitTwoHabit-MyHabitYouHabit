@@ -1,11 +1,7 @@
 package com.example.ohthmhyh.database;
 
-import android.content.Intent;
-
-import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.entities.Habit;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -154,27 +150,5 @@ public class HabitList{
     public int nextUHID() {
         return UHIDCounter++;
     }
-
-    public ArrayList<String> HabitNames() {
-        ArrayList<String> nameOfHabit=new ArrayList<>();
-        for (int i=0; i<habitList.size(); i++) {
-            nameOfHabit.add( habitList.get(i).getName() );
-        }
-        return nameOfHabit;
-    }
-
-    /**
-     * Get a list of habits done today
-     * @return If a list of habits that are completed and due today
-     */
-    public HabitList ValidHabitForDay() {
-        HabitList doneHabitsOnADay= new HabitList();
-        for (int i=0; i<habitList.size(); i++) {
-            if (habitList.get(i).isDueToday()&&habitList.get(i).wasCompletedToday()){
-                doneHabitsOnADay.getHabitList().add( habitList.get(i));}
-        }
-        return doneHabitsOnADay;
-    }
-
 
 }
