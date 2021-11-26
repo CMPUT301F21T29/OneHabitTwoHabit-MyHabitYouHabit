@@ -1,7 +1,6 @@
 package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -51,7 +50,6 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
             @Override
             public void onClick(View view) {
                 if(holder.checkbox.isChecked()){
-                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
                     Log.d("tag", habit.getName() + " checked");
                     int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
 

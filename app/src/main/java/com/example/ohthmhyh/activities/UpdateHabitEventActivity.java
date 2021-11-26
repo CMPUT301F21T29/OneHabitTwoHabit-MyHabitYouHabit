@@ -159,7 +159,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
+    /**
+     * This function is called to see if we need to set the habit event activity for editing
+     * It also deals with the camera
+     */
     private void makeAndEdit() {
         String[] cameraPermission = new String[]{
                 Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
