@@ -1,7 +1,5 @@
 package com.example.ohthmhyh.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -13,26 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
 
-import com.example.ohthmhyh.activities.MainActivity;
 import com.example.ohthmhyh.adapters.HabitEventRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HabitEventsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
 
-    private Button addHabitEventButton;
     private RecyclerView recyclerView;
     private HabitEventRecyclerViewAdapter mAdapter;
     private HabitEventList habitEventList;
@@ -48,27 +39,27 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_habit_events, container, false);
 
-        // pull the habit events from the database
+        // Pull the habit events from the database
         databaseAdapter = DatabaseAdapter.getInstance();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
             @Override
             public void onHabitEventCallback(HabitEventList habitEvents) {
                 habitEventList = habitEvents;
 
-                // put the habit events into the recycler view
-                recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
-                LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
-                recyclerView.setLayoutManager(Mmanager);
+                // Put the habit events into the recycler view
+                recyclerView = view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setHasFixedSize(true);
-                mAdapter=new HabitEventRecyclerViewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
-                ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
-                ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+                mAdapter = new HabitEventRecyclerViewAdapter(
+                        habitEventList, getActivity(), HabitEventsFragment.this);
+                ItemTouchHelper.Callback callback = new TransportableTouchHelper(mAdapter);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
                 mAdapter.setTouchhelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
                 recyclerView.setAdapter(mAdapter);
-
             }
         });
 
