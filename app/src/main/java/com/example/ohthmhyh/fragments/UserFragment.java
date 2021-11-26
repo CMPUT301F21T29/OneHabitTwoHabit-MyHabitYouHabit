@@ -53,15 +53,6 @@ public class UserFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        // set up the edit profile button
-        Button editProfileButton = view.findViewById(R.id.user_editprofile);
-        editProfileButton.setOnClickListener((v) -> {
-            Intent editProfile = new Intent(getActivity(), EditProfileActivity.class);
-            //TODO: no idea why this is here. Should probably be removed.
-            editProfile.putExtra("NAME", "change me - userFragment.java");
-            getActivity().startActivity(editProfile);
-        });
-
         // set up the sign out button
         Button signOutButton = view.findViewById(R.id.button_sign_out);
         signOutButton.setOnClickListener(new View.OnClickListener() {
@@ -94,14 +85,8 @@ public class UserFragment extends Fragment {
      */
     private void fillViews(View view, User user){
 
-         // Ian added this, idk if we need it. It currently doesn't work
-//        // Display the user's email.
-//        TextView userTextView = view.findViewById(R.id.text_view_user);
-//        userTextView.setText(user.getEmail());
-
         // get the views
         TextView usernameTV= view.findViewById(R.id.username_TV);
-        TextView userBioTV = view.findViewById(R.id.user_biography_TV);
         ListView requestLV = view.findViewById(R.id.friend_request_LV);
         TextView emptyRequestTV = view.findViewById(R.id.empty_request_list);
         ListView friendsLV = view.findViewById(R.id.friends_LV);
@@ -111,7 +96,8 @@ public class UserFragment extends Fragment {
 
         // set the views
         usernameTV.setText(user.getUsername());
-        userBioTV.setText(user.getBio());
+
+        //check if there is a bio. If not show a message
         emptyRequestTV.setText("Looks like you're all caught up!");
         emptyFriendsTV.setText("You're not following anyone!");
 
@@ -150,7 +136,6 @@ public class UserFragment extends Fragment {
         FRAdapter.setCustomButtonListener(new FriendRequestListAdapter.buttonListener() {
             @Override
             public void onAcceptClickListener(int position) {
-                Toast.makeText(getContext(), "ACCEPT "+position, Toast.LENGTH_SHORT).show();
                 user.acceptFriendRequest(position);
                 friendsAdapter.notifyDataSetChanged();
                 FRAdapter.notifyDataSetChanged();
@@ -158,7 +143,6 @@ public class UserFragment extends Fragment {
 
             @Override
             public void onDeclineClickListener(int position) {
-                Toast.makeText(getContext(), "DECLINE "+position, Toast.LENGTH_SHORT).show();
                 user.denyFriendRequest(position);
                 FRAdapter.notifyDataSetChanged();
             }

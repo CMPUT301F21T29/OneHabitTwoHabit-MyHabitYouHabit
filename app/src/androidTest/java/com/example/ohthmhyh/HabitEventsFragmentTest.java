@@ -93,6 +93,73 @@ public class HabitEventsFragmentTest {
     public void testAddAndDeleteEvent() throws Exception {
         int fromX, toX, fromY, toY;
         int[] location = new int[2];
+        String comment = String.valueOf(System.currentTimeMillis());
+
+        Thread.sleep(3000);  // Wait for everything to load.
+
+        // Click on one of the add event button
+        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
+
+        // Ensure we are in UpdateHabitEventActivity activity.
+        solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
+
+        // Set an event using the spinner.
+        solo.clickOnView(solo.getView(R.id.AutoCompleteTextviewCE));
+        solo.clickOnView(solo.getView(TextView.class, 1));
+
+        // Set a random comment
+        solo.enterText((EditText) solo.getView(R.id.Get_a_comment_CE), comment);
+
+        // Fetch a location
+        solo.clickOnView(solo.getView(R.id.Add_location_button));
+
+        solo.sleep(1000);
+
+        solo.clickOnView((Button)solo.getView(R.id.set_location_button));
+
+        solo.sleep(1000);
+
+        assertTrue(solo.searchText("Mountain View, United States"));
+
+        // Create event
+        solo.clickOnView(solo.getView(R.id.button2));
+
+        // Ensure we are in UpdateHabitEventActivity activity.
+        solo.assertCurrentActivity("Wrong activity", MainActivity.class);
+        solo.clickOnView(solo.getView(R.id.habit_events_nav_item));
+
+        // Check to see if comments is proper
+        assertTrue(solo.searchText(comment));
+        assertTrue(solo.searchText("Mountain View, United States"));
+
+        // Delete
+        View row = solo.getText("Comment: " + comment);
+        row.getLocationInWindow(location);
+
+        // fail if the view with text cannot be located in the window
+
+        fromX = location[0] + 100;
+        fromY = location[1];
+
+        toX = location[0];
+        toY = fromY;
+
+        solo.drag(fromX, toX, fromY, toY, 2);
+
+        solo.sleep(1000);
+
+        assertFalse(solo.searchText("Comment: " + comment));
+    }
+
+    /**
+     * Check to see when different location of the map is selected
+     * @throws Exception
+     */
+    @Ignore  // Currently unable to click on the map to select a new location in Robotium.
+    @Test
+    public void testMapUpdate() throws Exception {
+        int fromX, toX, fromY, toY;
+        int[] location = new int[2];
 
         Thread.sleep(3000);  // Wait for everything to load.
 
@@ -112,7 +179,28 @@ public class HabitEventsFragmentTest {
         // Fetch a location
         solo.clickOnView(solo.getView(R.id.Add_location_button));
 
+        // Wait for map to popup
+        solo.sleep(6000);
+
+        fromX = location[0] + 200;
+        fromY = location[1] + 700;
+
+        toX = location[0] + 200;
+        toY = fromY + 500;
+
+        solo.drag(fromX, toX, fromY, toY, 2);
+
+        solo.sleep(3000);
+
+        solo.clickLongOnScreen(500, 500, 2);
+
+        solo.sleep(3000);
+
+        solo.clickOnView((Button)solo.getView(R.id.set_location_button));
+
         solo.sleep(1000);
+
+        assertTrue(solo.searchText("Mountain View, United States"));
 
         // Create event
         solo.clickOnView(solo.getView(R.id.button2));
@@ -124,24 +212,6 @@ public class HabitEventsFragmentTest {
         // Check to see if comments is proper
         assertTrue(solo.searchText("TESTING COMMENT"));
         assertTrue(solo.searchText("Mountain View, United States"));
-
-        // Delete
-        View row = solo.getText("Comment: TESTING COMMENT");
-        row.getLocationInWindow(location);
-
-        // fail if the view with text cannot be located in the window
-
-        fromX = location[0] + 100;
-        fromY = location[1];
-
-        toX = location[0];
-        toY = fromY;
-
-        solo.drag(fromX, toX, fromY, toY, 2);
-
-        solo.sleep(1000);
-
-        assertFalse(solo.searchText("Comment: TESTING COMMENT"));
     }
 
     @After
