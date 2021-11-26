@@ -48,6 +48,7 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
         Habit habit = content.get(position);
         if (habit.wasCompletedToday()){
             holder.checkbox.setChecked(true);
+            holder.checkbox.setEnabled(false);  // Disable the checkbox if it's already completed.
         }
         // Hide the username TextView but show the Checkbox
         holder.checkbox.setVisibility(View.VISIBLE);
