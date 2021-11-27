@@ -262,6 +262,10 @@ public class HabitEventsFragmentTest {
             // Handle exceptions if necessary
         }
     }
+/**
+ * This deletes the habit we just made for testing
+ * @param  HABIT_NAME the name we need to delete
+    */
     protected void ResetTest(String HABIT_NAME){
         int fromX, fromY,toY,toX;
         int[] location = new int[2];
@@ -281,6 +285,10 @@ public class HabitEventsFragmentTest {
         solo.drag(fromX, toX, fromY, toY, 2);
         solo.clickOnButton("Yes");
     }
+    /**
+     * This creates a habit that is always valid for testing
+     * @return  HABIT_NAME the name of the habit we made
+     */
     private String makeValidHabit(){
         int fromX, fromY,toY,toX;
         int[] location = new int[2];
