@@ -3,7 +3,6 @@ package com.example.ohthmhyh.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -39,7 +38,6 @@ import com.example.ohthmhyh.watchers.LengthTextWatcher;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -80,7 +78,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_habit_event);
+        setContentView(R.layout.activity_create_habit_event);
 
         databaseAdapter = DatabaseAdapter.getInstance();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
