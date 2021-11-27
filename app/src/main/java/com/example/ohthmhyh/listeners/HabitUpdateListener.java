@@ -18,7 +18,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * Verifies that a new or edited habit is valid
+ * Verifies that a new or edited habit is valid by taking in the views that a Habit's attributes are
+ * defined in. When called to execute (the listener implementer is clicked), it checks the views to
+ * ensure that the Habit's attributes are set properly.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitUpdateListener implements View.OnClickListener {
     protected Activity activity;

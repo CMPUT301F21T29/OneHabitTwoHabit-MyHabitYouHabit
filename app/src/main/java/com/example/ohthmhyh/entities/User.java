@@ -7,9 +7,10 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 
 /**
- * The entity class for a user. This class represents a user, and the parameters related
- * to a user (username, friend list, etc.). Make an instance of this class to
- * represent a user of the app.
+ * The entity class for a user. This class represents a user, and the parameters related to a user
+ * (username, friend list, etc.). Make an instance of this class to represent a user of the app.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class User {
     // instance variables

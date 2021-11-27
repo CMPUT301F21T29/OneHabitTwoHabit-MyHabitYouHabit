@@ -21,9 +21,10 @@ import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link HabitEventsFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * The Fragment that shows the user's HabitEvents.. This Fragment's parent Activity is MainActivity
+ * and is created when the user clicks on the bottom navigation bar's habit event button.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
 

@@ -47,6 +47,14 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * An Activity that allows one to view/edit the contents of a HabitEvent. This can currently be
+ * spawned from the Habits Today fragment when the user chooses to add an event for their Habit, or
+ * from the HabitEvent fragment where the user can click on one of their HabitEvents to view/edit
+ * the details.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class UpdateHabitEventActivity extends AppCompatActivity {
 
     public static final String ARG_HABIT_EVENT_INDEX = "habit_event_index_arg";

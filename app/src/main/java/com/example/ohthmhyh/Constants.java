@@ -1,5 +1,12 @@
 package com.example.ohthmhyh;
 
+/**
+ * A class that holds constants used throughout the app. Rather than referencing literals everywhere
+ * all the time, these constants provide easy and universal access to numbers that are critical to
+ * the app's requirements.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class Constants {
 
     /**
