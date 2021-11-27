@@ -178,6 +178,7 @@ public class LoginActivityTest {
 
         // Ensure we have moved to the MainActivity.
         solo.waitForActivity(MainActivity.class, 20000);
+        solo.sleep(TestConstants.LOADING_WAIT_TIME_MS);
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
 
         FirebaseAuth.getInstance().signOut();

@@ -52,6 +52,7 @@ public class HabitEventsFragmentTest {
     @Before
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+        solo.sleep(TestConstants.LOADING_WAIT_TIME_MS);  // Wait until the data loads.
         solo.clickOnView(solo.getView(R.id.habit_events_nav_item));
     }
 
