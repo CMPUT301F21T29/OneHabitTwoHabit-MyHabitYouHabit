@@ -75,7 +75,7 @@ public class HabitEventsFragmentTest {
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
-        ResetTest(HABIT_NAME);
+
     }
 
     /**
@@ -90,7 +90,6 @@ public class HabitEventsFragmentTest {
         assertTrue(solo.searchText("Click to add Image"));
         assertTrue(solo.searchText("Add location button"));
         assertTrue(solo.searchText("Create Event"));
-        ResetTest(HABIT_NAME);
     }
 
     /**
