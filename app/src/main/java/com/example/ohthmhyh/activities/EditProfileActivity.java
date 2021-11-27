@@ -16,6 +16,12 @@ import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.entities.User;
 
+/**
+ * The Activity responsible for editing the user profile. The user can use this activity to set
+ * different properties about their user. This is CURRENTLY NOT USED IN THE APP.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class EditProfileActivity extends AppCompatActivity {
 
     private ImageView pick;

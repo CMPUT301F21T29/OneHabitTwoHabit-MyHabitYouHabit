@@ -7,6 +7,8 @@ import android.widget.EditText;
 /**
  * Displays an error on an EditText if the text in the EditText is below the minimum length or above
  * the maximum length specified.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class LengthTextWatcher implements TextWatcher {
 

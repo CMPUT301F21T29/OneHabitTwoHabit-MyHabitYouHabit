@@ -10,9 +10,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 /**
- * The class manages how data is put into and pulled out of the database. Make an instance
- * of this class to be able to get or push the HabitList, HabitEventList, and User objects
- * to/from firebase.
+ * The class manages how data is put into and pulled out of the database. Make an instance of this
+ * class to be able to get or push the HabitList, HabitEventList, and User objects to/from firebase.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class DatabaseAdapter{
 

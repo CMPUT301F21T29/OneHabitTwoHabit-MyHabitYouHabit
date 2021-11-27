@@ -19,7 +19,11 @@ import com.example.ohthmhyh.R;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
+ * The Fragment that shows the user's Habits that are supposed to be done today. This Fragment's
+ * parent Activity is MainActivity and is created when the user clicks on the bottom navigation
+ * bar's habits today button.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitsTodayFragment extends Fragment {
 

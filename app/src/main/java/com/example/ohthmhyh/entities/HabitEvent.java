@@ -25,9 +25,11 @@ import java.util.List;
 /**
  * The habitEvent class is used to define a habit event.
  *
- * A habit event is created whenever a user does a habit (for example, if you had a habit stating you
- * want to brush teeth every day, and at 9pm you actually brushed your teeth, you would create a habit event.
- * It is analogous to a post on a social media platform.
+ * A habit event is created whenever a user does a habit (for example, if you had a habit stating
+ * you want to brush teeth every day, and at 9pm you actually brushed your teeth, you would create a
+ * habit event.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitEvent {
     private int habitUHID;
