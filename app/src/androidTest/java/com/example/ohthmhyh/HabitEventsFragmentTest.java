@@ -65,6 +65,7 @@ public class HabitEventsFragmentTest {
      */
     @Test
     public void testAddButtonExists() throws Exception {
+        String HABIT_NAME=makeValidHabit();
         solo.sleep(1000);
         // Ensure we are in the MainActivity.
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
@@ -74,6 +75,7 @@ public class HabitEventsFragmentTest {
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
+        ResetTest(HABIT_NAME);
     }
 
     /**
@@ -82,11 +84,13 @@ public class HabitEventsFragmentTest {
      */
     @Test
     public void testAddHabitEventShowsUp() throws Exception {
+        String HABIT_NAME=makeValidHabit();
         solo.clickOnView((Button) solo.getView(R.id.checkBox_ht));
         assertTrue(solo.searchText("Enter a comment"));
         assertTrue(solo.searchText("Click to add Image"));
         assertTrue(solo.searchText("Add location button"));
         assertTrue(solo.searchText("Create Event"));
+        ResetTest(HABIT_NAME);
     }
 
     /**
