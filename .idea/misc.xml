@@ -3,6 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Code workshopes/Android Studio workspace/301 Project/add_aker_dialog/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habit_events.xml" value="0.9423868312757202" />
+        <entry key="..\:/Code workshopes/Android Studio workspace/301 Project/add_aker_dialog/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habits.xml" value="0.25" />
+        <entry key="..\:/Code workshopes/Android Studio workspace/301 Project/add_aker_dialog/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_habits_today.xml" value="0.25" />
+        <entry key="..\:/Code workshopes/Android Studio workspace/301 Project/add_aker_dialog/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/menu/bottom_nav_menu.xml" value="0.33" />
+        <entry key="..\:/Code workshopes/Android Studio workspace/301 Project/add_aker_dialog/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/mipmap-anydpi-v26/ic_habits_today.xml" value="0.23229166666666667" />
         <entry key="app/src/main/res/drawable/habit_event_default.xml" value="0.23125" />
         <entry key="app/src/main/res/drawable/ic_feed_background.xml" value="0.23125" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.11481481481481481" />
