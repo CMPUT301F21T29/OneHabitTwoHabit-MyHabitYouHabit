@@ -2,11 +2,15 @@ package com.example.ohthmhyh.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,6 +43,8 @@ public class FeedFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);  // For the refresh button at the top menu bar.
+
         feedHabits = new ArrayList<>();
         usernames = new ArrayList<>();
 
@@ -58,11 +64,36 @@ public class FeedFragment extends Fragment{
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.top_nav_refresh_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.button_refresh) {
+            // Pull the user's updated friend's list and refresh the feed
+            databaseAdapter.pullUser(new DatabaseAdapter.OnLoadedListener() {
+                @Override
+                public void onLoaded() {
+                    buildFeed();
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * Builds up the habit feed from the database.
      */
     public void buildFeed() {
+        // Clear the feed and usernames before loading the feed (in case of a refresh).
+        while (feedHabits.size() > 0) {
+            feedHabits.remove(0);
+            usernames.remove(0);
+            adapter.notifyItemRemoved(0);
+        }
 
         for (int i = 0; i < databaseAdapter.userFriendList().size(); i++) {
             // UID of the user for which to get their public habits

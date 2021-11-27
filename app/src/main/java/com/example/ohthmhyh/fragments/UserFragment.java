@@ -4,10 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,6 +34,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class UserFragment extends Fragment {
 
     private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+    private View view;
 
     /**
      * An empty constructor required for fragments
@@ -49,9 +54,10 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);  // For the refresh button at the top menu bar.
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        view = inflater.inflate(R.layout.fragment_user, container, false);
 
         // set up the sign out button
         Button signOutButton = view.findViewById(R.id.button_sign_out);
@@ -65,18 +71,37 @@ public class UserFragment extends Fragment {
         });
 
         // get the user data and put it into the proper views
-        fillViews(view);
+        fillViews();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.top_nav_refresh_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.button_refresh) {
+            // Pull the user's updated friend's list and refresh the feed
+            databaseAdapter.pullUser(new DatabaseAdapter.OnLoadedListener() {
+                @Override
+                public void onLoaded() {
+                    fillViews();
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
     /**
      * Fills the views in the fragment that are dependent on the user object
      * that is retrieved from the database.
-     * @param view The fragment view being filled
      */
-    private void fillViews(View view){
+    private void fillViews(){
 
         // get the views
         TextView usernameTV= view.findViewById(R.id.username_TV);
