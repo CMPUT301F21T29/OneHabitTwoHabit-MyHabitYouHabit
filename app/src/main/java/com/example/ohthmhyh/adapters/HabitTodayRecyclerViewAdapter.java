@@ -7,7 +7,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.example.ohthmhyh.database.HabitList;
+import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 
 import java.util.ArrayList;
@@ -17,18 +17,15 @@ import java.util.ArrayList;
  */
 public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
 
-    private HabitList habitList;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
     
     /**
      * Creates the custom adapter instance
      * @param context Context from the activity
-     * @param habitList The HabitList containing the habits
      * @param content The Habits to display in the RecyclerView
      */
-    public HabitTodayRecyclerViewAdapter(Context context, HabitList habitList,
-                                         ArrayList<Habit> content) {
+    public HabitTodayRecyclerViewAdapter(Context context, ArrayList<Habit> content) {
         super(context, content);
-        this.habitList = habitList;
     }
 
     //sets the things in the display
@@ -49,16 +46,16 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
             public void onClick(View view) {
                 if(holder.checkbox.isChecked()){
                     Log.d("tag", habit.getName() + " checked");
-                    int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
+                    int index = databaseAdapter.indexForHabit(habit);
 
                     habit.logCompleted();
-                    habitList.setHabit(index, habit);
+                    databaseAdapter.setHabit(index, habit);
                 } else {
                     Log.d("tag", habit.getName() + " unchecked");
-                    int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
+                    int index = databaseAdapter.indexForHabit(habit);
 
                     habit.undoCompleted();
-                    habitList.setHabit(index, habit);
+                    databaseAdapter.setHabit(index, habit);
                 }
             }
         });

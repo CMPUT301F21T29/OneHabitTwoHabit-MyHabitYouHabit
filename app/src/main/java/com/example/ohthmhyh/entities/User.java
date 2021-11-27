@@ -1,9 +1,5 @@
 package com.example.ohthmhyh.entities;
 
-import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
 
 /**
@@ -18,14 +14,13 @@ public class User {
     private String bio;
     private ArrayList<String> friendList, friendRequests;
     private int UPIDCounter;
-    private DatabaseAdapter dba;
 
     /**
      * Construct a new, empty user. You MUST manually declare all of the instance
      * variables when using this constructor.
      */
-    public User(){
-        dba = DatabaseAdapter.getInstance();
+    public User() {
+
     }
 
 
@@ -39,7 +34,6 @@ public class User {
         this.username = username;
         this.friendList = new ArrayList<String>();
         this.friendRequests = new ArrayList<String>();
-        dba = DatabaseAdapter.getInstance();
     }
 
     /**
@@ -57,15 +51,6 @@ public class User {
      */
     public void setUsername(String username) {
         this.username = username;
-    }
-
-
-    /**
-     * update the users username. Check if the username has been taken first!
-     */
-    public void updateUsername(String username) {
-        this.username = username;
-        dba.pushUser(this);
     }
 
 
@@ -106,89 +91,6 @@ public class User {
 
 
     /**
-     * Sends a friend request to the person who currently has the username. Make sure the
-     * username is valid first!
-     */
-    public void sendFriendRequest(String username){
-        // make sure we aren't sending a friend request to ourself
-        if(username.equals(this.username)){
-            return;
-        }
-
-        // get the UID of the username to send the request from
-        dba.pullUIDFromUsername(username, new DatabaseAdapter.UIDCallback() {
-            @Override
-            public void onUIDCallback(String UID) {
-                if(UID != null){
-                    //prevent sending friend requests to existing friends.
-                    if(friendList.contains(UID)){
-                        return;
-                    }
-
-                    // now pull the user we want to send the friend request to
-                    dba.pullUser(UID, new DatabaseAdapter.ProfileCallback() {
-                        @Override
-                        public void onProfileCallback(User otherUser) {
-                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                            // prevent sending multiple requests to the same person
-                            if(!otherUser.getFriendRequests().contains(currentUser.getUid())) {
-                                // add this users UID to the other users friend requests
-                                otherUser.getFriendRequests().add(currentUser.getUid());
-                            }
-                            // push the other user back to the database
-                            dba.pushUser(UID, otherUser);
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-
-    /**
-     * Accept an incoming friend request by moving it from the friend request list to
-     * the friends list. Also update the other users friend list.
-     * @param index the index of the friend request to accept
-     */
-    public void acceptFriendRequest(int index){
-        // get the user who sent the friend request
-        String UID = friendRequests.get(index);
-        // remove the request from the current user
-        friendRequests.remove(index);
-        dba.pushUser(this);
-        dba.pullUser(UID, new DatabaseAdapter.ProfileCallback() {
-            @Override
-            public void onProfileCallback(User user) {
-                // add this user to the requesters friends list
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                user.getFriendList().add(currentUser.getUid());
-                dba.pushUser(UID, user);
-            }
-        });
-    }
-
-
-    /**
-     * Deny a friend request by removing it from the friend request list.
-     * @param index the index of the friend request to accept
-     */
-    public void denyFriendRequest(int index){
-        friendRequests.remove((index));
-        dba.pushUser(this);
-    }
-
-
-    /**
-     * Removes a friend
-     * @param index the index of the friend to remove
-     */
-    public void removeFriend(int index){
-        friendList.remove((index));
-        dba.pushUser(this);
-    }
-
-
-    /**
      * Get the biography of the user
      * @return The user bio as string
      */
@@ -203,15 +105,6 @@ public class User {
      */
     public void setBio(String value) {
         this.bio = value;
-    }
-
-
-    /**
-     * update the users bio.
-     */
-    public void updateBio(String bio) {
-        this.bio = bio;
-        dba.pushUser(this);
     }
 
 

@@ -1,13 +1,20 @@
 package com.example.ohthmhyh.database;
 
+import android.util.Log;
+
+import com.example.ohthmhyh.entities.Habit;
+import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.entities.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 /**
  * The class manages how data is put into and pulled out of the database. Make an instance
@@ -58,10 +65,21 @@ public class DatabaseAdapter{
         void onHabitEventCallback(HabitEventList habitEvents);
     }
 
+    public interface OnLoadedListener {
+        void onLoaded();
+    }
+
+    public interface OnLoadedHabitsListener {
+        void onLoadedHabits(ArrayList<Habit> habits);
+    }
+
 
     private static DatabaseAdapter instance = null;
-    private static String UID;
+    private String UID;
     private FirebaseFirestore db;
+    private HabitList habitList = null;
+    private HabitEventList habitEventList = null;
+    private User user = null;
 
 
     private DatabaseAdapter() {
@@ -70,10 +88,24 @@ public class DatabaseAdapter{
     }
 
     public static DatabaseAdapter getInstance() {
-        if (instance == null || !UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if (instance == null) {
             instance = new DatabaseAdapter();
         }
         return instance;
+    }
+
+    /**
+     * Determines if the data in the DatabaseAdapter instance should be updated. Returns true if the
+     * user has changed or any of the data elements are null.
+     * @return Whether the DatabaseAdapter should update its data.
+     */
+    public boolean shouldUpdate() {
+        String currentUserUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        if (!UID.equals(currentUserUID) || habitList == null || habitEventList == null || user == null) {
+            UID = currentUserUID;
+            return true;
+        }
+        return false;
     }
 
 
@@ -120,6 +152,303 @@ public class DatabaseAdapter{
                 }
             }
         });
+    }
+
+
+    public void pullAll(DatabaseAdapter.OnLoadedListener callback) {
+        if (UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            Log.d("DatabaseAdapter'", String.valueOf(habitList.size()));
+            Log.d("DatabaseAdapter'", String.valueOf(habitEventList.size()));
+            Log.d("DatabaseAdapter'", user.getUsername());
+            callback.onLoaded();
+        } else {
+            UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseAdapter.this.pullHabitEventList(new OnLoadedListener() {
+                @Override
+                public void onLoaded() {
+                    DatabaseAdapter.this.pullHabitList(new OnLoadedListener() {
+                        @Override
+                        public void onLoaded() {
+                            DatabaseAdapter.this.pullUser(new OnLoadedListener() {
+                                @Override
+                                public void onLoaded() {
+                                    Log.d("DatabaseAdapter", String.valueOf(habitList.size()));
+                                    Log.d("DatabaseAdapter", String.valueOf(habitEventList.size()));
+                                    Log.d("DatabaseAdapter", user.getUsername());
+                                    callback.onLoaded();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
+
+
+    public void pullHabitList(DatabaseAdapter.OnLoadedListener callback) {
+        DocumentReference documentReference = db.collection("Habits").document(UID);
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                habitList = documentSnapshot.toObject(HabitList.class);
+                Log.d("DatabaseAdapter", "HabitList: " + String.valueOf(habitList.size()));
+                callback.onLoaded();
+            }
+        });
+    }
+
+    public void pullHabitsForUser(String userUID, DatabaseAdapter.OnLoadedHabitsListener callback) {
+        DocumentReference documentReference = db.collection("Habits").document(userUID);
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                ArrayList<Habit> habits = new ArrayList<>();
+                HabitList habitList = documentSnapshot.toObject(HabitList.class);
+
+                for (int i = 0; i < habitList.size(); i++) {
+                    habits.add(habitList.getHabit(i));
+                }
+
+                callback.onLoadedHabits(habits);
+            }
+        });
+    }
+
+
+    public void pullHabitEventList(DatabaseAdapter.OnLoadedListener callback) {
+        DocumentReference documentReference = db.collection("HabitEvents").document(UID);
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                habitEventList = documentSnapshot.toObject(HabitEventList.class);
+                Log.d("DatabaseAdapter", "HabitEventList: " + String.valueOf(habitEventList.size()));
+                callback.onLoaded();
+            }
+        });
+    }
+
+
+    public void pullUser(DatabaseAdapter.OnLoadedListener callback) {
+        DocumentReference documentReference = db.collection("Profiles").document(UID);
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                user = documentSnapshot.toObject(User.class);
+                Log.d("DatabaseAdapter", "User: " + user.getUsername());
+                callback.onLoaded();
+            }
+        });
+    }
+
+
+
+    public User getUser() {
+        return user;
+    }
+
+
+    /**
+     * ----------------------- Habit methods. -----------------------
+     */
+
+
+    public Habit habitAtIndex(int index) {
+        return habitList.getHabit(index);
+    }
+
+    /**
+     * Get the index of a habit in the habitlist
+     *
+     * This is useful for modifying parameters in a habitList (synced with server) using a non-synced habit
+     * @param habit the habit which we are trying to match
+     * @return index of habit if successful, -1 if not
+     */
+    public int indexForHabit(Habit habit) {
+        for (int i = 0; i < habitList.size(); i++) {
+            if (habitList.getHabit(i).equals(habit)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int numberOfHabits() {
+        return habitList.size();
+    }
+
+    public void addHabit(Habit habit) {
+        habitList.addHabit(habit);
+        pushHabits(habitList);
+    }
+
+    public void removeHabit(int index) {
+        habitList.removeHabit(index);
+        pushHabits(habitList);
+    }
+
+    /**
+     * Set a habit in the list without removing it
+     * @param index the index of the habit you want to set
+     * @param h the habit you'd like to set
+     */
+    public void setHabit(int index, Habit h) {
+        habitList.setHabit(index, h);
+        pushHabits(habitList);
+    }
+
+    public void replaceHabit(int index, Habit habit) {
+        habitList.replaceHabit(index, habit);
+        pushHabits(habitList);
+    }
+
+    public void moveHabit(int fromIndex, int toIndex) {
+        habitList.moveHabit(fromIndex, toIndex);
+        pushHabits(habitList);
+    }
+
+
+    /**
+     * ----------------------- HabitEvent methods. -----------------------
+     */
+
+
+    public HabitEvent habitEventAtIndex(int index) {
+        return habitEventList.getHabitEvent(index);
+    }
+
+    public int numberOfHabitEvents() {
+        return habitEventList.size();
+    }
+
+    public void addHabitEvent(HabitEvent habitEvent) {
+        habitEventList.addHabitEvent(habitEvent);
+        pushHabitEvents(habitEventList);
+    }
+
+    public void removeHabitEvent(int index) {
+        habitEventList.removeHabitEvent(index);
+        pushHabitEvents(habitEventList);
+    }
+
+    public void replaceHabitEvent(int index, HabitEvent habitEvent) {
+        habitEventList.replaceHabitEvent(index, habitEvent);
+        pushHabitEvents(habitEventList);
+    }
+
+    public void moveHabitEvent(int fromIndex, int toIndex) {
+        habitEventList.moveHabitEvent(fromIndex, toIndex);
+        pushHabitEvents(habitEventList);
+    }
+
+    public int nextHabitEventUPID() {
+        return habitEventList.nextUPID();
+    }
+
+
+    /**
+     * ----------------------- User methods. -----------------------
+     */
+
+    public String userUsername() {
+        return user.getUsername();
+    }
+
+    public ArrayList<String> userFriendList() {
+        return user.getFriendList();
+    }
+
+    public ArrayList<String> userFriendRequests() {
+        return user.getFriendRequests();
+    }
+
+    /**
+     * Sends a friend request to the person who currently has the username. Make sure the
+     * username is valid first!
+     */
+    public void sendUserFriendRequest(String username) {
+        // make sure we aren't sending a friend request to ourself
+        if (username.equals(user.getUsername())) {
+            return;
+        }
+
+        // get the UID of the username to send the request from
+        pullUIDFromUsername(username, new DatabaseAdapter.UIDCallback() {
+            @Override
+            public void onUIDCallback(String otherUID) {
+                if (otherUID != null) {
+                    //prevent sending friend requests to existing friends.
+                    if (user.getFriendList().contains(otherUID)) {
+                        return;
+                    }
+
+                    // now pull the user we want to send the friend request to
+                    pullUser(otherUID, new DatabaseAdapter.ProfileCallback() {
+                        @Override
+                        public void onProfileCallback(User otherUser) {
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            // prevent sending multiple requests to the same person
+                            if (!otherUser.getFriendRequests().contains(currentUser.getUid())) {
+                                // add this users UID to the other users friend requests
+                                otherUser.getFriendRequests().add(currentUser.getUid());
+                            }
+                            // push the other user back to the database
+                            pushUser(otherUID, otherUser);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    /**
+     * Accept an incoming friend request by moving it from the friend request list to
+     * the friends list. Also update the other users friend list.
+     * @param index the index of the friend request to accept
+     */
+    public void acceptUserFriendRequest(int index) {
+        // get the user who sent the friend request
+        String acceptedFriendUID = user.getFriendRequests().get(index);
+        // remove the request from the current user
+        user.getFriendRequests().remove(index);
+        pushUser(user);
+        pullUser(acceptedFriendUID, new DatabaseAdapter.ProfileCallback() {
+            @Override
+            public void onProfileCallback(User friendUser) {
+                // add this user to the requesters friends list
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                friendUser.getFriendList().add(currentUser.getUid());
+                pushUser(acceptedFriendUID, friendUser);
+            }
+        });
+    }
+
+    /**
+     * Deny a friend request by removing it from the friend request list. Push the changes to the
+     * database.
+     * @param index The index of the friend request to deny.
+     */
+    public void denyUserFriendRequest(int index) {
+        user.getFriendRequests().remove(index);
+        pushUser(user);
+    }
+
+    /**
+     * Remove a friend from the User and push the changes to the database.
+     * @param index THe index of the friend to remove.
+     */
+    public void removeUserFriend(int index) {
+        user.getFriendList().remove(index);
+        pushUser(user);
+    }
+
+    /**
+     * Changes the user's bio in the database to be the given String.
+     * @param bio The new bio.
+     */
+    public void updateUserBio(String bio) {
+        user.setBio(bio);
+        pushUser(user);
     }
 
 

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.example.ohthmhyh.adapters.HabitTodayRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.ArrayList;
 public class HabitsTodayFragment extends Fragment {
 
     private HabitTodayRecyclerViewAdapter adapter;
-    private DatabaseAdapter databaseAdapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     public HabitsTodayFragment(){/* Required empty public constructor*/}
 
@@ -46,27 +45,18 @@ public class HabitsTodayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_habits_today, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_htf);
 
-        // Get the HabitList from the database.
-        databaseAdapter = DatabaseAdapter.getInstance();
-        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
-            @Override
-            public void onHabitCallback(HabitList hList) {
-                //make smaller list of habits to put into the recycler view
-                ArrayList<Habit> habitsToday = new ArrayList<>();
-
-                for (int i = 0; i < hList.size(); i++){
-                    Habit habit = hList.getHabit(i);
-                    if (habit.isDueToday()) {
-                        habitsToday.add(habit);
-                    }
-                }
-
-                adapter = new HabitTodayRecyclerViewAdapter(getContext(), hList, habitsToday);
-                recyclerView.setAdapter(adapter);
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setHasFixedSize(true);
+        ArrayList<Habit> habitsToday = new ArrayList<>();
+        for (int i = 0; i < databaseAdapter.numberOfHabits(); i++) {
+            Habit habit = databaseAdapter.habitAtIndex(i);
+            if (habit.isDueToday()) {
+                habitsToday.add(habit);
             }
-        });
+
+            adapter = new HabitTodayRecyclerViewAdapter(getContext(), habitsToday);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setHasFixedSize(true);
+        }
 
         return view;
     }

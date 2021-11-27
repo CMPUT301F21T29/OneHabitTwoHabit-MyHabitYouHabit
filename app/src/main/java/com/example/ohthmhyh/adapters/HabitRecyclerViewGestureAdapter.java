@@ -13,7 +13,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.HabitList;
+import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
 
@@ -123,22 +123,20 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     }
 
 
-    private HabitList habitList;
     private OnTouchListener touchListener;
     private ItemTouchHelper touchHelper;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
 
     /**
      * Creates the custom adapter instance
      * @param context          Context from the activity
-     * @param habitList        The HabitList containing the habits
      * @param content          The Habits to display in the RecyclerView
      * @param touchListener    A thing that does touch actions
      */
-    public HabitRecyclerViewGestureAdapter(Context context, HabitList habitList,
-                                           ArrayList<Habit> content, OnTouchListener touchListener) {
+    public HabitRecyclerViewGestureAdapter(Context context, ArrayList<Habit> content,
+                                           OnTouchListener touchListener) {
         super(context, content);
-        this.habitList = habitList;
         this.touchListener = touchListener;
     }
 
@@ -185,7 +183,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
                         content.remove(position);
 
                         // Remove the Habit from the database.
-                        habitList.removeHabit(position);
+                        databaseAdapter.removeHabit(position);
                         notifyItemRemoved(position);
                     }})
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -210,7 +208,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         content.add(toPosition, habitToMove);
 
         // Move the Habit in the database.
-        habitList.moveHabit(fromPosition, toPosition);
+        databaseAdapter.moveHabit(fromPosition, toPosition);
 
         notifyItemMoved(fromPosition, toPosition);
     }

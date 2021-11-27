@@ -13,19 +13,17 @@ import android.view.ViewGroup;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.adapters.HabitFeedRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.entities.User;
 
 import java.util.ArrayList;
 
 
 public class FeedFragment extends Fragment{
 
-
-    ArrayList<Habit> feedHabits;
-    ArrayList<String> usernames;
-    HabitFeedRecyclerViewAdapter adapter;
+    private ArrayList<Habit> feedHabits;
+    private ArrayList<String> usernames;
+    private HabitFeedRecyclerViewAdapter adapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     public FeedFragment() {
         // Required empty public constructor
@@ -64,45 +62,69 @@ public class FeedFragment extends Fragment{
     /**
      * Builds up the habit feed from the database.
      */
-    public void buildFeed(){
-        DatabaseAdapter dba = DatabaseAdapter.getInstance();
+    public void buildFeed() {
 
-        // get the user so we know who they follow
-        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
-            @Override
-            public void onProfileCallback(User user) {
+        for (int i = 0; i < databaseAdapter.userFriendList().size(); i++) {
+            // UID of the user for which to get their public habits
+            String followingUID = databaseAdapter.userFriendList().get(i);
 
-                // build up the habit list of public habits by
-                // getting the habits of the people this user follows
-                for(int i =0; i< user.getFriendList().size(); i++){
-
-                    // UID of the user for which to get their public habits
-                    String followingUID = user.getFriendList().get(i);
-
-                    // pull username of user we are getting public habits for
-                    dba.pullUsernameFromUID(followingUID, new DatabaseAdapter.UsernameCallback() {
+            // pull username of user we are getting public habits for
+            databaseAdapter.pullUsernameFromUID(followingUID, new DatabaseAdapter.UsernameCallback() {
+                @Override
+                public void onUsernameCallback(String username) {
+                    // Pull the Habits of the Users we follow.
+                    databaseAdapter.pullHabitsForUser(followingUID, new DatabaseAdapter.OnLoadedHabitsListener() {
                         @Override
-                        public void onUsernameCallback(String username) {
-
-                            // pull the habits of the user we follow
-                            dba.pullHabits(followingUID, new DatabaseAdapter.HabitCallback() {
-                                @Override
-                                public void onHabitCallback(HabitList hList) {
-                                    for (Habit habit: hList.getHabitList()) {
-                                        // add the habit to the feed if it is public
-                                        if(!habit.getIsPrivate()){
-                                            feedHabits.add(habit);
-                                            usernames.add(username);
-                                            adapter.notifyItemInserted(adapter.getItemCount()+1);
-                                        }
-                                    }
+                        public void onLoadedHabits(ArrayList<Habit> habits) {
+                            for (Habit habit : habits) {
+                                if (!habit.getIsPrivate()) {
+                                    feedHabits.add(habit);
+                                    usernames.add(username);
+                                    adapter.notifyItemInserted(adapter.getItemCount() + 1);
                                 }
-                            });
+                            }
                         }
                     });
                 }
-            }
-        });
+            });
+        }
+
+//        // get the user so we know who they follow
+//        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
+//            @Override
+//            public void onProfileCallback(User user) {
+//
+//                // build up the habit list of public habits by
+//                // getting the habits of the people this user follows
+//                for(int i =0; i< user.getFriendList().size(); i++){
+//
+//                    // UID of the user for which to get their public habits
+//                    String followingUID = user.getFriendList().get(i);
+//
+//                    // pull username of user we are getting public habits for
+//                    dba.pullUsernameFromUID(followingUID, new DatabaseAdapter.UsernameCallback() {
+//                        @Override
+//                        public void onUsernameCallback(String username) {
+//
+//                            // pull the habits of the user we follow
+//                            dba.pullHabits(followingUID, new DatabaseAdapter.HabitCallback() {
+//                                @Override
+//                                public void onHabitCallback(HabitList hList) {
+//                                    for (Habit habit: hList.getHabitList()) {
+//                                        // add the habit to the feed if it is public
+//                                        if(!habit.getIsPrivate()){
+//                                            feedHabits.add(habit);
+//                                            usernames.add(username);
+//                                            adapter.notifyItemInserted(adapter.getItemCount()+1);
+//                                        }
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    });
+//                }
+//            }
+//        });
     }
 
 }

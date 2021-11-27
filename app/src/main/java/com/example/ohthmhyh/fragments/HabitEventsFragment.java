@@ -16,22 +16,21 @@ import android.widget.Button;
 import com.example.ohthmhyh.adapters.HabitEventRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.helpers.TransportableTouchHelper;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HabitEventsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
 
     private Button addHabitEventButton;
     private RecyclerView recyclerView;
     private HabitEventRecyclerViewAdapter mAdapter;
-    private HabitEventList habitEventList;
-    private DatabaseAdapter databaseAdapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     public HabitEventsFragment() {
         // Required empty public constructor
@@ -45,27 +44,44 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
 
-        // pull the habit events from the database
-        databaseAdapter = DatabaseAdapter.getInstance();
-        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-            @Override
-            public void onHabitEventCallback(HabitEventList habitEvents) {
-                habitEventList = habitEvents;
+        ArrayList<HabitEvent> habitEvents = new ArrayList<>();
+        for (int i = 0; i < databaseAdapter.numberOfHabitEvents(); i++) {
+            habitEvents.add(databaseAdapter.habitEventAtIndex(i));
+        }
 
-                // put the habit events into the recycler view
-                recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
-                LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
-                recyclerView.setLayoutManager(Mmanager);
-                recyclerView.setHasFixedSize(true);
-                mAdapter=new HabitEventRecyclerViewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
-                ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
-                ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
-                mAdapter.setTouchhelper(itemTouchHelper);
-                itemTouchHelper.attachToRecyclerView(recyclerView);
-                recyclerView.setAdapter(mAdapter);
+        recyclerView = view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+        LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        mAdapter=new HabitEventRecyclerViewAdapter(
+                habitEvents, getActivity(), HabitEventsFragment.this);//Might error getActivity works?
+        ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
+        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+        mAdapter.setTouchhelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(mAdapter);
 
-            }
-        });
+
+//        databaseAdapter = DatabaseAdapter.getInstance();
+//        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
+//            @Override
+//            public void onHabitEventCallback(HabitEventList habitEvents) {
+//                habitEventList = habitEvents;
+//
+//                // put the habit events into the recycler view
+//                recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+//                LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
+//                recyclerView.setLayoutManager(layoutManager);
+//                recyclerView.setHasFixedSize(true);
+//                mAdapter=new HabitEventRecyclerViewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
+//                ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
+//                ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+//                mAdapter.setTouchhelper(itemTouchHelper);
+//                itemTouchHelper.attachToRecyclerView(recyclerView);
+//                recyclerView.setAdapter(mAdapter);
+//
+//            }
+//        });
 
         addHabitEventButton = view.findViewById(R.id.add_habit_event);
         addHabitEventButton.setOnClickListener(new View.OnClickListener() {

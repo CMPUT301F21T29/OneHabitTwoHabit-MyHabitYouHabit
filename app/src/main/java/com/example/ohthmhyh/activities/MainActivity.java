@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
+import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.fragments.FeedFragment;
 import com.example.ohthmhyh.fragments.HabitEventsFragment;
 import com.example.ohthmhyh.fragments.HabitsFragment;
@@ -21,12 +24,14 @@ import com.google.android.material.navigation.NavigationBarView;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private ProgressBar loadingProgressBar;
     private BottomNavigationView bottomNavigationView;
     private FeedFragment feedFragment = new FeedFragment();
     private HabitsFragment habitsFragment = new HabitsFragment();
     private HabitsTodayFragment habitsTodayFragment = new HabitsTodayFragment();
     private HabitEventsFragment habitEventsFragment = new HabitEventsFragment();
     private UserFragment userFragment = new UserFragment();
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     /**
      * Called to create the main activity.
@@ -37,10 +42,41 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loadingProgressBar = findViewById(R.id.progress_bar_loading);
+        loadingProgressBar.setVisibility(View.VISIBLE);
+
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
+
+        if (databaseAdapter.shouldUpdate()) {
+            databaseAdapter.pullHabitEventList(new DatabaseAdapter.OnLoadedListener() {
+                @Override
+                public void onLoaded() {
+                    databaseAdapter.pullHabitList(new DatabaseAdapter.OnLoadedListener() {
+                        @Override
+                        public void onLoaded() {
+                            databaseAdapter.pullUser(new DatabaseAdapter.OnLoadedListener() {
+                                @Override
+                                public void onLoaded() {
+                                    loadingProgressBar.setVisibility(View.GONE);
+                                    setupNavigationBar();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            loadingProgressBar.setVisibility(View.GONE);
+            setupNavigationBar();
+        }
+    }
+
+    private void setupNavigationBar() {
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be
         // shown as the "Habit Today" fragment.
-        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -67,6 +103,5 @@ public class MainActivity extends AppCompatActivity {
         });  // Determine which fragment to navigate to when the navigation bar is tapped.
 
         bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
-
     }
 }

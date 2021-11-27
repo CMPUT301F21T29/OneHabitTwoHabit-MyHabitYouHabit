@@ -33,13 +33,11 @@ import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
-import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.watchers.LengthTextWatcher;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -53,8 +51,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
 
     private Bitmap bitmap = null;
     private Habit habit = Habit.makeDummyHabit();  // This is temp
-    private HabitEventList habitEventList;
-    private DatabaseAdapter databaseAdapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
     private Location location = null;
     private int habitEventIndex;
 
@@ -82,15 +79,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_habit_event);
 
-        databaseAdapter = DatabaseAdapter.getInstance();
-        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-            @Override
-            public void onHabitEventCallback(HabitEventList habitEvents) {
-                habitEventList = habitEvents;
-                makeAndEdit();
-            }
-        });
-
+        makeAndEdit();
     }
 
     /**
@@ -162,7 +151,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
 
         // Show the selected HabitEvent.
         if (habitEventIndex >= 0) {
-            HabitEvent habitEvent = habitEventList.getHabitEvent(habitEventIndex);
+            HabitEvent habitEvent = databaseAdapter.habitEventAtIndex(habitEventIndex);
 
             // Set the image picture.
             habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
@@ -320,7 +309,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                     null,
                     null,
                     bitmap,
-                    habitEventList.nextUPID()
+                    databaseAdapter.nextHabitEventUPID()
             );
         } else {
             habitEvent = new HabitEvent(
@@ -329,7 +318,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                     location.getLatitude(),
                     location.getLongitude(),
                     bitmap,
-                    habitEventList.nextUPID()
+                    databaseAdapter.nextHabitEventUPID()
             );
         }
 
@@ -339,10 +328,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
 
         if (habitEventIndex >= 0){  // Editing the HabitEvent.
             // Replace the HabitEvent at the given position.
-            habitEventList.replaceHabitEvent(habitEventIndex, habitEvent);
+            databaseAdapter.replaceHabitEvent(habitEventIndex, habitEvent);
         } else {  // Adding the HabitEvent.
             // Add HabitEvent into the HabitEventList.
-            habitEventList.addHabitEvent(habitEvent);
+            databaseAdapter.addHabitEvent(habitEvent);
         }
 
         Intent intent = new Intent(this, MainActivity.class);
