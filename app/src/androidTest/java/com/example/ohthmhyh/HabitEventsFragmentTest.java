@@ -84,7 +84,6 @@ public class HabitEventsFragmentTest {
      */
     @Test
     public void testAddHabitEventShowsUp() throws Exception {
-        String HABIT_NAME=makeValidHabit();
         solo.clickOnView((Button) solo.getView(R.id.checkBox_ht));
         assertTrue(solo.searchText("Enter a comment"));
         assertTrue(solo.searchText("Click to add Image"));
