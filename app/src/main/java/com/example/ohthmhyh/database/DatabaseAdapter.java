@@ -186,6 +186,17 @@ public class DatabaseAdapter{
     }
 
 
+    public void createDataForNewUser(String username) {
+        habitList = new HabitList();
+        habitEventList = new HabitEventList();
+        user = new User(username);
+
+        pushHabits(habitList);
+        pushHabitEvents(habitEventList);
+        pushUser(user);
+    }
+
+
     public void pullHabitList(DatabaseAdapter.OnLoadedListener callback) {
         DocumentReference documentReference = db.collection("Habits").document(UID);
         documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
