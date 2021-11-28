@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
 
@@ -70,8 +71,19 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
         //Todo
         //Need to error check because some things might be null
         HabitEvent habitEvent = content.get(position);
+
+        // Find the corresponding Habit name for this HabitEvent.
+        String habitName = null;
+        for (int i = 0; i < databaseAdapter.numberOfHabitEvents(); i++) {
+            if (databaseAdapter.habitAtIndex(i).getUHID() == habitEvent.getHabitUHID()) {
+                habitName = databaseAdapter.habitAtIndex(i).getName();
+                break;
+            }
+        }
+        habitName = habitName == null ? "Error" : habitName;
+
         holder.displayComment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
-        holder.displayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
+        holder.displayHabit.setText(habitName);
         holder.displayLocation.setText(
                 Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(holder.itemView.getContext())));
 
