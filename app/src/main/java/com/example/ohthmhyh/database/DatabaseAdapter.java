@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
+import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.entities.User;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,9 +18,11 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 /**
- * The class manages how data is put into and pulled out of the database. Make an instance
- * of this class to be able to get or push the HabitList, HabitEventList, and User objects
- * to/from firebase.
+ * The class manages how data is put into and pulled out of the database. Make an instance of this
+ * class to be able to get or push the HabitList, HabitEventList, and User objects to/from firebase.
+ * This class uses the Singleton design pattern.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class DatabaseAdapter{
 
@@ -117,7 +120,8 @@ public class DatabaseAdapter{
      */
     public static void checkUsernameExists(String username, DatabaseAdapter.UsernameCheckCallback callback){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query conflicts = db.collection("Profiles").whereEqualTo("username", username);
+        Query conflicts = db.collection(Constants.PROFILE_COLLECTION_NAME)
+                .whereEqualTo(Constants.USERNAME_FIELD_NAME, username);
 
         conflicts.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -139,7 +143,8 @@ public class DatabaseAdapter{
      * @param callback The callback which will provide the UID info
      */
     public void pullUIDFromUsername(String username, DatabaseAdapter.UIDCallback callback){
-        Query profile = db.collection("Profiles").whereEqualTo("username", username);
+        Query profile = db.collection(Constants.PROFILE_COLLECTION_NAME)
+                .whereEqualTo(Constants.USERNAME_FIELD_NAME, username);
 
         profile.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
@@ -460,7 +465,7 @@ public class DatabaseAdapter{
      * @param callback The callback which will provide the username info
      */
     public void pullUsernameFromUID(String UID, DatabaseAdapter.UsernameCallback callback){
-        DocumentReference profile = db.collection("Profiles").document(UID);
+        DocumentReference profile = db.collection(Constants.PROFILE_COLLECTION_NAME).document(UID);
 
         profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -489,7 +494,7 @@ public class DatabaseAdapter{
      * @param UID The UID of the user profile being pushed
      */
     public void pushUser(String UID, User user){
-        db.collection("Profiles").document(UID).set(user);
+        db.collection(Constants.PROFILE_COLLECTION_NAME).document(UID).set(user);
     }
 
     /**
@@ -497,7 +502,7 @@ public class DatabaseAdapter{
      * @param habits the list of habits to push into the DB
      */
     public void pushHabits(HabitList habits){
-        db.collection("Habits").document(UID).set(habits);
+        db.collection(Constants.HABIT_COLLECTION_NAME).document(UID).set(habits);
     }
 
 
@@ -506,7 +511,7 @@ public class DatabaseAdapter{
      * @param events The habit events to push into the DB
      */
     public void pushHabitEvents(HabitEventList events){
-        db.collection("HabitEvents").document(UID).set(events);
+        db.collection(Constants.HABIT_EVENT_COLLECTION_NAME).document(UID).set(events);
     }
 
 
@@ -525,7 +530,7 @@ public class DatabaseAdapter{
      * @param callback A callback which will be used to update the user profile
      */
     public void pullUser(String UID, DatabaseAdapter.ProfileCallback callback){
-        DocumentReference profile = db.collection("Profiles").document(UID);
+        DocumentReference profile = db.collection(Constants.PROFILE_COLLECTION_NAME).document(UID);
         profile.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -551,7 +556,7 @@ public class DatabaseAdapter{
      * @param UID The uid of the user for which to pull habits
      */
     public void pullHabits(String UID, HabitCallback callback){
-        DocumentReference habits = db.collection("Habits").document(UID);
+        DocumentReference habits = db.collection(Constants.HABIT_COLLECTION_NAME).document(UID);
         // get the users habits
         habits.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -578,7 +583,8 @@ public class DatabaseAdapter{
      * @param callback A callback which is called when the query completes
      */
     public void pullHabitEvents(String UID, HabitEventCallback callback){
-        DocumentReference habitEvents = db.collection("HabitEvents").document(UID);
+        DocumentReference habitEvents = db.collection(Constants.HABIT_EVENT_COLLECTION_NAME)
+                .document(UID);
         // get the users habits
         habitEvents.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -589,30 +595,5 @@ public class DatabaseAdapter{
         });
     }
 
-    
 }
-
-//////////////////////////////////////////////////////////////////
-// works, but probably not super efficient. Kept for posterity ///
-//////////////////////////////////////////////////////////////////
-
-//    private void pushHabits(User user, WriteBatch batch){
-//        DocumentReference habits = db.collection("Habits").document(UID);
-//        ArrayList<Map<String, Object>> allHabits = new ArrayList<>();
-//
-//        // make an arraylist with the essence of each habit
-//        for(int i=0; i<user.getHabitList().size(); i++){
-//            Map<String, Object> habitData = new HashMap<>();
-//            habitData.put("name", user.getHabitList().get(i).getName());
-//            habitData.put("description", user.getHabitList().get(i).getDescription());
-//            habitData.put("startDate", user.getHabitList().get(i).getStartDate());
-//            habitData.put("schedule", user.getHabitList().get(i).getSchedule());
-//            allHabits.add(habitData);
-//        }
-//
-//        // next line obtained through cosmic rituals
-//        HashMap<String, ArrayList<Map<String, Object>>> field = new HashMap<>();
-//        field.put("habits", allHabits);
-//        batch.set(habits, field);
-//    }
 

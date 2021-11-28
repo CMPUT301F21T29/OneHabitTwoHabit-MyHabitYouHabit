@@ -29,6 +29,8 @@ import com.google.firebase.auth.FirebaseUser;
  * The user should not get past this activity without either have signed into their existing
  * account, or have created a new account. That way, the fragments of the app can freely use the
  * signed-in user and all of their data.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class LoginActivity extends AppCompatActivity {
 

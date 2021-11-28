@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.ohthmhyh.adapters.HabitEventRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
@@ -23,11 +22,13 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
+ * The Fragment that shows the user's HabitEvents.. This Fragment's parent Activity is MainActivity
+ * and is created when the user clicks on the bottom navigation bar's habit event button.
+ *
+ * There are no outstanding issues that we are aware of.
  */
-public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
+public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OnTouchListener {
 
-    private Button addHabitEventButton;
     private RecyclerView recyclerView;
     private HabitEventRecyclerViewAdapter mAdapter;
     private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
@@ -42,7 +43,7 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_habit_events, container, false);
 
         ArrayList<HabitEvent> habitEvents = new ArrayList<>();
         for (int i = 0; i < databaseAdapter.numberOfHabitEvents(); i++) {
@@ -50,24 +51,16 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
         }
 
         recyclerView = view.findViewById(R.id.Displayed_HabitEvent_list_CE);
-        LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        mAdapter=new HabitEventRecyclerViewAdapter(
-                habitEvents, getActivity(), HabitEventsFragment.this);//Might error getActivity works?
-        ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
-        ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
-        mAdapter.setTouchhelper(itemTouchHelper);
+        mAdapter = new HabitEventRecyclerViewAdapter(
+                habitEvents, getActivity(), HabitEventsFragment.this);
+        ItemTouchHelper.Callback callback = new TransportableTouchHelper(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        mAdapter.setTouchHelper(itemTouchHelper);
         itemTouchHelper.attachToRecyclerView(recyclerView);
         recyclerView.setAdapter(mAdapter);
-
-        addHabitEventButton = view.findViewById(R.id.add_habit_event);
-        addHabitEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToUpdateHabitEventActivity(-1);
-            }
-        });
 
         return view;
     }
@@ -77,7 +70,7 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
      * @param position the position where it needs to edit
      */
     @Override
-    public void onItemclicked(int position) {
+    public void onItemClicked(int position) {
         goToUpdateHabitEventActivity(position);
     }
 
@@ -87,7 +80,6 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
      * @param position The position of the HabitEvent.
      */
     private void goToUpdateHabitEventActivity(int position) {
-        // TODO: Add a check to make sure the HabitList is not empty.
         Intent intent = new Intent(getActivity(), UpdateHabitEventActivity.class);
         if (position >= 0) {
             intent.putExtra(UpdateHabitEventActivity.ARG_HABIT_EVENT_INDEX, position);

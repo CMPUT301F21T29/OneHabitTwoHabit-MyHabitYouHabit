@@ -93,7 +93,7 @@ public class UserDatabaseTests {
      * Tests accepting a friend request from another user
      * @throws Exception
      */
-    // TODO: Fix this test.
+      // TODO: Fix this test.
 //    @Test
 //    public void TestAcceptFriendRequest_1() throws Exception{
 //        // push users to the DB
@@ -104,7 +104,7 @@ public class UserDatabaseTests {
 //        dba.pushUser("0daedC91Z0dGFwSvNIZoQLqmOlq2", user2); // nasty string is user2's UID
 //
 //        // send a friend request from user 1 to user 2
-//        dba.sendUserFriendRequest(TestConstants.EXISTING_USER_USERNAME2);
+//        user1.sendFriendRequest(TestConstants.EXISTING_USER_USERNAME2);
 //        Thread.sleep(2000);  // Wait for push to finish.
 //
 //        // now user 2 accepts the friend request. To do this, sign in as user 2
@@ -123,7 +123,7 @@ public class UserDatabaseTests {
 //                        @Override
 //                        public void onProfileCallback(User user2) {
 //                            // the nasty string is the UID of user1
-//                            int index = user2.getFriendRequests().indexOf("ZcJzv1lHwHSGIGNbQO4gaYVhITy1");
+//                            int index = user2.getFriendRequests().indexOf("2uxnFdVOeAbPdVHjUASc9FjShpm1");
 //                            user2.acceptFriendRequest(index);
 //                        }
 //                    });
@@ -133,11 +133,11 @@ public class UserDatabaseTests {
 //        Thread.sleep(3000);  // Wait above to finish
 //
 //        // now user1 should have user2 in their friends list. Nasty string is UID of user1
-//        dba.pullUser("ZcJzv1lHwHSGIGNbQO4gaYVhITy1", new DatabaseAdapter.ProfileCallback() {
+//        dba.pullUser("2uxnFdVOeAbPdVHjUASc9FjShpm1", new DatabaseAdapter.ProfileCallback() {
 //            @Override
 //            public void onProfileCallback(User user) {
 //                // make sure the UID of user2 is in user1's friend list
-//                assertTrue(user.getFriendList().contains("0daedC91Z0dGFwSvNIZoQLqmOlq2"));
+//                assertTrue(user.getFriendList().contains("HZVcAii3GcMVgRWyi575m1z6sBK2"));
 //            }
 //        });
 //    }

@@ -14,6 +14,12 @@ import com.example.ohthmhyh.database.DatabaseAdapter;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter used for the friend request ListView. It is responsible for ordering friend requests
+ * in the ListView and setting each row's views to their appropriate attributes.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class FriendRequestListAdapter extends ArrayAdapter<String> {
 
     /**

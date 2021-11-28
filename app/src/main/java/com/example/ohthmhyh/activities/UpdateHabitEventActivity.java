@@ -3,7 +3,6 @@ package com.example.ohthmhyh.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,8 +15,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,44 +39,70 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * An Activity that allows one to view/edit the contents of a HabitEvent. This can currently be
+ * spawned from the Habits Today fragment when the user chooses to add an event for their Habit, or
+ * from the HabitEvent fragment where the user can click on one of their HabitEvents to view/edit
+ * the details.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class UpdateHabitEventActivity extends AppCompatActivity {
 
     public static final String ARG_HABIT_EVENT_INDEX = "habit_event_index_arg";
+    public static final String ARG_HABIT_INDEX = "habit_index_arg";
 
     private Bitmap bitmap = null;
-    private Habit habit = Habit.makeDummyHabit();  // This is temp
     private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
     private Location location = null;
     private int habitEventIndex;
+    private int habitIndex;
 
-    private AutoCompleteTextView habitListAutoCompleteTextView;
+    private TextView displayHabitView;
     private EditText commentEditText;
     private ImageView pictureImageView;
     private TextView locationTextView;
-    //private ActivityResultLauncher<Intent> resultLauncher;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Down here is for dropdown menu. Need to get the habit.
-        String[] habitList = {"Habit one", "Habit two", "Habit three"};
-        habitListAutoCompleteTextView = findViewById(R.id.AutoCompleteTextviewCE);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(
-                this, R.layout.create_habit_habit_drop_down_menu, habitList);
-        habitListAutoCompleteTextView.setText(arrayAdapter.getItem(0).toString(),false);
-        habitListAutoCompleteTextView.setAdapter(arrayAdapter);
-    }
+    private Habit habit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_habit_event);
+        setContentView(R.layout.activity_update_habit_event);
 
         makeAndEdit();
+        displayHabit();
+    }
+
+    /**
+     * This handles the drop down list for Habits
+     * Can tell if we are on edit or new Calls to the data base to get the HabitEventList
+     */
+    private void displayHabit(){
+        displayHabitView = (TextView) findViewById(R.id.Display_Habit_Ce);
+
+        Intent intent = getIntent();
+        habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
+        habitIndex= intent.getIntExtra(ARG_HABIT_INDEX, -1);
+        if (habitEventIndex >= 0) {  // This is edit so display right habit
+            for (int index = 0; index < databaseAdapter.numberOfHabits(); index++) {
+                Habit currentHabit = databaseAdapter.habitAtIndex(index);
+                if (currentHabit.getUHID()
+                        == databaseAdapter.habitEventAtIndex(habitEventIndex).getHabitUHID()) {
+                    displayHabitView.setText("Habit: " + currentHabit.getName());
+                    habit = currentHabit;
+                }
+            }
+        } else {
+            // Default list view (not editing)
+            Habit currentHabit = databaseAdapter.habitAtIndex(habitIndex);
+            displayHabitView.setText("Habit: " + currentHabit.getName());
+            habit = currentHabit;
+        }
     }
 
     /**
@@ -120,6 +143,10 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This function is called to see if we need to set the habit event activity for editing
+     * It also deals with the camera
+     */
     private void makeAndEdit() {
         String[] cameraPermission = new String[]{
                 Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -140,8 +167,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ImagePicker.with(UpdateHabitEventActivity.this)
                         .crop()	 // Crop image with 16:9 aspect ratio
-                        .compress(1024)  //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)  // Final image resolution will be less than 1080 x 1080(Optional)
+                        .compress(Constants.MAX_IMAGE_FILE_SIZE)  //Final image size will be less than this file size
+                        .maxResultSize(Constants.MAX_IMAGE_HORIZONTAL_RESOLUTION,
+                                Constants.MAX_IMAGE_VERTICAL_RESOLUTION)  // Final image resolution will be less than this resolution
                         .start();
             }
         });
@@ -176,7 +204,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                 locationTextView.setText(locationString(location));
             }
 
-            // TODO: Set the habit associated with this HabitEvent.
         }
     }
 
@@ -300,7 +327,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.habit_event_default_img);
         }
 
-        // TODO: Associate the HabitEvent with an actual Habit.
+
         HabitEvent habitEvent;
         if (location == null) {
             habitEvent = new HabitEvent(
@@ -322,9 +349,6 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             );
         }
 
-        // Show which Habit was chosen
-        String habitTitle = habitListAutoCompleteTextView.getText().toString();
-        Toast.makeText(this, habitTitle, Toast.LENGTH_LONG).show();
 
         if (habitEventIndex >= 0){  // Editing the HabitEvent.
             // Replace the HabitEvent at the given position.
@@ -332,6 +356,11 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         } else {  // Adding the HabitEvent.
             // Add HabitEvent into the HabitEventList.
             databaseAdapter.addHabitEvent(habitEvent);
+
+            //This updates the log of the habit
+            habit.logCompleted();
+            habit.setLastDayCompleted(LocalDate.now().toEpochDay());
+            databaseAdapter.setHabit(habitIndex, habit);
         }
 
         Intent intent = new Intent(this, MainActivity.class);

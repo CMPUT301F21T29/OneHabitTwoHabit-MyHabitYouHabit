@@ -21,7 +21,12 @@ import com.example.ohthmhyh.entities.Habit;
 
 import java.util.ArrayList;
 
-
+/**
+ * The Fragment that shows the user's feed. This Fragment's parent Activity is MainActivity and is
+ * created when the user clicks on the bottom navigation bar's feed button.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class FeedFragment extends Fragment{
 
     private ArrayList<Habit> feedHabits;

@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * The entity class for a habit. This class represents a habit, and the parameters related
- * to a habit (name, description, start date, etc.). Make an instance of this class to
- * represent a habit.
+ * The entity class for a habit. This class represents a habit, and the parameters related to a
+ * habit (name, description, start date, etc.). Make an instance of this class to represent a habit.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class Habit implements Serializable {
 
@@ -23,7 +24,7 @@ public class Habit implements Serializable {
     private ArrayList<Days> schedule = new ArrayList<Days>();
     private int UHID = -1;  // Set as -1 to indicate this Habit does not have a unique habit ID
     private int completedCounter = 0;
-
+    private long lastDayCompleted=0;
 
 
     /**
@@ -176,6 +177,13 @@ public class Habit implements Serializable {
         return startDate;
     }
 
+    public long getLastDayCompleted() {
+        return lastDayCompleted;
+    }
+
+    public void setLastDayCompleted(long lastDayCompleted) {
+        this.lastDayCompleted = lastDayCompleted;
+    }
 
     /**
      * Sets the intended completion schedule of the habit.
@@ -348,6 +356,18 @@ public class Habit implements Serializable {
         int dayOfWeekIndex = today.getDayOfWeek().getValue() % 7;
         return (today.isAfter(StartDateAsLocalDate().minusDays(1)) &&
                 getSchedule().contains(Habit.Days.values()[dayOfWeekIndex]));
+    }
+
+    /**
+     * Returns true if the Habit was done today, false if it was not completed.
+     * @return true if the Habit was done today, false if it was not completed.
+     */
+    public boolean wasCompletedToday() {
+        long today = LocalDate.now().toEpochDay();
+        if (lastDayCompleted == 0) {
+            return false;
+        }
+        return lastDayCompleted == today;
     }
 }
 

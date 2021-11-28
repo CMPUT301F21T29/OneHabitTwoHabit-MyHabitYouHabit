@@ -29,7 +29,10 @@ import com.example.ohthmhyh.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * This fragment is used to show the user's data
+ * The Fragment that shows the user's profile. This Fragment's parent Activity is MainActivity and
+ * is created when the user clicks on the bottom navigation bar's profile button.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class UserFragment extends Fragment {
 

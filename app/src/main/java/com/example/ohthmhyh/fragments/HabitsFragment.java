@@ -28,7 +28,10 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 import java.util.ArrayList;
 
 /**
- * A simple {@link Fragment} subclass.
+ * The Fragment that shows the user's Habits. This Fragment's parent Activity is MainActivity and is
+ * created when the user clicks on the bottom navigation bar's habit button.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitsFragment extends Fragment implements HabitRecyclerViewGestureAdapter.OnTouchListener {
 

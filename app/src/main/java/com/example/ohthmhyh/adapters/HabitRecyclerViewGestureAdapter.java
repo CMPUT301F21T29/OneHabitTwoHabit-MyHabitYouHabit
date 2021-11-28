@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.ohthmhyh.R;
@@ -19,6 +18,13 @@ import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter used for putting Habit objects into elements of a RecyclerView for the user's list of
+ * all their Habits. Each row is populated with views to display the Habit's attributes. Gestures
+ * like swiping and moving Habits are supported.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         implements ItemTransportable {
 
@@ -28,7 +34,6 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     public interface OnTouchListener{
         void onItemClicked(int position);
     }
-
 
     /**
      * Used to provide a reference to the views (items) in the RecyclerView
@@ -171,28 +176,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      */
     @Override
     public void onItemSwiped(int position) {
-        // show a confirmation dialog when deleting
-        new AlertDialog.Builder(context)
-                .setMessage("Do you really want to delete this habit?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    // when "yes" is pressed, delete the habit
-                    @Override
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // Remove the Habit from the content.
-                        content.remove(position);
-
-                        // Remove the Habit from the database.
-                        databaseAdapter.removeHabit(position);
-                        notifyItemRemoved(position);
-                    }})
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    // don't delete the habit when "no" is pressed, but undo the swipe animation
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        notifyDataSetChanged();
-                    }
-                }).show();
+        openDialog(position);
     }
 
 
@@ -212,5 +196,63 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
 
         notifyItemMoved(fromPosition, toPosition);
     }
+    /**
+     *This method is used to open a conformation screen with the user before a delete
+     * @param position the position of the item being swiped
+     */
+    private void openDialog(int position) {
+        android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
+        alertDialogBuilder.setMessage(
+                "Deleting this habit will remove associated events. Continue?");
+        alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    // If user wants to delete and has confirmed, run this code which deletes the
+                    // Habit and HabitEvent.
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        // Remove all associated HabitEvents.
+                        ArrayList<Integer> positionsToDelete = new ArrayList<>();
+                        for (int index = 0; index < databaseAdapter.numberOfHabitEvents(); index++) {
+                            if (content.get(position).getUHID()
+                                    == databaseAdapter.habitEventAtIndex(index).getHabitUHID()) {
+                                positionsToDelete.add(index);
+                            }
+                        }
+                        if (positionsToDelete.size() > 0){
+                            for (int i = positionsToDelete.size() - 1; i >= 0; i--) {
+                                databaseAdapter.removeHabitEvent(positionsToDelete.get(i));
+                            }
+                        }
 
+                        // Remove the Habit from the content.
+                        content.remove(position);
+
+                        // Remove the Habit from the database.
+                        databaseAdapter.removeHabit(position);
+
+                        notifyItemRemoved(position);
+                    }
+                });
+        // If the user hits no they don't want to delete run this code
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        notifyItemChanged(position);
+
+                    }
+                });
+        // If the user clicks outside the box run this code (same as saying no)
+        alertDialogBuilder.setOnCancelListener(
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        notifyItemChanged(position);
+                    }
+                });
+
+        android.app.AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
 }

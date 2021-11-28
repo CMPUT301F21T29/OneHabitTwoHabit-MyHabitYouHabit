@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_edit_profile.xml" value="0.36666666666666664" />
+        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_user.xml" value="0.25" />
+        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/item_friend.xml" value="0.36666666666666664" />
         <entry key="app/src/main/res/drawable/habit_event_default.xml" value="0.23125" />
         <entry key="app/src/main/res/drawable/ic_feed_background.xml" value="0.23125" />
         <entry key="app/src/main/res/drawable/ic_person_foreground.xml" value="0.21302083333333333" />

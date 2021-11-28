@@ -5,8 +5,10 @@ import com.example.ohthmhyh.entities.Habit;
 import java.util.ArrayList;
 
 /**
- * The entity class for a the users habits. This class represents all of the habits created
- * by the user. Make an instance of this class to represent a collection of habits.
+ * The entity class for a the users habits. This class represents all of the habits created by the
+ * user. Make an instance of this class to represent a collection of habits.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitList {
 

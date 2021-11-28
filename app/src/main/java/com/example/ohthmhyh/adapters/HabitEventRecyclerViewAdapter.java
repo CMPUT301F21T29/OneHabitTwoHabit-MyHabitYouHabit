@@ -2,6 +2,7 @@ package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.GestureDetector;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -25,14 +27,18 @@ import com.example.ohthmhyh.interfaces.ItemTransportable;
 import java.util.ArrayList;
 
 /**
- * An adapter used for putting habitEvent objects into elements of a RecyclerView.
+ * An adapter used for putting HabitEvent objects into elements of a RecyclerView. Each row is
+ * populated with views to display the HabitEvent's attributes, and gestures like swiping and moving
+ * elements are also supported.
+ *
+ * There are no outstanding issues that we are aware of.
  */
-public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.Myviewholder>
+public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.ViewHolder>
         implements ItemTransportable {
 
     private Context context;
-    private ItemTouchHelper mTouchhelper;
-    private OntouchListener mOntouchListener;
+    private ItemTouchHelper itemTouchHelper;
+    private OnTouchListener onTouchListener;
     private ArrayList<HabitEvent> content;
     private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
@@ -40,54 +46,51 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
      * Constructor for an adapter capable of putting habits into a RecyclerView.
      * @param content A array of habit event
      * @param context Context from the activity
-     * @param mOntouchListener A thing that does touch actions
+     * @param onTouchListener A thing that does touch actions
      */
     public HabitEventRecyclerViewAdapter(ArrayList<HabitEvent> content, Context context,
-                                         OntouchListener mOntouchListener){
+                                         OnTouchListener onTouchListener){
         this.content=content;
         this.context=context;
-        this.mOntouchListener=mOntouchListener;
+        this.onTouchListener = onTouchListener;
     }
 
     @NonNull
     @Override
-    public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit_event,parent,false);
-        Myviewholder holder =new Myviewholder(view, mOntouchListener);
+        ViewHolder holder =new ViewHolder(view, onTouchListener);
 
         return holder;
     }
 
     //sets the things in the display
     @Override
-    public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because some things might be null
         HabitEvent habitEvent = content.get(position);
-        holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
-        holder.DisplayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
-        holder.DisplayLocation.setText(
+        holder.displayComment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
+        holder.displayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
+        holder.displayLocation.setText(
                 Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(holder.itemView.getContext())));
 
         habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
             @Override
             public void onBMPcallback(Bitmap bitmap) {
-                holder.DisplayUserpic.setImageBitmap(bitmap);
+                holder.displayUserPic.setImageBitmap(bitmap);
             }
         });
-
-
     }
 
     /**
-    *Returns the amount of items in the Recycleview
+     *Returns the amount of items in the RecyclerView
      * @return habitEventsList.size()
      */
     @Override
     public int getItemCount() {
         return content.size();
     }
-
 
     /**
      * This is used for moving items in the RecyclerView
@@ -112,38 +115,31 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
      */
     @Override
     public void onItemSwiped(int position) {
-        // Remove the HabitEvent from the content.
-        content.remove(position);
-
-        // Remove the HabitEvent from the database.
-        databaseAdapter.removeHabitEvent(position);
-
-        notifyItemRemoved(position);
+        openDialog(position);
     }
 
-
-    public void setTouchhelper(ItemTouchHelper touchhelper){
-        this.mTouchhelper=touchhelper;
+    public void setTouchHelper(ItemTouchHelper touchHelper){
+        this.itemTouchHelper =touchHelper;
     }
 
-    public class Myviewholder extends RecyclerView.ViewHolder implements
+    public class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnTouchListener,
             GestureDetector.OnGestureListener {
 
-        TextView Displaycomment;
-        TextView DisplayHabit;
-        TextView DisplayLocation;
-        ImageView DisplayUserpic;
+        TextView displayComment;
+        TextView displayHabit;
+        TextView displayLocation;
+        ImageView displayUserPic;
         GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
-        OntouchListener ontouchListener;
-        public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
+        OnTouchListener ontouchListener;
+        public ViewHolder(@NonNull View itemView, OnTouchListener ontouchListener) {
             super(itemView);
-            Displaycomment=itemView.findViewById(R.id.DisplayCommentCE);
-            DisplayHabit=itemView.findViewById(R.id.DisplayHabitCE);
-            DisplayLocation=itemView.findViewById(R.id.DisplayLocationCE);
-            DisplayUserpic=itemView.findViewById(R.id.DisplayUserpicCE);
-            //This is the name of the contrant layout in display HE list
+            displayComment =itemView.findViewById(R.id.DisplayCommentCE);
+            displayHabit =itemView.findViewById(R.id.DisplayHabitCE);
+            displayLocation=itemView.findViewById(R.id.DisplayLocationCE);
+            displayUserPic =itemView.findViewById(R.id.DisplayUserpicCE);
+            //This is the name of the constraint layout in display HE list
             parentLayout=itemView.findViewById(R.id.Displayed_HabitEvent_list);
             mGestureDetector=new GestureDetector(itemView.getContext(),this);
 
@@ -168,7 +164,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
         @Override
         public boolean onSingleTapUp(MotionEvent motionEvent) {
-            ontouchListener.onItemclicked(getAdapterPosition());
+            ontouchListener.onItemClicked(getAdapterPosition());
             return true;
         }
 
@@ -179,7 +175,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
         @Override
         public void onLongPress(MotionEvent motionEvent) {
-            mTouchhelper.startDrag(this);
+            itemTouchHelper.startDrag(this);
         }
 
         @Override
@@ -195,11 +191,56 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
 
     }
-    public interface OntouchListener{
+    public interface OnTouchListener {
      /**
      *This method is used to goto the edit screen
      * @param position the position of the list we want to edit
      */
-        void onItemclicked(int position);
+        void onItemClicked(int position);
+    }
+
+    /**
+     *This method is used to open a conformation screen with the user before a delete
+     * @param position the position of the item being swiped
+     */
+    private void openDialog(int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
+        alertDialogBuilder.setMessage(
+                "Are you sure you want to delete this event? It will not impact your score.");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    // If user wants to delete and has confirmed, run this code with deletes the
+                    // habit
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        // Remove the HabitEvent from the content.
+                        content.remove(position);
+
+                        // Remove the HabitEvent from the database.
+                        databaseAdapter.removeHabitEvent(position);
+
+                        notifyItemRemoved(position);
+                    }
+                });
+        // If the user hits no they don't want to delete run this code
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        notifyItemChanged(position);
+                    }
+                });
+        // If the user clicks outside the box run this code (same as saying no)
+        alertDialogBuilder.setOnCancelListener(
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        notifyItemChanged(position);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
