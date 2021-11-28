@@ -161,37 +161,27 @@ public class DatabaseAdapter{
 
 
     public void pullAll(DatabaseAdapter.OnLoadedListener callback) {
-        if (UID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-            Log.d("DatabaseAdapter'", String.valueOf(habitList.size()));
-            Log.d("DatabaseAdapter'", String.valueOf(habitEventList.size()));
-            Log.d("DatabaseAdapter'", user.getUsername());
-            callback.onLoaded();
-        } else {
-            UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            DatabaseAdapter.this.pullHabitEventList(new OnLoadedListener() {
-                @Override
-                public void onLoaded() {
-                    DatabaseAdapter.this.pullHabitList(new OnLoadedListener() {
-                        @Override
-                        public void onLoaded() {
-                            DatabaseAdapter.this.pullUser(new OnLoadedListener() {
-                                @Override
-                                public void onLoaded() {
-                                    Log.d("DatabaseAdapter", String.valueOf(habitList.size()));
-                                    Log.d("DatabaseAdapter", String.valueOf(habitEventList.size()));
-                                    Log.d("DatabaseAdapter", user.getUsername());
-                                    callback.onLoaded();
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-        }
+        pullHabitEventList(new OnLoadedListener() {
+            @Override
+            public void onLoaded() {
+                pullHabitList(new OnLoadedListener() {
+                    @Override
+                    public void onLoaded() {
+                        pullUser(new OnLoadedListener() {
+                            @Override
+                            public void onLoaded() {
+                                callback.onLoaded();
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
 
     public void createDataForNewUser(String username) {
+        UID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         habitList = new HabitList();
         habitEventList = new HabitEventList();
         user = new User(username);

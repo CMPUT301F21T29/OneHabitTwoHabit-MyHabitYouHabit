@@ -33,20 +33,9 @@ public class UserDatabaseTests {
     @Before
     public void setUp() throws Exception {
         if (dba.shouldUpdate()) {
-            dba.pullHabitEventList(new DatabaseAdapter.OnLoadedListener() {
+            dba.pullAll(new DatabaseAdapter.OnLoadedListener() {
                 @Override
-                public void onLoaded() {
-                    dba.pullHabitList(new DatabaseAdapter.OnLoadedListener() {
-                        @Override
-                        public void onLoaded() {
-                            dba.pullUser(new DatabaseAdapter.OnLoadedListener() {
-                                @Override
-                                public void onLoaded() {
-                                }
-                            });
-                        }
-                    });
-                }
+                public void onLoaded() {}
             });
             Thread.sleep(TestConstants.LOADING_WAIT_TIME_MS);
         }

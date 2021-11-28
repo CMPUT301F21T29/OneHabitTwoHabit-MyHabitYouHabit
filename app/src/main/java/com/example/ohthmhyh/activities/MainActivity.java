@@ -52,21 +52,12 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.habits_today_nav_item);  // Set habit today as the initial screen.
 
         if (databaseAdapter.shouldUpdate()) {
-            databaseAdapter.pullHabitEventList(new DatabaseAdapter.OnLoadedListener() {
+            // Pull all data for this user. Show a progress bar until everything loads.
+            databaseAdapter.pullAll(new DatabaseAdapter.OnLoadedListener() {
                 @Override
                 public void onLoaded() {
-                    databaseAdapter.pullHabitList(new DatabaseAdapter.OnLoadedListener() {
-                        @Override
-                        public void onLoaded() {
-                            databaseAdapter.pullUser(new DatabaseAdapter.OnLoadedListener() {
-                                @Override
-                                public void onLoaded() {
-                                    loadingProgressBar.setVisibility(View.GONE);
-                                    setupNavigationBar();
-                                }
-                            });
-                        }
-                    });
+                    loadingProgressBar.setVisibility(View.GONE);
+                    setupNavigationBar();
                 }
             });
         } else {
