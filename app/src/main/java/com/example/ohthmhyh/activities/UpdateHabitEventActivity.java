@@ -191,8 +191,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ImagePicker.with(UpdateHabitEventActivity.this)
                         .crop()	 // Crop image with 16:9 aspect ratio
-                        .compress(1024)  //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)  // Final image resolution will be less than 1080 x 1080(Optional)
+                        .compress(Constants.MAX_IMAGE_FILE_SIZE)  //Final image size will be less than this file size
+                        .maxResultSize(Constants.MAX_IMAGE_HORIZONTAL_RESOLUTION,
+                                Constants.MAX_IMAGE_VERTICAL_RESOLUTION)  // Final image resolution will be less than this resolution
                         .start();
             }
         });

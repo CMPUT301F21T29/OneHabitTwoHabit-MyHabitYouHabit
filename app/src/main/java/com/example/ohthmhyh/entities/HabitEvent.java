@@ -10,6 +10,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.ohthmhyh.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -155,8 +156,8 @@ public class HabitEvent {
                 "images/"+ UID + "/"+Integer.toString(UPID)+".jpeg");
 
         // pull the image
-        final long ONE_MEGABYTE = 1024 * 1024;
-        imgref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        imgref.getBytes(Constants.MAX_IMAGE_FILE_SIZE*1024) //kB to B
+                .addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 // when we get the image, send it to the caller
