@@ -12,6 +12,12 @@ import com.example.ohthmhyh.database.DatabaseAdapter;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter used for the friend list ListView. It is responsible for ordering the friends of the
+ * current user in the ListView and setting each row's views to their appropriate attributes.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class FriendsListAdapter extends ArrayAdapter<String> {
 
     // resource ID of the layout to use as the listView elements

@@ -25,7 +25,11 @@ import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 /**
- * An adapter used for putting habitEvent objects into elements of a RecyclerView.
+ * An adapter used for putting HabitEvent objects into elements of a RecyclerView. Each row is
+ * populated with views to display the HabitEvent's attributes, and gestures like swiping and moving
+ * elements are also supported.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.Myviewholder>
         implements ItemTransportable {

@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * The entity class for a habit. This class represents a habit, and the parameters related
- * to a habit (name, description, start date, etc.). Make an instance of this class to
- * represent a habit.
+ * The entity class for a habit. This class represents a habit, and the parameters related to a
+ * habit (name, description, start date, etc.). Make an instance of this class to represent a habit.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class Habit implements Serializable {
 

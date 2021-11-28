@@ -20,6 +20,13 @@ import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter used for putting Habit objects into elements of a RecyclerView for the user's list of
+ * all their Habits. Each row is populated with views to display the Habit's attributes. Gestures
+ * like swiping and moving Habits are supported.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         implements ItemTransportable {
 

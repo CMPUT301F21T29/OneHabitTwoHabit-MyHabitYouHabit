@@ -32,6 +32,8 @@ import java.util.Locale;
 /**
  * An Activity that shows a map. The user is able to select a location on the map and this activity
  * will return the selected location to the calling Activity.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;

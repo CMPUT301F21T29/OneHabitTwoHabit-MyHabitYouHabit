@@ -15,7 +15,11 @@ import com.example.ohthmhyh.entities.Habit;
 import java.util.ArrayList;
 
 /**
- * A simple RecycleviewAdapter for the Habit list.
+ * An adapter used for putting Habit objects into elements of a RecyclerView for the user's Habits
+ * that are due today. Each row is populated with views to display the Habit's attributes. There are
+ * no gestures or clicking allowed for these feed Habits.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
 

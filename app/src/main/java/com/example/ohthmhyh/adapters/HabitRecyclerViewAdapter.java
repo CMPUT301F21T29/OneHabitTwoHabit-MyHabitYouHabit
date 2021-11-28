@@ -24,7 +24,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * An adapter used for putting habit objects into elements of a RecyclerView.
+ * An abstract adapter for Habits in RecyclerViews. This allows subclasses to not worry about having
+ * to populate views with all the attributes of a Habit as this class will do it for them.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.ViewHolder> {
 

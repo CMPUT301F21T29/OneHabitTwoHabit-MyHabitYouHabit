@@ -8,7 +8,9 @@ import java.util.Calendar;
 
 /**
  * A View.OnClickListener that will pull up a DatePickerDialog given a Context and
- * DatePickerDialog.OnDateSetListener
+ * DatePickerDialog.OnDateSetListener.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class DatePickerListener implements View.OnClickListener {
 

@@ -180,6 +180,9 @@ public class LoginActivityTest {
         solo.waitForActivity(MainActivity.class, 20000);
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
 
+        Thread.sleep(10000);  // Wait for app to load user data, then sign out.
+
+        // If there is a null reference on a user object from Firebase, increase the sleep time.
         FirebaseAuth.getInstance().signOut();
     }
 

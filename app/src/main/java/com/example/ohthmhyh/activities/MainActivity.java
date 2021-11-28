@@ -16,8 +16,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 /**
- * The main activity of the app responsible for moving between fragments in the
- * bottom navigation bar.
+ * The main activity of the app responsible for moving between fragments in the bottom navigation
+ * bar.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class MainActivity extends AppCompatActivity {
 
