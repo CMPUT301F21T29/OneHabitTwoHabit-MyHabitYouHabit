@@ -2,6 +2,7 @@ package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.text.Html;
 import android.view.GestureDetector;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.AlertDialog;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -31,10 +33,11 @@ import com.example.ohthmhyh.interfaces.ItemTransportable;
  */
 public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.Myviewholder>
         implements ItemTransportable {
-    HabitEventList habitEventsList;
-    Context context;
-    ItemTouchHelper mTouchhelper;
-    OntouchListener mOntouchListener;
+
+    private HabitEventList habitEventsList;
+    private Context context;
+    private ItemTouchHelper mTouchhelper;
+    private OntouchListener mOntouchListener;
 
     /**
      * Constructor for an adapter capable of putting habits into a RecyclerView.
@@ -87,7 +90,6 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
         return habitEventsList.size();
     }
 
-
     /**
      * This is used for moving items in the RecyclerView
      * @param fromPosition When we move a item in the list this is the position
@@ -105,10 +107,8 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
      */
     @Override
     public void onItemSwiped(int position) {
-        habitEventsList.removeHabitEvent(position);
-        notifyItemRemoved(position);
+        openDialog(position);
     }
-
 
     public void setTouchhelper(ItemTouchHelper touchhelper){
         this.mTouchhelper=touchhelper;
@@ -183,11 +183,52 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
 
     }
+
     public interface OntouchListener{
      /**
      *This method is used to goto the edit screen
      * @param position the position of the list we want to edit
      */
         void onItemclicked(int position);
+    }
+
+    /**
+     *This method is used to open a conformation screen with the user before a delete
+     * @param position the position of the item being swiped
+     */
+    private void openDialog(int position){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+        alertDialogBuilder.setIcon(android.R.drawable.ic_dialog_alert);
+        alertDialogBuilder.setMessage(
+                "Are you sure you want to delete this event? It will not impact your score.");
+        alertDialogBuilder.setPositiveButton("Yes",
+                new DialogInterface.OnClickListener() {
+                    // If user wants to delete and has confirmed, run this code with deletes the
+                    // habit
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        habitEventsList.removeHabitEvent(position);
+                        notifyItemRemoved(position);
+                    }
+                });
+        // If the user hits no they don't want to delete run this code
+        alertDialogBuilder.setNegativeButton("No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+                        notifyItemChanged(position);
+                    }
+                });
+        // If the user clicks outside the box run this code (same as saying no)
+        alertDialogBuilder.setOnCancelListener(
+                new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialogInterface) {
+                        notifyItemChanged(position);
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 }
