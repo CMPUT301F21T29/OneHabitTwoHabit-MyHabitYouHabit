@@ -119,43 +119,6 @@ public class FeedFragment extends Fragment{
                 }
             });
         }
-
-//        // get the user so we know who they follow
-//        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
-//            @Override
-//            public void onProfileCallback(User user) {
-//
-//                // build up the habit list of public habits by
-//                // getting the habits of the people this user follows
-//                for(int i =0; i< user.getFriendList().size(); i++){
-//
-//                    // UID of the user for which to get their public habits
-//                    String followingUID = user.getFriendList().get(i);
-//
-//                    // pull username of user we are getting public habits for
-//                    dba.pullUsernameFromUID(followingUID, new DatabaseAdapter.UsernameCallback() {
-//                        @Override
-//                        public void onUsernameCallback(String username) {
-//
-//                            // pull the habits of the user we follow
-//                            dba.pullHabits(followingUID, new DatabaseAdapter.HabitCallback() {
-//                                @Override
-//                                public void onHabitCallback(HabitList hList) {
-//                                    for (Habit habit: hList.getHabitList()) {
-//                                        // add the habit to the feed if it is public
-//                                        if(!habit.getIsPrivate()){
-//                                            feedHabits.add(habit);
-//                                            usernames.add(username);
-//                                            adapter.notifyItemInserted(adapter.getItemCount()+1);
-//                                        }
-//                                    }
-//                                }
-//                            });
-//                        }
-//                    });
-//                }
-//            }
-//        });
     }
 
 }
