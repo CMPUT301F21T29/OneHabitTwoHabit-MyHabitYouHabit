@@ -131,7 +131,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
             DisplayHabit=itemView.findViewById(R.id.DisplayHabitCE);
             DisplayLocation=itemView.findViewById(R.id.DisplayLocationCE);
             DisplayUserpic=itemView.findViewById(R.id.DisplayUserpicCE);
-            //This is the name of the contrant layout in display HE list
+            //This is the name of the constraint layout in display HE list
             parentLayout=itemView.findViewById(R.id.Displayed_HabitEvent_list);
             mGestureDetector=new GestureDetector(itemView.getContext(),this);
 

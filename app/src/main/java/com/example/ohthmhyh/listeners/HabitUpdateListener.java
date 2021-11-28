@@ -108,20 +108,20 @@ public class HabitUpdateListener implements View.OnClickListener {
         }
 
         else {
-            if (habitNameET.getText().toString().length() <= 0) {
+            if (habitNameET.getText().toString().length() < Constants.HABIT_NAME_MIN_LENGTH) {
                 habitNameET.setError("Title is empty");
                 habitNameET.requestFocus();
             }
-            else if (habitNameET.getText().toString().length() > 20) {
+            else if (habitNameET.getText().toString().length() > Constants.HABIT_NAME_MAX_LENGTH) {
                 habitNameET.setError("Title is too long");
                 habitNameET.requestFocus();
             }
 
-            if (habitDescriptionET.getText().toString().length() > 30) {
+            if (habitDescriptionET.getText().toString().length() > Constants.HABIT_DESCRIPTION_MAX_LENGTH) {
                 habitDescriptionET.setError("Description is too long");
                 habitDescriptionET.requestFocus();
             }
-            else if (habitDescriptionET.getText().toString().length() <= 0) {
+            else if (habitDescriptionET.getText().toString().length() < Constants.HABIT_DESCRIPTION_MIN_LENGTH) {
                 habitDescriptionET.setError("Description is empty");
                 habitDescriptionET.requestFocus();
             }
