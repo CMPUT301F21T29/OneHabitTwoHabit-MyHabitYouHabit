@@ -453,15 +453,6 @@ public class DatabaseAdapter{
         pushUser(user);
     }
 
-    /**
-     * Changes the user's bio in the database to be the given String.
-     * @param bio The new bio.
-     */
-    public void updateUserBio(String bio) {
-        user.setBio(bio);
-        pushUser(user);
-    }
-
 
     /**
      * Call this method to get the username associated with a UID
