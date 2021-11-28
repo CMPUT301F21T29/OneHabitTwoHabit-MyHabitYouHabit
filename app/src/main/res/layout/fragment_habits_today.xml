@@ -10,4 +10,13 @@
         android:id="@+id/recycler_view_htf"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/Alarm_Activate_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/recycler_view_htf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_alarm_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
