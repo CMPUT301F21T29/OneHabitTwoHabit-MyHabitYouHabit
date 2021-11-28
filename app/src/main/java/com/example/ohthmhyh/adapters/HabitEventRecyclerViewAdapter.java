@@ -73,14 +73,13 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
         HabitEvent habitEvent = content.get(position);
 
         // Find the corresponding Habit name for this HabitEvent.
-        String habitName = null;
-        for (int i = 0; i < databaseAdapter.numberOfHabitEvents(); i++) {
+        String habitName = "";
+        for (int i = 0; i < databaseAdapter.numberOfHabits(); i++) {
             if (databaseAdapter.habitAtIndex(i).getUHID() == habitEvent.getHabitUHID()) {
                 habitName = databaseAdapter.habitAtIndex(i).getName();
                 break;
             }
         }
-        habitName = habitName == null ? "Error" : habitName;
 
         holder.displayComment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
         holder.displayHabit.setText(habitName);
