@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/NTT/Desktop/CMPUT301/GroupProject_CMPUT301/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_create_habit_event.xml" value="0.264" />
+        <entry key="..\:/Users/NTT/Desktop/CMPUT301/GroupProject_CMPUT301/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_update_habit_event.xml" value="0.264" />
         <entry key="..\:/Users/NTT/Desktop/CMPUT301/GroupProject_CMPUT301/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/create_habit_event.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/drawable/habit_event_default.xml" value="0.23125" />
         <entry key="app/src/main/res/drawable/ic_feed_background.xml" value="0.23125" />

@@ -108,7 +108,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                     for (int index = 0; index < habitList.size(); index++) {
                         if (habitList.getHabit(index).getUHID()
                                 == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
-                            displayHabitView.setText("Habit: " + habitList.getHabit(index).getName());
+                            displayHabitView.setText("I have completed Habit: " + habitList.getHabit(index).getName());
                             habit = habitList.getHabit(index);
                         }
                     }
@@ -116,7 +116,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             });
         } else {
             // Default list view (not editing)
-            displayHabitView.setText("Habit: " + habitList.getHabit(habitIndex).getName());
+            displayHabitView.setText("I have completed Habit: " + habitList.getHabit(habitIndex).getName());
             habit = habitList.getHabit(habitIndex);
         }
 
