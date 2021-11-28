@@ -26,7 +26,7 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
  *
  * There are no outstanding issues that we are aware of.
  */
-public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
+public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OnTouchListener {
 
     private Button addHabitEventButton;
     private RecyclerView recyclerView;
@@ -61,7 +61,7 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
                 mAdapter=new HabitEventRecyclerViewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
                 ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
                 ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
-                mAdapter.setTouchhelper(itemTouchHelper);
+                mAdapter.setTouchHelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
                 recyclerView.setAdapter(mAdapter);
 
@@ -84,7 +84,7 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
      * @param position the position where it needs to edit
      */
     @Override
-    public void onItemclicked(int position) {
+    public void onItemClicked(int position) {
         goToUpdateHabitEventActivity(position);
     }
 
