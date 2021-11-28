@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.ohthmhyh.adapters.HabitEventRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
@@ -22,12 +21,9 @@ import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link HabitEventsFragment#newInstance} factory method to
- * create an instance of this fragment.
  */
 public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
 
-    private Button addHabitEventButton;
     private RecyclerView recyclerView;
     private HabitEventRecyclerViewAdapter mAdapter;
     private HabitEventList habitEventList;
@@ -43,35 +39,27 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_habit_events, container, false);
+        View view = inflater.inflate(R.layout.fragment_habit_events, container, false);
 
-        // pull the habit events from the database
+        // Pull the habit events from the database
         databaseAdapter = DatabaseAdapter.getInstance();
         databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
             @Override
             public void onHabitEventCallback(HabitEventList habitEvents) {
                 habitEventList = habitEvents;
 
-                // put the habit events into the recycler view
-                recyclerView=view.findViewById(R.id.Displayed_HabitEvent_list_CE);
-                LinearLayoutManager Mmanager=new LinearLayoutManager(getActivity());
-                recyclerView.setLayoutManager(Mmanager);
+                // Put the habit events into the recycler view
+                recyclerView = view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setHasFixedSize(true);
-                mAdapter=new HabitEventRecyclerViewAdapter(habitEventList,getActivity(),HabitEventsFragment.this);//Might error getActivity works?
-                ItemTouchHelper.Callback callback=new TransportableTouchHelper(mAdapter);
-                ItemTouchHelper itemTouchHelper=new ItemTouchHelper(callback);
+                mAdapter = new HabitEventRecyclerViewAdapter(
+                        habitEventList, getActivity(), HabitEventsFragment.this);
+                ItemTouchHelper.Callback callback = new TransportableTouchHelper(mAdapter);
+                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
                 mAdapter.setTouchhelper(itemTouchHelper);
                 itemTouchHelper.attachToRecyclerView(recyclerView);
                 recyclerView.setAdapter(mAdapter);
-
-            }
-        });
-
-        addHabitEventButton = view.findViewById(R.id.add_habit_event);
-        addHabitEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToUpdateHabitEventActivity(-1);
             }
         });
 
@@ -93,7 +81,6 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
      * @param position The position of the HabitEvent.
      */
     private void goToUpdateHabitEventActivity(int position) {
-        // TODO: Add a check to make sure the HabitList is not empty.
         Intent intent = new Intent(getActivity(), UpdateHabitEventActivity.class);
         if (position >= 0) {
             intent.putExtra(UpdateHabitEventActivity.ARG_HABIT_EVENT_INDEX, position);

@@ -4,10 +4,12 @@ import static junit.framework.TestCase.assertTrue;
 
 import static org.junit.Assert.assertFalse;
 
+import android.app.Instrumentation;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
@@ -19,11 +21,13 @@ import com.robotium.solo.Solo;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
+
 
 public class HabitEventsFragmentTest {
     private Solo solo;
@@ -52,24 +56,26 @@ public class HabitEventsFragmentTest {
     @Before
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
-        solo.clickOnView(solo.getView(R.id.habit_events_nav_item));
+        solo.clickOnView(solo.getView(R.id.habits_today_nav_item));
     }
 
     /**
-     * Ensure the button to add a habit event exists.
+     * Ensure that clicking on a habit today will make a new habit event
      * @throws Exception
      */
     @Test
     public void testAddButtonExists() throws Exception {
+        String HABIT_NAME=makeValidHabit();
         solo.sleep(1000);
         // Ensure we are in the MainActivity.
         solo.assertCurrentActivity("Wrong activity", MainActivity.class);
 
-        // Click on one of the add event button
-        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
+        // Click on the checkmark button
+        solo.clickOnView((Button) solo.getView(R.id.checkBox_ht));
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
+
     }
 
     /**
@@ -78,7 +84,7 @@ public class HabitEventsFragmentTest {
      */
     @Test
     public void testAddHabitEventShowsUp() throws Exception {
-        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
+        solo.clickOnView((Button) solo.getView(R.id.checkBox_ht));
         assertTrue(solo.searchText("Enter a comment"));
         assertTrue(solo.searchText("Click to add Image"));
         assertTrue(solo.searchText("Add location button"));
@@ -94,32 +100,24 @@ public class HabitEventsFragmentTest {
         int fromX, toX, fromY, toY;
         int[] location = new int[2];
         String comment = String.valueOf(System.currentTimeMillis());
+        Thread.sleep(2000);  // Wait for everything to load.
+
+        //Make sure we have a valid habit
+        String HABIT_NAME=makeValidHabit();
+
+
 
         Thread.sleep(3000);  // Wait for everything to load.
 
-        // Click on one of the add event button
-        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
+        // Click on the checkbox button
+        solo.clickOnView((Button) solo.getView(R.id.checkBox_ht));
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
 
-        // Set an event using the spinner.
-        solo.clickOnView(solo.getView(R.id.AutoCompleteTextviewCE));
-        solo.clickOnView(solo.getView(TextView.class, 1));
 
         // Set a random comment
         solo.enterText((EditText) solo.getView(R.id.Get_a_comment_CE), comment);
-
-        // Fetch a location
-        solo.clickOnView(solo.getView(R.id.Add_location_button));
-
-        solo.sleep(1000);
-
-        solo.clickOnView((Button)solo.getView(R.id.set_location_button));
-
-        solo.sleep(1000);
-
-        assertTrue(solo.searchText("Mountain View, United States"));
 
         // Create event
         solo.clickOnView(solo.getView(R.id.button2));
@@ -130,25 +128,29 @@ public class HabitEventsFragmentTest {
 
         // Check to see if comments is proper
         assertTrue(solo.searchText(comment));
-        assertTrue(solo.searchText("Mountain View, United States"));
+        //assertTrue(solo.searchText("Mountain View, United States"));
 
         // Delete
-        View row = solo.getText("Comment: " + comment);
-        row.getLocationInWindow(location);
+        View row2 = solo.getText("Comment: " + comment);
+        row2.getLocationInWindow(location);
 
         // fail if the view with text cannot be located in the window
 
-        fromX = location[0] + 100;
+        fromX = location[0] + 500;
         fromY = location[1];
 
-        toX = location[0];
+        toX = location[0]-50;
         toY = fromY;
 
         solo.drag(fromX, toX, fromY, toY, 2);
 
         solo.sleep(1000);
+        solo.clickOnButton("Yes");
+        solo.sleep(1000);
 
         assertFalse(solo.searchText("Comment: " + comment));
+        ResetTest(HABIT_NAME);
+
     }
 
     /**
@@ -164,14 +166,11 @@ public class HabitEventsFragmentTest {
         Thread.sleep(3000);  // Wait for everything to load.
 
         // Click on one of the add event button
-        solo.clickOnView((Button) solo.getView(R.id.add_habit_event));
+        solo.clickOnView((Button) solo.getView(R.id.checkBox_ht));
 
         // Ensure we are in UpdateHabitEventActivity activity.
         solo.assertCurrentActivity("Wrong activity", UpdateHabitEventActivity.class);
 
-        // Set an event using the spinner.
-        solo.clickOnView(solo.getView(R.id.AutoCompleteTextviewCE));
-        solo.clickOnView(solo.getView(TextView.class, 1));
 
         // Set a random comment
         solo.enterText((EditText) solo.getView(R.id.Get_a_comment_CE), "TESTING COMMENT");
@@ -185,8 +184,8 @@ public class HabitEventsFragmentTest {
         fromX = location[0] + 200;
         fromY = location[1] + 700;
 
-        toX = location[0] + 200;
-        toY = fromY + 500;
+        toX = location[0] + 400;
+        toY = fromY + 800;
 
         solo.drag(fromX, toX, fromY, toY, 2);
 
@@ -224,6 +223,110 @@ public class HabitEventsFragmentTest {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
     }
+    /**
+     * Realize dragging one view to the position of another view
+     * @param fromX start X
+     * @param toX end X
+     * @param fromY start Y
+     * @param toY end Y
+     * @throws Exception
+     */
+    public void clickLongAndDrag(float fromX, float toX, float fromY, float toY) throws Exception {
+        //Get the absolute x and y coordinates on the phone screen in the view
 
+        Instrumentation inst=new Instrumentation();
+        float xStart=fromX;
+        float yStart=fromY;
+        float xStop=toX;
+        float yStop=toY;
 
+        long downTime = SystemClock.uptimeMillis();
+        long eventTime = SystemClock.uptimeMillis();
+        try{
+            MotionEvent event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_DOWN, xStart+10f, yStart+10f, 0);
+            inst.sendPointerSync(event);
+            //event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, xStart+10f+1.0f, yStart+10f+1.0f, 0);
+            //inst.sendPointerSync(event);
+            //Thread.sleep(1000);
+            //Delay for one second, simulate long press operation
+            eventTime = SystemClock.uptimeMillis() + 1000;
+            //xStop adds 10 points of coordinates, the View coordinates obtained need to be adjusted slightly according to the actual situation of the application
+            event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, xStop+10f, yStop+50f, 0);
+            inst.sendPointerSync(event);
+            eventTime = SystemClock.uptimeMillis() + 1000;
+            //Move again a little, if you don't do this, you can't activate the state of the application under test, causing the View to return to its original position after moving
+            event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_MOVE, xStop+10f, yStop+10f, 0);
+            inst.sendPointerSync(event);
+            eventTime = SystemClock.uptimeMillis() + 1000;
+            event = MotionEvent.obtain(downTime, eventTime, MotionEvent.ACTION_UP, xStop+10f, yStop+10f, 0);
+            inst.sendPointerSync(event);
+        }catch (Exception ignored) {
+            // Handle exceptions if necessary
+        }
+    }
+/**
+ * This deletes the habit we just made for testing
+ * @param  HABIT_NAME the name we need to delete
+    */
+    protected void ResetTest(String HABIT_NAME){
+        int fromX, fromY,toY,toX;
+        int[] location = new int[2];
+
+        solo.clickOnView(solo.getView(R.id.habits_nav_item));
+        View row = solo.getText(HABIT_NAME);
+        row.getLocationInWindow(location);
+
+        // fail if the view with text cannot be located in the window
+
+        fromX = location[0] + 500;
+        fromY = location[1];
+
+        toX = location[0]-50;
+        toY = fromY;
+
+        solo.drag(fromX, toX, fromY, toY, 2);
+        solo.clickOnButton("Yes");
+    }
+    /**
+     * This creates a habit that is always valid for testing
+     * @return  HABIT_NAME the name of the habit we made
+     */
+    private String makeValidHabit(){
+        int fromX, fromY,toY,toX;
+        int[] location = new int[2];
+        solo.clickOnView(solo.getView(R.id.habits_nav_item));
+        final String HABIT_NAME = String.valueOf(System.currentTimeMillis() % 10000000);
+
+        solo.clickOnButton("Add a Habit");
+        solo.enterText((EditText) solo.getView(R.id.enter_habit_name), HABIT_NAME);
+        solo.enterText((EditText) solo.getView(R.id.enter_habit_des), "TESTFORVALIDHABITEVENT");
+        solo.clickOnView(solo.getView(R.id.enter_date));
+        solo.clickOnButton("OK");
+        solo.clickOnButton("Sun");
+        solo.clickOnButton("Mon");
+        solo.clickOnButton("Tue");
+        solo.clickOnButton("Wed");
+        solo.clickOnButton("Thu");
+        solo.clickOnButton("Fri");
+        solo.clickOnButton("Sat");
+        solo.clickOnButton("Yes, publicly");
+        solo.clickOnButton("Done");
+
+        View row = solo.getText(HABIT_NAME);
+        row.getLocationInWindow(location);
+
+        fromX = location[0];
+        fromY = location[1];
+        toX = location[0];
+        toY = 100;
+        try {
+            clickLongAndDrag(fromX,toX,fromY,toY);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        solo.clickOnView(solo.getView(R.id.habits_today_nav_item));
+        return HABIT_NAME;
+        //end of getting a valid habit
+    }
 }

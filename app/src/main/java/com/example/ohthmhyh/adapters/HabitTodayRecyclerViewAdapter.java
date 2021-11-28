@@ -2,11 +2,13 @@ package com.example.ohthmhyh.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
 
     private HabitList habitList;
-    
+
     /**
      * Creates the custom adapter instance
      * @param context Context from the activity
@@ -34,13 +36,13 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
     //sets the things in the display
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        //Todo
-        //Need to error check because somethings might be null
-
         super.onBindViewHolder(holder, position);
 
         Habit habit = content.get(position);
-
+        if (habit.wasCompletedToday()){
+            holder.checkbox.setChecked(true);
+            holder.checkbox.setEnabled(false);  // Disable the checkbox if it's already completed.
+        }
         // Hide the username TextView but show the Checkbox
         holder.checkbox.setVisibility(View.VISIBLE);
 
@@ -51,14 +53,15 @@ public class HabitTodayRecyclerViewAdapter extends HabitRecyclerViewAdapter {
                     Log.d("tag", habit.getName() + " checked");
                     int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
 
-                    habit.logCompleted();
-                    habitList.setHabit(index, habit);
-                } else {
-                    Log.d("tag", habit.getName() + " unchecked");
-                    int index = habitList.getHabitIndex(habit);  // Get the index of the Habit.
+                    // Go make an event for this Habit if one was not already made today.
+                    if (!habit.wasCompletedToday()) {
+                        // Uncheck the checkbox in case they decide to back-out of the event.
+                        holder.checkbox.setChecked(false);
 
-                    habit.undoCompleted();
-                    habitList.setHabit(index, habit);
+                        Intent intent = new Intent(context, UpdateHabitEventActivity.class);
+                        intent.putExtra(UpdateHabitEventActivity.ARG_HABIT_INDEX, index);
+                        context.startActivity(intent);
+                    }
                 }
             }
         });
