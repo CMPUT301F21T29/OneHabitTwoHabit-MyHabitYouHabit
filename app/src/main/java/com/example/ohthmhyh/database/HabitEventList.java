@@ -7,11 +7,12 @@ import java.util.ArrayList;
 /**
  * The entity class for a the users habit events. This class represents all of the habit events
  * created by the user. Make an instance of this class to represent a collection of habit events.
+ *
+ * There are no outstanding issues that we are of.
  */
 public class HabitEventList {
 
     private ArrayList<HabitEvent> habitEventList;
-    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
     private int UPIDCounter;
 
     public HabitEventList() {
@@ -41,7 +42,6 @@ public class HabitEventList {
      */
     public void addHabitEvent(HabitEvent habitEvent) {
         habitEventList.add(habitEvent);
-        databaseAdapter.pushHabitEvents(this);
     }
 
     /**
@@ -61,7 +61,6 @@ public class HabitEventList {
      */
     public void replaceHabitEvent(int index, HabitEvent habitEvent) {
         habitEventList.set(index, habitEvent);
-        databaseAdapter.pushHabitEvents(this);
     }
 
 
@@ -71,7 +70,6 @@ public class HabitEventList {
      */
     public void removeHabitEvent(int index) {
         habitEventList.remove(index);
-        databaseAdapter.pushHabitEvents(this);
     }
 
 
@@ -81,10 +79,9 @@ public class HabitEventList {
      * @param fromIndex The index of the habit
      * @param toIndex The index to put the habit
      */
-    public void moveHabit(int fromIndex, int toIndex) {
+    public void moveHabitEvent(int fromIndex, int toIndex) {
         HabitEvent habitEventToMove = habitEventList.remove(fromIndex);
         habitEventList.add(toIndex, habitEventToMove);
-        databaseAdapter.pushHabitEvents(this);
     }
 
 

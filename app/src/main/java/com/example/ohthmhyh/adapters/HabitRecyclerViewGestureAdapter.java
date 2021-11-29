@@ -13,13 +13,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitEventList;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter used for putting Habit objects into elements of a RecyclerView for the user's list of
+ * all their Habits. Each row is populated with views to display the Habit's attributes. Gestures
+ * like swiping and moving Habits are supported.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         implements ItemTransportable {
 
@@ -123,23 +128,20 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     }
 
 
-    private DatabaseAdapter databaseAdapter;
-    private HabitList habitList;
     private OnTouchListener touchListener;
     private ItemTouchHelper touchHelper;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
 
     /**
      * Creates the custom adapter instance
      * @param context          Context from the activity
-     * @param habitList        The HabitList containing the habits
      * @param content          The Habits to display in the RecyclerView
      * @param touchListener    A thing that does touch actions
      */
-    public HabitRecyclerViewGestureAdapter(Context context, HabitList habitList,
-                                           ArrayList<Habit> content, OnTouchListener touchListener) {
+    public HabitRecyclerViewGestureAdapter(Context context, ArrayList<Habit> content,
+                                           OnTouchListener touchListener) {
         super(context, content);
-        this.habitList = habitList;
         this.touchListener = touchListener;
     }
 
@@ -175,7 +177,6 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
     @Override
     public void onItemSwiped(int position) {
         openDialog(position);
-
     }
 
 
@@ -191,7 +192,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
         content.add(toPosition, habitToMove);
 
         // Move the Habit in the database.
-        habitList.moveHabit(fromPosition, toPosition);
+        databaseAdapter.moveHabit(fromPosition, toPosition);
 
         notifyItemMoved(fromPosition, toPosition);
     }
@@ -199,7 +200,7 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
      *This method is used to open a conformation screen with the user before a delete
      * @param position the position of the item being swiped
      */
-    private void openDialog(int position){
+    private void openDialog(int position) {
         android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(context);
         alertDialogBuilder.setMessage(
                 "Deleting this habit will remove associated events. Continue?");
@@ -210,27 +211,27 @@ public class HabitRecyclerViewGestureAdapter extends HabitRecyclerViewAdapter
                     // Habit and HabitEvent.
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        databaseAdapter = DatabaseAdapter.getInstance();
-                        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-                            @Override
-                            public void onHabitEventCallback(HabitEventList habitEvents) {
-                                ArrayList<Integer> positionsToDelete = new ArrayList<>();
-                                for (int index = 0; index < habitEvents.size(); index++) {
-                                    if (content.get(position).getUHID() == habitEvents.getHabitEvent(index).getHabitUHID()) {
-                                        positionsToDelete.add(index);
-                                    }
-                                }
-                                if (positionsToDelete.size()>0){
-                                    for (int i = positionsToDelete.size() - 1; i >= 0; i--){
-                                        habitEvents.removeHabitEvent(positionsToDelete.get(i));
-                                    }
-                                }
-                                habitList.removeHabit(position);
-                                content.remove(position);
-                                notifyItemRemoved(position);
+                        // Remove all associated HabitEvents.
+                        ArrayList<Integer> positionsToDelete = new ArrayList<>();
+                        for (int index = 0; index < databaseAdapter.numberOfHabitEvents(); index++) {
+                            if (content.get(position).getUHID()
+                                    == databaseAdapter.habitEventAtIndex(index).getHabitUHID()) {
+                                positionsToDelete.add(index);
                             }
-                        });
+                        }
+                        if (positionsToDelete.size() > 0){
+                            for (int i = positionsToDelete.size() - 1; i >= 0; i--) {
+                                databaseAdapter.removeHabitEvent(positionsToDelete.get(i));
+                            }
+                        }
 
+                        // Remove the Habit from the content.
+                        content.remove(position);
+
+                        // Remove the Habit from the database.
+                        databaseAdapter.removeHabit(position);
+
+                        notifyItemRemoved(position);
                     }
                 });
         // If the user hits no they don't want to delete run this code

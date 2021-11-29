@@ -15,10 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitEventList;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.entities.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,6 +29,8 @@ import com.google.firebase.auth.FirebaseUser;
  * The user should not get past this activity without either have signed into their existing
  * account, or have created a new account. That way, the fragments of the app can freely use the
  * signed-in user and all of their data.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -122,9 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                                                     // also give them other data structures for
                                                     // their data.
                                                     DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
-                                                    databaseAdapter.pushUser(new User(username));
-                                                    databaseAdapter.pushHabits(new HabitList());
-                                                    databaseAdapter.pushHabitEvents(new HabitEventList());
+                                                    databaseAdapter.createDataForNewUser(username);
 
                                                     goToMainActivity();
                                                 } else {

@@ -11,6 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
 
+/**
+ * Implements the methods for the "transportable" functionality. Is responsible for detecting
+ * certain touch movements and then calling the TransportableInterfaces appropriate methods.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class TransportableTouchHelper extends ItemTouchHelper.Callback {
 
     private static final int DRAG_FLAGS = ItemTouchHelper.UP | ItemTouchHelper.DOWN;

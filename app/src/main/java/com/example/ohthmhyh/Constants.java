@@ -1,5 +1,14 @@
 package com.example.ohthmhyh;
 
+import android.graphics.Typeface;
+
+/**
+ * A class that holds constants used throughout the app. Rather than referencing literals everywhere
+ * all the time, these constants provide easy and universal access to numbers that are critical to
+ * the app's requirements.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class Constants {
 
     /**
@@ -38,18 +47,82 @@ public class Constants {
     public static final int ADHERENCE_TEXT_GREEN_THRESHOLD = 100;
 
     /**
-     * The % adherance score threshold for which the progress bar turns green
+     * The % adherence score threshold for which the progress bar turns green
      */
     public static final int ADHERENCE_PROGRESS_BAR_GREEN_THRESHOLD = 85;
 
     /**
-     * The % adherance score threshold for which the progress bar turns amber
+     * The % adherence score threshold for which the progress bar turns amber
      */
     public static final int ADHERENCE_PROGRESS_BAR_AMBER_THRESHOLD = 60;
 
     /**
-     * The % adherance score threshold for which the progress bar turns red
+     * The % adherence score threshold for which the progress bar turns red
      */
     public static final int ADHERENCE_PROGRESS_BAR_RED_THRESHOLD = 0;
+
+    /**
+     * The default zoom level on the map activity
+     */
+    public static final float DEFAULT_MAP_ZOOM_LEVEL = 15.0f;
+
+    /**
+     * The max file size for the habit event images in kB
+     */
+    public static final int MAX_IMAGE_FILE_SIZE = 1024;
+
+    /**
+     * The max vertical resolution of the habit event images in pixels
+     */
+    public static final int MAX_IMAGE_VERTICAL_RESOLUTION = 1080;
+
+    /**
+     * The max horizontal resolution of the habit event images in pixels
+     */
+    public static final int MAX_IMAGE_HORIZONTAL_RESOLUTION = 1080;
+
+    /**
+     * The font type for the days in which a habit is not to be completed. Used in habit recycler
+     * views.
+     */
+    public static final int HABIT_VIEW_INACTIVE_DAY_TYPEFACE = Typeface.NORMAL;
+
+    /**
+     * The font type for the days in which a habit is to be completed. Used in habit recycler
+     * views.
+     */
+    public static final int HABIT_VIEW_ACTIVE_DAY_TYPEFACE = Typeface.BOLD;
+
+    /**
+     * The view alpha for the days in which a habit is not to be completed. Used in habit recycler
+     * views.
+     */
+    public static final float HABIT_VIEW_INACTIVE_DAY_ALPHA = 0.3f;
+
+    /**
+     * The view alpha for the days in which a habit is to be completed. Used in habit recycler
+     * views.
+     */
+    public static final float HABIT_VIEW_ACTIVE_DAY_ALPHA = 1f;
+
+    /**
+     * The name of the database collection with habits
+     */
+    public static final String HABIT_COLLECTION_NAME = "Habits";
+
+    /**
+     * The name of the database collection with habit events
+     */
+    public static final String HABIT_EVENT_COLLECTION_NAME = "HabitEvents";
+
+    /**
+     * The name of the database collection with user profiles
+     */
+    public static final String PROFILE_COLLECTION_NAME = "Profiles";
+
+    /**
+     * The name of the database field name for usernames
+     */
+    public static final String USERNAME_FIELD_NAME = "username";
 
 }

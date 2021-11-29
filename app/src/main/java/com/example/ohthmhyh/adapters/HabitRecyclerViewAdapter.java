@@ -24,7 +24,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * An adapter used for putting habit objects into elements of a RecyclerView.
+ * An abstract adapter for Habits in RecyclerViews. This allows subclasses to not worry about having
+ * to populate views with all the attributes of a Habit as this class will do it for them.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<HabitRecyclerViewAdapter.ViewHolder> {
 
@@ -165,67 +168,66 @@ public abstract class HabitRecyclerViewAdapter extends RecyclerView.Adapter<Habi
     public void setDays(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         ArrayList<Habit.Days> days = content.get(position).getSchedule();
-        final float minOpacity = 0.3f;
 
         // set all "day" views to default font
-        holder.sun.setTypeface(null, Typeface.NORMAL);
-        holder.mon.setTypeface(null, Typeface.NORMAL);
-        holder.tues.setTypeface(null, Typeface.NORMAL);
-        holder.wed.setTypeface(null, Typeface.NORMAL);
-        holder.thurs.setTypeface(null, Typeface.NORMAL);
-        holder.fri.setTypeface(null, Typeface.NORMAL);
-        holder.sat.setTypeface(null, Typeface.NORMAL);
+        holder.sun.setTypeface(null, Constants.HABIT_VIEW_INACTIVE_DAY_TYPEFACE);
+        holder.mon.setTypeface(null, Constants.HABIT_VIEW_INACTIVE_DAY_TYPEFACE);
+        holder.tues.setTypeface(null, Constants.HABIT_VIEW_INACTIVE_DAY_TYPEFACE);
+        holder.wed.setTypeface(null, Constants.HABIT_VIEW_INACTIVE_DAY_TYPEFACE);
+        holder.thurs.setTypeface(null, Constants.HABIT_VIEW_INACTIVE_DAY_TYPEFACE);
+        holder.fri.setTypeface(null, Constants.HABIT_VIEW_INACTIVE_DAY_TYPEFACE);
+        holder.sat.setTypeface(null, Constants.HABIT_VIEW_INACTIVE_DAY_TYPEFACE);
 
         // set all "day" views to default opacity
-        holder.sun.setAlpha(minOpacity);
-        holder.mon.setAlpha(minOpacity);
-        holder.tues.setAlpha(minOpacity);
-        holder.wed.setAlpha(minOpacity);
-        holder.thurs.setAlpha(minOpacity);
-        holder.fri.setAlpha(minOpacity);
-        holder.sat.setAlpha(minOpacity);
+        holder.sun.setAlpha(Constants.HABIT_VIEW_INACTIVE_DAY_ALPHA);
+        holder.mon.setAlpha(Constants.HABIT_VIEW_INACTIVE_DAY_ALPHA);
+        holder.tues.setAlpha(Constants.HABIT_VIEW_INACTIVE_DAY_ALPHA);
+        holder.wed.setAlpha(Constants.HABIT_VIEW_INACTIVE_DAY_ALPHA);
+        holder.thurs.setAlpha(Constants.HABIT_VIEW_INACTIVE_DAY_ALPHA);
+        holder.fri.setAlpha(Constants.HABIT_VIEW_INACTIVE_DAY_ALPHA);
+        holder.sat.setAlpha(Constants.HABIT_VIEW_INACTIVE_DAY_ALPHA);
 
         // Bold the days of the week for which this habit should occur
         if(days.contains(Habit.Days.Sun)){
             // bold / change colour
-            holder.sun.setTypeface(null, Typeface.BOLD);
-            holder.sun.setAlpha(1f);
+            holder.sun.setTypeface(null, Constants.HABIT_VIEW_ACTIVE_DAY_TYPEFACE);
+            holder.sun.setAlpha(Constants.HABIT_VIEW_ACTIVE_DAY_ALPHA);
         }
 
         if(days.contains(Habit.Days.Mon)){
             // bold / change colour
-            holder.mon.setTypeface(null, Typeface.BOLD);
-            holder.mon.setAlpha(1f);
+            holder.mon.setTypeface(null, Constants.HABIT_VIEW_ACTIVE_DAY_TYPEFACE);
+            holder.mon.setAlpha(Constants.HABIT_VIEW_ACTIVE_DAY_ALPHA);
         }
 
         if(days.contains(Habit.Days.Tue)){
             // bold / change colour
-            holder.tues.setTypeface(null, Typeface.BOLD);
-            holder.tues.setAlpha(1f);
+            holder.tues.setTypeface(null, Constants.HABIT_VIEW_ACTIVE_DAY_TYPEFACE);
+            holder.tues.setAlpha(Constants.HABIT_VIEW_ACTIVE_DAY_ALPHA);
         }
 
         if(days.contains(Habit.Days.Wed)){
             // bold / change colour
-            holder.wed.setTypeface(null, Typeface.BOLD);
-            holder.wed.setAlpha(1f);
+            holder.wed.setTypeface(null, Constants.HABIT_VIEW_ACTIVE_DAY_TYPEFACE);
+            holder.wed.setAlpha(Constants.HABIT_VIEW_ACTIVE_DAY_ALPHA);
         }
 
         if(days.contains(Habit.Days.Thu)){
             // bold / change colour
-            holder.thurs.setTypeface(null, Typeface.BOLD);
-            holder.thurs.setAlpha(1f);
+            holder.thurs.setTypeface(null, Constants.HABIT_VIEW_ACTIVE_DAY_TYPEFACE);
+            holder.thurs.setAlpha(Constants.HABIT_VIEW_ACTIVE_DAY_ALPHA);
         }
 
         if(days.contains(Habit.Days.Fri)){
             // bold / change colour
-            holder.fri.setTypeface(null, Typeface.BOLD);
-            holder.fri.setAlpha(1f);
+            holder.fri.setTypeface(null, Constants.HABIT_VIEW_ACTIVE_DAY_TYPEFACE);
+            holder.fri.setAlpha(Constants.HABIT_VIEW_ACTIVE_DAY_ALPHA);
         }
 
         if(days.contains(Habit.Days.Sat)){
             // bold / change colour
-            holder.sat.setTypeface(null, Typeface.BOLD);
-            holder.sat.setAlpha(1f);
+            holder.sat.setTypeface(null, Constants.HABIT_VIEW_ACTIVE_DAY_TYPEFACE);
+            holder.sat.setAlpha(Constants.HABIT_VIEW_ACTIVE_DAY_ALPHA);
         }
     }
 

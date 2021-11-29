@@ -5,15 +5,16 @@ import com.example.ohthmhyh.entities.Habit;
 import java.util.ArrayList;
 
 /**
- * The entity class for a the users habits. This class represents all of the habits created
- * by the user. Make an instance of this class to represent a collection of habits.
+ * The entity class for a the users habits. This class represents all of the habits created by the
+ * user. Make an instance of this class to represent a collection of habits.
+ *
+ * There are no outstanding issues that we are aware of.
  */
-public class HabitList{
+public class HabitList {
 
     // instance variables
     private ArrayList<Habit> habitList;
     private int UHIDCounter;
-    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     /**
      * Construct a new HabitList for storing all of the users habits.
@@ -48,7 +49,6 @@ public class HabitList{
             habit.setUHID(nextUHID());
         }
         habitList.add(habit);
-        databaseAdapter.pushHabits(this);
     }
 
     /**
@@ -84,7 +84,6 @@ public class HabitList{
      */
     public void setHabit(int index, Habit h) {
         habitList.set(index, h);
-        databaseAdapter.pushHabits(this);
     }
 
     /**
@@ -93,7 +92,6 @@ public class HabitList{
      */
     public void removeHabit(int index) {
         habitList.remove(index);
-        databaseAdapter.pushHabits(this);
     }
 
     /**
@@ -105,7 +103,6 @@ public class HabitList{
     public void moveHabit(int fromIndex, int toIndex) {
         Habit habitToMove = habitList.remove(fromIndex);
         habitList.add(toIndex, habitToMove);
-        databaseAdapter.pushHabits(this);
     }
 
     /**
@@ -116,7 +113,6 @@ public class HabitList{
     public void replaceHabit(int index, Habit newHabit) {
         habitList.remove(index);
         habitList.add(index, newHabit);
-        databaseAdapter.pushHabits(this);
     }
 
     /**

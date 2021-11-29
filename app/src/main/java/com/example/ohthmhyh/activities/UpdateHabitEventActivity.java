@@ -28,10 +28,8 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
-import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.watchers.LengthTextWatcher;
 import com.github.dhaval2404.imagepicker.ImagePicker;
@@ -45,14 +43,21 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * An Activity that allows one to view/edit the contents of a HabitEvent. This can currently be
+ * spawned from the Habits Today fragment when the user chooses to add an event for their Habit, or
+ * from the HabitEvent fragment where the user can click on one of their HabitEvents to view/edit
+ * the details.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class UpdateHabitEventActivity extends AppCompatActivity {
 
     public static final String ARG_HABIT_EVENT_INDEX = "habit_event_index_arg";
     public static final String ARG_HABIT_INDEX = "habit_index_arg";
 
     private Bitmap bitmap = null;
-    private HabitEventList habitEventList;
-    private DatabaseAdapter databaseAdapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
     private Location location = null;
     private int habitEventIndex;
     private int habitIndex;
@@ -61,34 +66,18 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
     private EditText commentEditText;
     private ImageView pictureImageView;
     private TextView locationTextView;
-    //private ActivityResultLauncher<Intent> resultLauncher;
 
     private Habit habit;
-    private HabitList habitList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_habit_event);
 
-        databaseAdapter = DatabaseAdapter.getInstance();
-        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-            @Override
-            public void onHabitEventCallback(HabitEventList habitEvents) {
-                habitEventList = habitEvents;
-                makeAndEdit();
-            }
-        });
-        // Get the HabitList from the database.
-        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
-            @Override
-            public void onHabitCallback(HabitList hList) {
-                habitList = hList;
-                displayHabit();
-
-            }
-        });
+        makeAndEdit();
+        displayHabit();
     }
+
     /**
      * This handles the drop down list for Habits
      * Can tell if we are on edit or new Calls to the data base to get the HabitEventList
@@ -100,26 +89,20 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         habitEventIndex = intent.getIntExtra(ARG_HABIT_EVENT_INDEX, -1);
         habitIndex= intent.getIntExtra(ARG_HABIT_INDEX, -1);
         if (habitEventIndex >= 0) {  // This is edit so display right habit
-            // Wait for habitEventList to become non null
-            databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-                @Override
-                public void onHabitEventCallback(HabitEventList habitEvents) {
-                    habitEventList = habitEvents;
-                    for (int index = 0; index < habitList.size(); index++) {
-                        if (habitList.getHabit(index).getUHID()
-                                == habitEventList.getHabitEvent(habitEventIndex).getHabitUHID()) {
-                            displayHabitView.setText("I have completed Habit: " + habitList.getHabit(index).getName());
-                            habit = habitList.getHabit(index);
-                        }
-                    }
+            for (int index = 0; index < databaseAdapter.numberOfHabits(); index++) {
+                Habit currentHabit = databaseAdapter.habitAtIndex(index);
+                if (currentHabit.getUHID()
+                        == databaseAdapter.habitEventAtIndex(habitEventIndex).getHabitUHID()) {
+                    displayHabitView.setText("Habit: " + currentHabit.getName());
+                    habit = currentHabit;
                 }
-            });
+            }
         } else {
             // Default list view (not editing)
-            displayHabitView.setText("I have completed Habit: " + habitList.getHabit(habitIndex).getName());
-            habit = habitList.getHabit(habitIndex);
+            Habit currentHabit = databaseAdapter.habitAtIndex(habitIndex);
+            displayHabitView.setText("I have completed Habit: " + currentHabit.getName());
+            habit = currentHabit;
         }
-
     }
 
     /**
@@ -159,6 +142,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
     /**
      * This function is called to see if we need to set the habit event activity for editing
      * It also deals with the camera
@@ -183,8 +167,9 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 ImagePicker.with(UpdateHabitEventActivity.this)
                         .crop()	 // Crop image with 16:9 aspect ratio
-                        .compress(1024)  //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)  // Final image resolution will be less than 1080 x 1080(Optional)
+                        .compress(Constants.MAX_IMAGE_FILE_SIZE)  //Final image size will be less than this file size
+                        .maxResultSize(Constants.MAX_IMAGE_HORIZONTAL_RESOLUTION,
+                                Constants.MAX_IMAGE_VERTICAL_RESOLUTION)  // Final image resolution will be less than this resolution
                         .start();
             }
         });
@@ -194,7 +179,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
 
         // Show the selected HabitEvent.
         if (habitEventIndex >= 0) {
-            HabitEvent habitEvent = habitEventList.getHabitEvent(habitEventIndex);
+            HabitEvent habitEvent = databaseAdapter.habitEventAtIndex(habitEventIndex);
 
             // Set the image picture.
             habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
@@ -351,7 +336,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                     null,
                     null,
                     bitmap,
-                    habitEventList.nextUPID()
+                    databaseAdapter.nextHabitEventUPID()
             );
         } else {
             habitEvent = new HabitEvent(
@@ -360,21 +345,22 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
                     location.getLatitude(),
                     location.getLongitude(),
                     bitmap,
-                    habitEventList.nextUPID()
+                    databaseAdapter.nextHabitEventUPID()
             );
         }
 
 
         if (habitEventIndex >= 0){  // Editing the HabitEvent.
             // Replace the HabitEvent at the given position.
-            habitEventList.replaceHabitEvent(habitEventIndex, habitEvent);
+            databaseAdapter.replaceHabitEvent(habitEventIndex, habitEvent);
         } else {  // Adding the HabitEvent.
             // Add HabitEvent into the HabitEventList.
-            habitEventList.addHabitEvent(habitEvent);
+            databaseAdapter.addHabitEvent(habitEvent);
+
             //This updates the log of the habit
-            habitList.getHabit(habitIndex).logCompleted();
-            habitList.getHabit(habitIndex).setLastDayCompleted(LocalDate.now().toEpochDay());
-            habitList.setHabit(habitIndex, habit);
+            habit.logCompleted();
+            habit.setLastDayCompleted(LocalDate.now().toEpochDay());
+            databaseAdapter.setHabit(habitIndex, habit);
         }
 
         Intent intent = new Intent(this, MainActivity.class);

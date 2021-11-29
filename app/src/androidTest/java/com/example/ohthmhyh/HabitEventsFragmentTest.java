@@ -21,13 +21,11 @@ import com.robotium.solo.Solo;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-
 
 public class HabitEventsFragmentTest {
     private Solo solo;
@@ -56,6 +54,7 @@ public class HabitEventsFragmentTest {
     @Before
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+        solo.sleep(TestConstants.LOADING_WAIT_TIME_MS);  // Wait until the data loads.
         solo.clickOnView(solo.getView(R.id.habits_today_nav_item));
     }
 

@@ -10,6 +10,13 @@ import com.example.ohthmhyh.entities.Habit;
 
 import java.util.ArrayList;
 
+/**
+ * An adapter used for putting Habit objects into elements of a RecyclerView for the user's feed.
+ * Each row is populated with views to display the Habit's attributes. There are no gestures or
+ * clicking allowed for these feed Habits.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class HabitFeedRecyclerViewAdapter extends HabitRecyclerViewAdapter{
 
     ArrayList<String> usernames;

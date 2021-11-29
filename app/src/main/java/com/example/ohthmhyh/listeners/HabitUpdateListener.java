@@ -18,7 +18,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
- * Verifies that a new or edited habit is valid
+ * Verifies that a new or edited habit is valid by taking in the views that a Habit's attributes are
+ * defined in. When called to execute (the listener implementer is clicked), it checks the views to
+ * ensure that the Habit's attributes are set properly.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class HabitUpdateListener implements View.OnClickListener {
     protected Activity activity;
@@ -34,6 +38,7 @@ public class HabitUpdateListener implements View.OnClickListener {
     protected ToggleButton sunFrequency;
     protected ToggleButton private_button;
     protected TextView errorSchedule;
+    protected Habit habit;
     private ColorStateList originalErrorScheduleColor;
 
     public HabitUpdateListener(
@@ -49,7 +54,8 @@ public class HabitUpdateListener implements View.OnClickListener {
             ToggleButton satFrequency,
             ToggleButton sunFrequency,
             ToggleButton private_button,
-            TextView errorSchedule
+            TextView errorSchedule,
+            Habit habit
     ) {
         this.activity = activity;
         this.habitDescriptionET = habitDescriptionET;
@@ -64,6 +70,7 @@ public class HabitUpdateListener implements View.OnClickListener {
         this.sunFrequency = sunFrequency;
         this.private_button = private_button;
         this.errorSchedule = errorSchedule;
+        this.habit = habit;
 
         this.originalErrorScheduleColor = errorSchedule.getTextColors();
     }
@@ -104,20 +111,20 @@ public class HabitUpdateListener implements View.OnClickListener {
         }
 
         else {
-            if (habitNameET.getText().toString().length() <= 0) {
+            if (habitNameET.getText().toString().length() < Constants.HABIT_NAME_MIN_LENGTH) {
                 habitNameET.setError("Title is empty");
                 habitNameET.requestFocus();
             }
-            else if (habitNameET.getText().toString().length() > 20) {
+            else if (habitNameET.getText().toString().length() > Constants.HABIT_NAME_MAX_LENGTH) {
                 habitNameET.setError("Title is too long");
                 habitNameET.requestFocus();
             }
 
-            if (habitDescriptionET.getText().toString().length() > 30) {
+            if (habitDescriptionET.getText().toString().length() > Constants.HABIT_DESCRIPTION_MAX_LENGTH) {
                 habitDescriptionET.setError("Description is too long");
                 habitDescriptionET.requestFocus();
             }
-            else if (habitDescriptionET.getText().toString().length() <= 0) {
+            else if (habitDescriptionET.getText().toString().length() < Constants.HABIT_DESCRIPTION_MIN_LENGTH) {
                 habitDescriptionET.setError("Description is empty");
                 habitDescriptionET.requestFocus();
             }
@@ -151,8 +158,12 @@ public class HabitUpdateListener implements View.OnClickListener {
             LocalDate startDate,
             ArrayList<Habit.Days> schedule
     ) {
-        Habit habit = new Habit(
-                habitName, habitDescription, startDate, schedule, private_button.isChecked());
+        habit.setName(habitName);
+        habit.setDescription(habitDescription);
+        habit.setStartDate(startDate.toEpochDay());
+        habit.setSchedule(schedule);
+        habit.setIsPrivate(private_button.isChecked());
+
         Intent intent = new Intent();
         intent.putExtra(HabitsFragment.ARG_RETURNED_HABIT, habit);
         activity.setResult(Activity.RESULT_OK, intent);

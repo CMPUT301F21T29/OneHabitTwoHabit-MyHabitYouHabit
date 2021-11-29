@@ -2,30 +2,37 @@ package com.example.ohthmhyh.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.adapters.HabitFeedRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.entities.User;
 
 import java.util.ArrayList;
 
-
+/**
+ * The Fragment that shows the user's feed. This Fragment's parent Activity is MainActivity and is
+ * created when the user clicks on the bottom navigation bar's feed button.
+ *
+ * There are no outstanding issues that we are aware of.
+ */
 public class FeedFragment extends Fragment{
 
-
-    ArrayList<Habit> feedHabits;
-    ArrayList<String> usernames;
-    HabitFeedRecyclerViewAdapter adapter;
+    private ArrayList<Habit> feedHabits;
+    private ArrayList<String> usernames;
+    private HabitFeedRecyclerViewAdapter adapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     public FeedFragment() {
         // Required empty public constructor
@@ -41,6 +48,8 @@ public class FeedFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);  // For the refresh button at the top menu bar.
+
         feedHabits = new ArrayList<>();
         usernames = new ArrayList<>();
 
@@ -60,49 +69,61 @@ public class FeedFragment extends Fragment{
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.top_nav_refresh_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.button_refresh) {
+            // Pull the user's updated friend's list and refresh the feed
+            databaseAdapter.pullUser(new DatabaseAdapter.OnLoadedListener() {
+                @Override
+                public void onLoaded() {
+                    buildFeed();
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     /**
      * Builds up the habit feed from the database.
      */
-    public void buildFeed(){
-        DatabaseAdapter dba = DatabaseAdapter.getInstance();
+    public void buildFeed() {
+        // Clear the feed and usernames before loading the feed (in case of a refresh).
+        while (feedHabits.size() > 0) {
+            feedHabits.remove(0);
+            usernames.remove(0);
+            adapter.notifyItemRemoved(0);
+        }
 
-        // get the user so we know who they follow
-        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
-            @Override
-            public void onProfileCallback(User user) {
+        for (int i = 0; i < databaseAdapter.userFriendList().size(); i++) {
+            // UID of the user for which to get their public habits
+            String followingUID = databaseAdapter.userFriendList().get(i);
 
-                // build up the habit list of public habits by
-                // getting the habits of the people this user follows
-                for(int i =0; i< user.getFriendList().size(); i++){
-
-                    // UID of the user for which to get their public habits
-                    String followingUID = user.getFriendList().get(i);
-
-                    // pull username of user we are getting public habits for
-                    dba.pullUsernameFromUID(followingUID, new DatabaseAdapter.UsernameCallback() {
+            // pull username of user we are getting public habits for
+            databaseAdapter.pullUsernameFromUID(followingUID, new DatabaseAdapter.UsernameCallback() {
+                @Override
+                public void onUsernameCallback(String username) {
+                    // Pull the Habits of the Users we follow.
+                    databaseAdapter.pullHabitsForUser(followingUID, new DatabaseAdapter.OnLoadedHabitsListener() {
                         @Override
-                        public void onUsernameCallback(String username) {
-
-                            // pull the habits of the user we follow
-                            dba.pullHabits(followingUID, new DatabaseAdapter.HabitCallback() {
-                                @Override
-                                public void onHabitCallback(HabitList hList) {
-                                    for (Habit habit: hList.getHabitList()) {
-                                        // add the habit to the feed if it is public
-                                        if(!habit.getIsPrivate()){
-                                            feedHabits.add(habit);
-                                            usernames.add(username);
-                                            adapter.notifyItemInserted(adapter.getItemCount()+1);
-                                        }
-                                    }
+                        public void onLoadedHabits(ArrayList<Habit> habits) {
+                            for (Habit habit : habits) {
+                                if (!habit.getIsPrivate()) {
+                                    feedHabits.add(habit);
+                                    usernames.add(username);
+                                    adapter.notifyItemInserted(adapter.getItemCount() + 1);
                                 }
-                            });
+                            }
                         }
                     });
                 }
-            }
-        });
+            });
+        }
     }
 
 }

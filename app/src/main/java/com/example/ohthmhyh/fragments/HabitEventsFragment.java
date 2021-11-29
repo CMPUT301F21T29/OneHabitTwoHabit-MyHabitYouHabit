@@ -15,19 +15,23 @@ import android.view.ViewGroup;
 import com.example.ohthmhyh.adapters.HabitEventRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitEventActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
+import java.util.ArrayList;
+
 /**
- * A simple {@link Fragment} subclass.
+ * The Fragment that shows the user's HabitEvents.. This Fragment's parent Activity is MainActivity
+ * and is created when the user clicks on the bottom navigation bar's habit event button.
+ *
+ * There are no outstanding issues that we are aware of.
  */
-public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OntouchListener {
+public class HabitEventsFragment extends Fragment implements HabitEventRecyclerViewAdapter.OnTouchListener {
 
     private RecyclerView recyclerView;
     private HabitEventRecyclerViewAdapter mAdapter;
-    private HabitEventList habitEventList;
-    private DatabaseAdapter databaseAdapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     public HabitEventsFragment() {
         // Required empty public constructor
@@ -41,27 +45,22 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_habit_events, container, false);
 
-        // Pull the habit events from the database
-        databaseAdapter = DatabaseAdapter.getInstance();
-        databaseAdapter.pullHabitEvents(new DatabaseAdapter.HabitEventCallback() {
-            @Override
-            public void onHabitEventCallback(HabitEventList habitEvents) {
-                habitEventList = habitEvents;
+        ArrayList<HabitEvent> habitEvents = new ArrayList<>();
+        for (int i = 0; i < databaseAdapter.numberOfHabitEvents(); i++) {
+            habitEvents.add(databaseAdapter.habitEventAtIndex(i));
+        }
 
-                // Put the habit events into the recycler view
-                recyclerView = view.findViewById(R.id.Displayed_HabitEvent_list_CE);
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-                recyclerView.setLayoutManager(layoutManager);
-                recyclerView.setHasFixedSize(true);
-                mAdapter = new HabitEventRecyclerViewAdapter(
-                        habitEventList, getActivity(), HabitEventsFragment.this);
-                ItemTouchHelper.Callback callback = new TransportableTouchHelper(mAdapter);
-                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-                mAdapter.setTouchhelper(itemTouchHelper);
-                itemTouchHelper.attachToRecyclerView(recyclerView);
-                recyclerView.setAdapter(mAdapter);
-            }
-        });
+        recyclerView = view.findViewById(R.id.Displayed_HabitEvent_list_CE);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        mAdapter = new HabitEventRecyclerViewAdapter(
+                habitEvents, getActivity(), HabitEventsFragment.this);
+        ItemTouchHelper.Callback callback = new TransportableTouchHelper(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        mAdapter.setTouchHelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(mAdapter);
 
         return view;
     }
@@ -71,7 +70,7 @@ public class HabitEventsFragment extends Fragment implements HabitEventRecyclerV
      * @param position the position where it needs to edit
      */
     @Override
-    public void onItemclicked(int position) {
+    public void onItemClicked(int position) {
         goToUpdateHabitEventActivity(position);
     }
 

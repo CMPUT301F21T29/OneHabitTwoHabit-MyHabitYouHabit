@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.ohthmhyh.Constants;
 import com.example.ohthmhyh.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -32,6 +33,8 @@ import java.util.Locale;
 /**
  * An Activity that shows a map. The user is able to select a location on the map and this activity
  * will return the selected location to the calling Activity.
+ *
+ * There are no outstanding issues that we are aware of.
  */
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
@@ -71,7 +74,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         updateMarker(new LatLng(this.location.getLatitude(), this.location.getLongitude()));
 
         // Making sure it's zoomed in properly
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currLoc, 15.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currLoc, Constants.DEFAULT_MAP_ZOOM_LEVEL));
 
         // If a location is selected on the map
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {

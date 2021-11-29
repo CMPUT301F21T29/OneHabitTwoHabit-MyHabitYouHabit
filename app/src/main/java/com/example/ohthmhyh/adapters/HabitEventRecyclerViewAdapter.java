@@ -20,70 +20,87 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.HabitEventList;
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
 
+import java.util.ArrayList;
+
 /**
- * An adapter used for putting habitEvent objects into elements of a RecyclerView.
+ * An adapter used for putting HabitEvent objects into elements of a RecyclerView. Each row is
+ * populated with views to display the HabitEvent's attributes, and gestures like swiping and moving
+ * elements are also supported.
+ *
+ * There are no outstanding issues that we are aware of.
  */
-public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.Myviewholder>
+public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.ViewHolder>
         implements ItemTransportable {
 
-    private HabitEventList habitEventsList;
     private Context context;
-    private ItemTouchHelper mTouchhelper;
-    private OntouchListener mOntouchListener;
+    private ItemTouchHelper itemTouchHelper;
+    private OnTouchListener onTouchListener;
+    private ArrayList<HabitEvent> content;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     /**
      * Constructor for an adapter capable of putting habits into a RecyclerView.
-     * @param habitEventsList A array of habit event
+     * @param content A array of habit event
      * @param context Context from the activity
-     * @param mOntouchListener A thing that does touch actions
+     * @param onTouchListener A thing that does touch actions
      */
-    public HabitEventRecyclerViewAdapter(HabitEventList habitEventsList, Context context, OntouchListener mOntouchListener){
-        this.habitEventsList=habitEventsList;
+    public HabitEventRecyclerViewAdapter(ArrayList<HabitEvent> content, Context context,
+                                         OnTouchListener onTouchListener){
+        this.content=content;
         this.context=context;
-        this.mOntouchListener=mOntouchListener;
+        this.onTouchListener = onTouchListener;
     }
 
     @NonNull
     @Override
-    public Myviewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.item_habit_event,parent,false);
-        Myviewholder holder =new Myviewholder(view, mOntouchListener);
+        ViewHolder holder =new ViewHolder(view, onTouchListener);
 
         return holder;
     }
 
     //sets the things in the display
     @Override
-    public void onBindViewHolder(@NonNull Myviewholder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because some things might be null
-        HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
-        holder.Displaycomment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
-        holder.DisplayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
-        holder.DisplayLocation.setText(
+        HabitEvent habitEvent = content.get(position);
+
+        // Find the corresponding Habit name for this HabitEvent.
+        String habitName = "";
+        for (int i = 0; i < databaseAdapter.numberOfHabits(); i++) {
+            if (databaseAdapter.habitAtIndex(i).getUHID() == habitEvent.getHabitUHID()) {
+                habitName = databaseAdapter.habitAtIndex(i).getName();
+                break;
+            }
+        }
+
+        holder.displayComment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
+        holder.displayHabit.setText(habitName);
+        holder.displayLocation.setText(
                 Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(holder.itemView.getContext())));
 
         habitEvent.getBitmapPic(new HabitEvent.BMPcallback() {
             @Override
             public void onBMPcallback(Bitmap bitmap) {
-                holder.DisplayUserpic.setImageBitmap(bitmap);
+                holder.displayUserPic.setImageBitmap(bitmap);
             }
         });
-
-
     }
 
     /**
-    *Returns the amount of items in the Recycleview
+     *Returns the amount of items in the RecyclerView
      * @return habitEventsList.size()
      */
     @Override
     public int getItemCount() {
-        return habitEventsList.size();
+        return content.size();
     }
 
     /**
@@ -93,7 +110,13 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
      */
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
-        habitEventsList.moveHabit(fromPosition, toPosition);
+        // Move the HabitEvent in the content.
+        HabitEvent habitEventToMove = content.remove(fromPosition);
+        content.add(toPosition, habitEventToMove);
+
+        // Move the HabitEvent in the database.
+        databaseAdapter.moveHabitEvent(fromPosition, toPosition);
+
         notifyItemMoved(fromPosition, toPosition);
     }
 
@@ -106,28 +129,28 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
         openDialog(position);
     }
 
-    public void setTouchhelper(ItemTouchHelper touchhelper){
-        this.mTouchhelper=touchhelper;
+    public void setTouchHelper(ItemTouchHelper touchHelper){
+        this.itemTouchHelper =touchHelper;
     }
 
-    public class Myviewholder extends RecyclerView.ViewHolder implements
+    public class ViewHolder extends RecyclerView.ViewHolder implements
             View.OnTouchListener,
             GestureDetector.OnGestureListener {
 
-        TextView Displaycomment;
-        TextView DisplayHabit;
-        TextView DisplayLocation;
-        ImageView DisplayUserpic;
+        TextView displayComment;
+        TextView displayHabit;
+        TextView displayLocation;
+        ImageView displayUserPic;
         GestureDetector mGestureDetector;
         ConstraintLayout parentLayout;
-        OntouchListener ontouchListener;
-        public Myviewholder(@NonNull View itemView,OntouchListener ontouchListener) {
+        OnTouchListener ontouchListener;
+        public ViewHolder(@NonNull View itemView, OnTouchListener ontouchListener) {
             super(itemView);
-            Displaycomment=itemView.findViewById(R.id.DisplayCommentCE);
-            DisplayHabit=itemView.findViewById(R.id.DisplayHabitCE);
-            DisplayLocation=itemView.findViewById(R.id.DisplayLocationCE);
-            DisplayUserpic=itemView.findViewById(R.id.DisplayUserpicCE);
-            //This is the name of the contrant layout in display HE list
+            displayComment =itemView.findViewById(R.id.DisplayCommentCE);
+            displayHabit =itemView.findViewById(R.id.DisplayHabitCE);
+            displayLocation=itemView.findViewById(R.id.DisplayLocationCE);
+            displayUserPic =itemView.findViewById(R.id.DisplayUserpicCE);
+            //This is the name of the constraint layout in display HE list
             parentLayout=itemView.findViewById(R.id.Displayed_HabitEvent_list);
             mGestureDetector=new GestureDetector(itemView.getContext(),this);
 
@@ -152,7 +175,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
         @Override
         public boolean onSingleTapUp(MotionEvent motionEvent) {
-            ontouchListener.onItemclicked(getAdapterPosition());
+            ontouchListener.onItemClicked(getAdapterPosition());
             return true;
         }
 
@@ -163,7 +186,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
         @Override
         public void onLongPress(MotionEvent motionEvent) {
-            mTouchhelper.startDrag(this);
+            itemTouchHelper.startDrag(this);
         }
 
         @Override
@@ -179,13 +202,12 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
 
     }
-
-    public interface OntouchListener{
+    public interface OnTouchListener {
      /**
      *This method is used to goto the edit screen
      * @param position the position of the list we want to edit
      */
-        void onItemclicked(int position);
+        void onItemClicked(int position);
     }
 
     /**
@@ -203,7 +225,12 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
                     // habit
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        habitEventsList.removeHabitEvent(position);
+                        // Remove the HabitEvent from the content.
+                        content.remove(position);
+
+                        // Remove the HabitEvent from the database.
+                        databaseAdapter.removeHabitEvent(position);
+
                         notifyItemRemoved(position);
                     }
                 });
