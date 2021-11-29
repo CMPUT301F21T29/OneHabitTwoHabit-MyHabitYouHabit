@@ -12,21 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.ohthmhyh.adapters.FriendRequestListAdapter;
-import com.example.ohthmhyh.adapters.FriendsListAdapter;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.adapters.FriendsRecyclerViewAdapter;
-import com.example.ohthmhyh.adapters.HabitFeedRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.User;
-import com.example.ohthmhyh.activities.EditProfileActivity;
 import com.example.ohthmhyh.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -103,40 +97,42 @@ public class UserFragment extends Fragment {
         // set the views
         usernameTV.setText(user.getUsername());
 
-        // set up the feed recyclerView
+        // set up the friend/friend request recyclerView
         adapter = new FriendsRecyclerViewAdapter(user.getFriendList(), user.getFriendRequests());
+        adapter.setCustomButtonListener(new FriendsRecyclerViewAdapter.buttonListener() {
+            // when the accept friend request button is pressed
+            @Override
+            public void onAcceptClickListener(int position) {
+                user.acceptFriendRequest(position);
+                adapter.notifyDataSetChanged();
+            }
+            // when the decline friend request button is pressed
+            @Override
+            public void onDeclineClickListener(int position) {
+                user.denyFriendRequest(position);
+                adapter.notifyDataSetChanged();
+            }
+            // when a friend is tapped
+            @Override
+            public void onFriendClickListener(int position){
+                // show a confirmation dialog when deleting
+                new AlertDialog.Builder(view.getContext())
+                        .setMessage("Remove this friend?")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            // when "yes" is pressed, delete the friend
+                            @Override
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                user.removeFriend(position);
+                                adapter.notifyDataSetChanged();
+                            }})
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
+            }
+        });
         friendsAndRequestsRV.setLayoutManager(new LinearLayoutManager(view.getContext()));
         friendsAndRequestsRV.setHasFixedSize(true);
         friendsAndRequestsRV.setAdapter(adapter);
-
-        //check if there is a bio. If not show a message
-//        emptyRequestTV.setText("Looks like you're all caught up!");
-//        emptyFriendsTV.setText("You're not following anyone!");
-
-
-//        // When a friend is tapped, ask if they should be removed
-//        friendsLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                TextView uname = view.findViewById(R.id.item_friend);
-//                String username = uname.getText().toString();
-//
-//                // show a confirmation dialog when deleting
-//                new AlertDialog.Builder(view.getContext())
-//                        .setMessage("Remove " + username + " as a friend?")
-//                        .setIcon(android.R.drawable.ic_dialog_alert)
-//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                            // when "yes" is pressed, delete the friend
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int whichButton) {
-//                                user.removeFriend(position);
-//                                friendsAdapter.notifyDataSetChanged();
-//                            }})
-//                        .setNegativeButton(android.R.string.no, null)
-//                        .show();
-//            }
-//        });
-
-
 
         // send friend request when the button is pressed
         searchBtn.setOnClickListener(new View.OnClickListener() {
