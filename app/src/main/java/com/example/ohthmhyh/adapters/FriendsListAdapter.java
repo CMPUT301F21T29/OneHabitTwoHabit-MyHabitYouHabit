@@ -1,6 +1,7 @@
 package com.example.ohthmhyh.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,10 +30,10 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
      * A constructor for making an adapter which puts friends into a listView
      * @param context the context of the listview
      * @param resource the resource ID of the view to put data into
-     * @param friendRequests the arrayList of friends
+     * @param friends the arrayList of friends
      */
-    public FriendsListAdapter(Context context, int resource, ArrayList<String> friendRequests) {
-        super(context, resource, friendRequests);
+    public FriendsListAdapter(Context context, int resource, ArrayList<String> friends) {
+        super(context, resource, friends);
         this.resource = resource;
         this.context = context;
     }
@@ -54,6 +55,8 @@ public class FriendsListAdapter extends ArrayAdapter<String> {
 
         // get the username text view
         TextView usernameTV = view.findViewById(R.id.item_friend);
+
+        Log.e("THE FRIENDS ARE", getItem(position));
 
         // set the content of the username text view
         DatabaseAdapter dba = DatabaseAdapter.getInstance();

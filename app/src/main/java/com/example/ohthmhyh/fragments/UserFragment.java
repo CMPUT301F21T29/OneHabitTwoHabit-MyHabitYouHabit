@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 import com.example.ohthmhyh.adapters.FriendRequestListAdapter;
 import com.example.ohthmhyh.adapters.FriendsListAdapter;
 import com.example.ohthmhyh.R;
+import com.example.ohthmhyh.adapters.FriendsRecyclerViewAdapter;
+import com.example.ohthmhyh.adapters.HabitFeedRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.User;
 import com.example.ohthmhyh.activities.EditProfileActivity;
@@ -33,6 +37,8 @@ import com.google.firebase.auth.FirebaseAuth;
  * There are no outstanding issues that we are aware of.
  */
 public class UserFragment extends Fragment {
+
+    private FriendsRecyclerViewAdapter adapter;
 
     /**
      * An empty constructor required for fragments
@@ -90,67 +96,47 @@ public class UserFragment extends Fragment {
 
         // get the views
         TextView usernameTV= view.findViewById(R.id.username_TV);
-        ListView requestLV = view.findViewById(R.id.friend_request_LV);
-        TextView emptyRequestTV = view.findViewById(R.id.empty_request_list);
-        ListView friendsLV = view.findViewById(R.id.friends_LV);
-        TextView emptyFriendsTV = view.findViewById(R.id.empty_friend_list);
         EditText searchFriendsET = view.findViewById(R.id.friend_Search_ET);
         Button searchBtn = view.findViewById(R.id.send_request_btn);
+        RecyclerView friendsAndRequestsRV = view.findViewById(R.id.friendsAndRequestsRV);
 
         // set the views
         usernameTV.setText(user.getUsername());
 
+        // set up the feed recyclerView
+        adapter = new FriendsRecyclerViewAdapter(user.getFriendList(), user.getFriendRequests());
+        friendsAndRequestsRV.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        friendsAndRequestsRV.setHasFixedSize(true);
+        friendsAndRequestsRV.setAdapter(adapter);
+
         //check if there is a bio. If not show a message
-        emptyRequestTV.setText("Looks like you're all caught up!");
-        emptyFriendsTV.setText("You're not following anyone!");
+//        emptyRequestTV.setText("Looks like you're all caught up!");
+//        emptyFriendsTV.setText("You're not following anyone!");
 
-        // fill the friends list view
-        friendsLV.setEmptyView(emptyFriendsTV);
-        FriendsListAdapter friendsAdapter = new FriendsListAdapter(getActivity(),
-                R.layout.item_friend, user.getFriendList());
-        friendsLV.setAdapter(friendsAdapter);
 
-        // When a friend is tapped, ask if they should be removed
-        friendsLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView uname = view.findViewById(R.id.item_friend);
-                String username = uname.getText().toString();
+//        // When a friend is tapped, ask if they should be removed
+//        friendsLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                TextView uname = view.findViewById(R.id.item_friend);
+//                String username = uname.getText().toString();
+//
+//                // show a confirmation dialog when deleting
+//                new AlertDialog.Builder(view.getContext())
+//                        .setMessage("Remove " + username + " as a friend?")
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            // when "yes" is pressed, delete the friend
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int whichButton) {
+//                                user.removeFriend(position);
+//                                friendsAdapter.notifyDataSetChanged();
+//                            }})
+//                        .setNegativeButton(android.R.string.no, null)
+//                        .show();
+//            }
+//        });
 
-                // show a confirmation dialog when deleting
-                new AlertDialog.Builder(view.getContext())
-                        .setMessage("Remove " + username + " as a friend?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            // when "yes" is pressed, delete the friend
-                            @Override
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                user.removeFriend(position);
-                                friendsAdapter.notifyDataSetChanged();
-                            }})
-                        .setNegativeButton(android.R.string.no, null)
-                        .show();
-            }
-        });
 
-        // fill the friend request list view
-        requestLV.setEmptyView(emptyRequestTV);
-        FriendRequestListAdapter FRAdapter = new FriendRequestListAdapter(getActivity(),
-                R.layout.item_friend_request, user.getFriendRequests());
-        FRAdapter.setCustomButtonListener(new FriendRequestListAdapter.buttonListener() {
-            @Override
-            public void onAcceptClickListener(int position) {
-                user.acceptFriendRequest(position);
-                friendsAdapter.notifyDataSetChanged();
-                FRAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onDeclineClickListener(int position) {
-                user.denyFriendRequest(position);
-                FRAdapter.notifyDataSetChanged();
-            }
-        });
-        requestLV.setAdapter(FRAdapter);
 
         // send friend request when the button is pressed
         searchBtn.setOnClickListener(new View.OnClickListener() {
