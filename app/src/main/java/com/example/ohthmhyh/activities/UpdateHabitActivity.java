@@ -92,6 +92,16 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
         dateTextView.setHint("Enter a date");
         dateTextView.setOnClickListener(
                 new DatePickerListener(this, UpdateHabitActivity.this));
+
+        // Set the views to display the Habit that was given to this activity (if there was a Habit
+        // passed to this Activity at all).
+        Intent intent = getIntent();
+        Habit habit = new Habit();  // The Habit to update.
+        if (intent.hasExtra(ARG_HABIT)) {
+            habit = (Habit) intent.getSerializableExtra(ARG_HABIT);
+            showExistingHabit(habit);
+        }
+
         doneButton.setOnClickListener(new HabitUpdateListener(
                 this,
                 descriptionEditText,
@@ -105,16 +115,9 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
                 saturdayToggleButton,
                 sundayToggleButton,
                 privateButton,
-                scheduleErrorTextView
+                scheduleErrorTextView,
+                habit
         ));
-
-        // Set the views to display the Habit that was given to this activity (if there was a Habit
-        // passed to this Activity at all).
-        Intent intent = getIntent();
-        if (intent.hasExtra(ARG_HABIT)) {
-            Habit habit = (Habit) intent.getSerializableExtra(ARG_HABIT);
-            showExistingHabit(habit);
-        }
     }
 
     /**
