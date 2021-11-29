@@ -65,8 +65,9 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
         return holder;
     }
 
-    /**sets the items in the display
-     **/
+    /**
+     * Sets the items in the display
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
