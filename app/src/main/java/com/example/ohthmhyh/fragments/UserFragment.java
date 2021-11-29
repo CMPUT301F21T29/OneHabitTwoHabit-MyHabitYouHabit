@@ -4,12 +4,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -20,7 +24,6 @@ import android.widget.Toast;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.adapters.FriendsRecyclerViewAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.entities.User;
 import com.example.ohthmhyh.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -33,6 +36,8 @@ import com.google.firebase.auth.FirebaseAuth;
 public class UserFragment extends Fragment {
 
     private FriendsRecyclerViewAdapter adapter;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+    private View view;
 
     /**
      * An empty constructor required for fragments
@@ -52,9 +57,10 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);  // For the refresh button at the top menu bar.
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        view = inflater.inflate(R.layout.fragment_user, container, false);
 
         // set up the sign out button
         Button signOutButton = view.findViewById(R.id.button_sign_out);
@@ -68,25 +74,37 @@ public class UserFragment extends Fragment {
         });
 
         // get the user data and put it into the proper views
-        DatabaseAdapter dba = DatabaseAdapter.getInstance();
-        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
-            @Override
-            public void onProfileCallback(User user) {
-                fillViews(view, user);
-            }
-        });
+        fillViews();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.top_nav_refresh_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.button_refresh) {
+            // Pull the user's updated friend's list and refresh the feed
+            databaseAdapter.pullUser(new DatabaseAdapter.OnLoadedListener() {
+                @Override
+                public void onLoaded() {
+                    fillViews();
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
     /**
      * Fills the views in the fragment that are dependent on the user object
      * that is retrieved from the database.
-     * @param view The fragment view being filled
-     * @param user The user object used to populate the views
      */
-    private void fillViews(View view, User user){
+    private void fillViews(){
 
         // get the views
         TextView usernameTV= view.findViewById(R.id.username_TV);
@@ -95,7 +113,7 @@ public class UserFragment extends Fragment {
         RecyclerView friendsAndRequestsRV = view.findViewById(R.id.friendsAndRequestsRV);
 
         // set the views
-        usernameTV.setText(user.getUsername());
+        usernameTV.setText(databaseAdapter.userUsername());
 
         // set up the friend/friend request recyclerView
         adapter = new FriendsRecyclerViewAdapter(user.getFriendList(), user.getFriendRequests());
@@ -148,7 +166,7 @@ public class UserFragment extends Fragment {
                             public void onUsernameCheckCallback(boolean usernameExists) {
                                 if(usernameExists){
                                     // send the friend request
-                                    user.sendFriendRequest(username);
+                                    databaseAdapter.sendUserFriendRequest(username);
                                     Toast.makeText(getContext(), "Friend request sent!", Toast.LENGTH_SHORT).show();
                                 }
                                 else{

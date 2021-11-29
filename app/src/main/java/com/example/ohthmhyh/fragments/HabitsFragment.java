@@ -18,12 +18,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.ohthmhyh.adapters.HabitRecyclerViewAdapter;
 import com.example.ohthmhyh.activities.UpdateHabitActivity;
 import com.example.ohthmhyh.adapters.HabitRecyclerViewGestureAdapter;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.entities.Habit;
-import com.example.ohthmhyh.database.HabitList;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.helpers.TransportableTouchHelper;
 
@@ -41,7 +39,6 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewGesture
 
     private int chosenHabitIndex = -1;
     private ActivityResultLauncher<Intent> resultLauncher;
-    private HabitList habitList;
     private ArrayList<Habit> listOfHabits;
     private HabitRecyclerViewGestureAdapter adapter;
     private DatabaseAdapter databaseAdapter;
@@ -69,30 +66,21 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewGesture
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_hf);
 
-        // Get the HabitList from the database.
+        listOfHabits = new ArrayList<>();
         databaseAdapter = DatabaseAdapter.getInstance();
-        databaseAdapter.pullHabits(new DatabaseAdapter.HabitCallback() {
-            @Override
-            public void onHabitCallback(HabitList hList) {
-                habitList = hList;
 
-                // Populate the ArrayList of Habits with all the Habits in the database.
-                listOfHabits = new ArrayList<>();
-                for (int i = 0; i < habitList.size(); i++) {
-                    listOfHabits.add(habitList.getHabit(i));
-                }
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setHasFixedSize(true);
-                adapter = new HabitRecyclerViewGestureAdapter(
-                        getContext(),  habitList, listOfHabits, HabitsFragment.this);
-                ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
-                ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-                adapter.setTouchHelper(itemTouchHelper);
-                itemTouchHelper.attachToRecyclerView(recyclerView);
-                recyclerView.setAdapter(adapter);
-            }
-        });
+        for (int i = 0; i < databaseAdapter.numberOfHabits(); i++) {
+            listOfHabits.add(databaseAdapter.habitAtIndex(i));
+        }
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setHasFixedSize(true);
+        adapter = new HabitRecyclerViewGestureAdapter(
+                getContext(), listOfHabits, HabitsFragment.this);
+        ItemTouchHelper.Callback callback = new TransportableTouchHelper(adapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        adapter.setTouchHelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(adapter);
 
         Button addButton = view.findViewById(R.id.add_habit);
         addButton.setOnClickListener(v -> goToUpdateHabitActivity(-1));
@@ -113,13 +101,13 @@ public class HabitsFragment extends Fragment implements HabitRecyclerViewGesture
                                 listOfHabits.add(habit);
 
                                 // Also add this Habit to the database.
-                                habitList.addHabit(habit);
+                                databaseAdapter.addHabit(habit);
                             } else {
                                 // Replace this Habit in the ArrayList of Habits.
                                 listOfHabits.set(chosenHabitIndex, habit);
 
                                 // Also replace this Habit in the database.
-                                habitList.replaceHabit(chosenHabitIndex, habit);
+                                databaseAdapter.replaceHabit(chosenHabitIndex, habit);
                             }
                             adapter.notifyDataSetChanged();
                         }

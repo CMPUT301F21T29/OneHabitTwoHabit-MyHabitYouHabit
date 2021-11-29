@@ -49,6 +49,7 @@ public class HabitTodayFragmentTest {
     @Before
     public void setUp() throws Exception {
         solo = new Solo(InstrumentationRegistry.getInstrumentation(), rule.getActivity());
+        solo.sleep(TestConstants.LOADING_WAIT_TIME_MS);
         solo.clickOnView(solo.getView(R.id.habits_today_nav_item));
     }
 
