@@ -308,7 +308,7 @@ public class Habit implements Serializable {
     /**
      * Calculate and return the % adherence for the given habit
      * This uses a basic completed / possible calculation.
-     *
+     * @param today the current date
      * @return the % adherence to this habit
      */
     public double getAdherence(LocalDate today) {

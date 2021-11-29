@@ -47,6 +47,7 @@ public class User {
 
 
     /**
+     * @param username Needs the user name and sets it
      * Set the users username
      */
     public void setUsername(String username) {
