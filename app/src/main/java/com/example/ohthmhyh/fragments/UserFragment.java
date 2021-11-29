@@ -204,6 +204,8 @@ public class UserFragment extends Fragment {
     private void goToLoginActivity() {
         // Go to the login activity from this fragment.
         Intent loginActivityIntent = new Intent(getActivity(), LoginActivity.class);
+        loginActivityIntent.setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginActivityIntent);
     }
 
