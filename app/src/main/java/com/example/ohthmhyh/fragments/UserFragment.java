@@ -116,18 +116,19 @@ public class UserFragment extends Fragment {
         usernameTV.setText(databaseAdapter.userUsername());
 
         // set up the friend/friend request recyclerView
-        adapter = new FriendsRecyclerViewAdapter(user.getFriendList(), user.getFriendRequests());
+        adapter = new FriendsRecyclerViewAdapter(databaseAdapter.userFriendList(),
+                databaseAdapter.userFriendRequests());
         adapter.setCustomButtonListener(new FriendsRecyclerViewAdapter.buttonListener() {
             // when the accept friend request button is pressed
             @Override
             public void onAcceptClickListener(int position) {
-                user.acceptFriendRequest(position);
+                databaseAdapter.acceptUserFriendRequest(position);
                 adapter.notifyDataSetChanged();
             }
             // when the decline friend request button is pressed
             @Override
             public void onDeclineClickListener(int position) {
-                user.denyFriendRequest(position);
+                databaseAdapter.denyUserFriendRequest(position);
                 adapter.notifyDataSetChanged();
             }
             // when a friend is tapped
@@ -141,7 +142,7 @@ public class UserFragment extends Fragment {
                             // when "yes" is pressed, delete the friend
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                user.removeFriend(position);
+                                databaseAdapter.removeUserFriend(position);
                                 adapter.notifyDataSetChanged();
                             }})
                         .setNegativeButton(android.R.string.no, null)
