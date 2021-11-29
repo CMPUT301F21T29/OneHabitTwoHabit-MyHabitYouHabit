@@ -314,10 +314,10 @@ public class Habit implements Serializable {
     public void undoCompleted() {completedCounter--;}
 
     /**
-     * Calculate and return the % adherance for the given habit
+     * Calculate and return the % adherence for the given habit
      * This uses a basic completed / possible calculation.
-     *
-     * @return the % adherance to this habit
+     * @param today the current date
+     * @return the % adherence to this habit
      */
     public double getAdherence(LocalDate today) {
         LocalDate currentDay = today;

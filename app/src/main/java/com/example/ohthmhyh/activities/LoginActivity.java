@@ -97,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // TODO: Check if username already exists.
                     // only allow signing up if the username is not already in use
                     DatabaseAdapter.checkUsernameExists(username, new DatabaseAdapter.UsernameCheckCallback() {
                         @Override

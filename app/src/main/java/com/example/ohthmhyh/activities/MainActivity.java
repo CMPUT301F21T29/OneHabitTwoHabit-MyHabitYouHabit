@@ -65,7 +65,10 @@ public class MainActivity extends AppCompatActivity {
             setupNavigationBar();
         }
     }
-
+    /**
+     * Called set up the activity bar at the bottom of the screen
+     *   Information about the previous state of the main activity.
+     */
     private void setupNavigationBar() {
         // Get the navigation bar in the MainActivity and specify which fragments it should go to
         // when the buttons in the navigation bar are tapped. Also, set the default fragment to be

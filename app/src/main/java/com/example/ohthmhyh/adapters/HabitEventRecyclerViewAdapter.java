@@ -65,11 +65,12 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
         return holder;
     }
 
-    //sets the things in the display
+    /**
+     * Sets the items in the display
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        //Todo
-        //Need to error check because some things might be null
+
         HabitEvent habitEvent = content.get(position);
 
         // Find the corresponding Habit name for this HabitEvent.
@@ -129,6 +130,10 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
         openDialog(position);
     }
 
+    /**
+     * Sets a touchpaper
+     * @param touchHelper the touchpaper we want to set
+     */
     public void setTouchHelper(ItemTouchHelper touchHelper){
         this.itemTouchHelper =touchHelper;
     }
@@ -160,40 +165,67 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
 
         }
         /**
-         *These are all possible motions a user can do
-         * With the corresponding actions
+         * Called when the GestureDetector detects a finger put down
+         * @param motionEvent the MotionEvent that triggered the call
+         * @return false - ignore this gesture
          */
         @Override
         public boolean onDown(MotionEvent motionEvent) {
             return false;
         }
-
+        /**
+         * Called when the GestureDetector detects a long press, but not a move or up yet
+         * @param motionEvent the MotionEvent that triggered the call
+         */
         @Override
         public void onShowPress(MotionEvent motionEvent) {
 
         }
-
+        /**
+         * Called when the GestureDetector detects a release of a single tap
+         * @param motionEvent the MotionEvent that triggered the call
+         * @return true - don't ignore this gesture
+         */
         @Override
         public boolean onSingleTapUp(MotionEvent motionEvent) {
             ontouchListener.onItemClicked(getAdapterPosition());
             return true;
         }
-
+        /**
+         * Called when the GestureDetector detects a scroll gesture
+         * @param motionEvent the MotionEvent that triggered the call
+         * @return false - ignore this gesture
+         */
         @Override
         public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
             return false;
         }
 
+        /**
+         * Called when the GestureDetector detects a long press
+         * @param motionEvent the MotionEvent that triggered the call
+         */
         @Override
         public void onLongPress(MotionEvent motionEvent) {
             itemTouchHelper.startDrag(this);
         }
-
+        /**
+         * Called when the GestureDetector detects a fling gesture
+         * @param motionEvent the MotionEvent at the start of the fling
+         * @param motionEvent1 the MotionEvent at the end of the fling
+         * @param v velocity in the X direction
+         * @param v1 velocity in the Y direction
+         * @return true - don't ignore this gesture
+         */
         @Override
         public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
             return true;
         }
-
+        /**
+         * Called when the GestureDetector detects a touch
+         * @param view the view on which the gesture was detected
+         * @param motionEvent the MotionEvent that triggered the call
+         */
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
             mGestureDetector.onTouchEvent(motionEvent);

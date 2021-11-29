@@ -145,6 +145,7 @@ public class HabitEvent {
 
     /**
      * Get the photo attached to this habit event from online storage
+     * @param callback
      * @return The photo (in bitmap form) attached to this event
      */
     public Bitmap getBitmapPic(HabitEvent.BMPcallback callback) {
