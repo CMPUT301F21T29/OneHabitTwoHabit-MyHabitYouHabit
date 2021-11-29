@@ -38,6 +38,7 @@ public class HabitUpdateListener implements View.OnClickListener {
     protected ToggleButton sunFrequency;
     protected ToggleButton private_button;
     protected TextView errorSchedule;
+    protected Habit habit;
     private ColorStateList originalErrorScheduleColor;
 
     public HabitUpdateListener(
@@ -53,7 +54,8 @@ public class HabitUpdateListener implements View.OnClickListener {
             ToggleButton satFrequency,
             ToggleButton sunFrequency,
             ToggleButton private_button,
-            TextView errorSchedule
+            TextView errorSchedule,
+            Habit habit
     ) {
         this.activity = activity;
         this.habitDescriptionET = habitDescriptionET;
@@ -68,6 +70,7 @@ public class HabitUpdateListener implements View.OnClickListener {
         this.sunFrequency = sunFrequency;
         this.private_button = private_button;
         this.errorSchedule = errorSchedule;
+        this.habit = habit;
 
         this.originalErrorScheduleColor = errorSchedule.getTextColors();
     }
@@ -155,8 +158,12 @@ public class HabitUpdateListener implements View.OnClickListener {
             LocalDate startDate,
             ArrayList<Habit.Days> schedule
     ) {
-        Habit habit = new Habit(
-                habitName, habitDescription, startDate, schedule, private_button.isChecked());
+        habit.setName(habitName);
+        habit.setDescription(habitDescription);
+        habit.setStartDate(startDate.toEpochDay());
+        habit.setSchedule(schedule);
+        habit.setIsPrivate(private_button.isChecked());
+
         Intent intent = new Intent();
         intent.putExtra(HabitsFragment.ARG_RETURNED_HABIT, habit);
         activity.setResult(Activity.RESULT_OK, intent);
