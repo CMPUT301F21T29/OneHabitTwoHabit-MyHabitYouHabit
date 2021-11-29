@@ -78,13 +78,17 @@ public class UserFragment extends Fragment {
 
         return view;
     }
-
+    /**
+     * Inflates the menu
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.top_nav_refresh_menu, menu);
     }
-
+    /**
+     * Calls fillViews to display a user object
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.button_refresh) {

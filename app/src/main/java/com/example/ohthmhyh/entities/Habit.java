@@ -177,10 +177,18 @@ public class Habit implements Serializable {
         return startDate;
     }
 
+    /**
+     * gets the epoch day on which the habit was hast completed
+     * @return the epoch day on which the habit was hast completed
+     */
     public long getLastDayCompleted() {
         return lastDayCompleted;
     }
 
+    /**
+     * sets the last epoch day on which the habit was completed
+     * @param lastDayCompleted the last epoch day on which the habit was completed
+     */
     public void setLastDayCompleted(long lastDayCompleted) {
         this.lastDayCompleted = lastDayCompleted;
     }
@@ -306,10 +314,10 @@ public class Habit implements Serializable {
     public void undoCompleted() {completedCounter--;}
 
     /**
-     * Calculate and return the % adherance for the given habit
+     * Calculate and return the % adherence for the given habit
      * This uses a basic completed / possible calculation.
-     *
-     * @return the % adherance to this habit
+     * @param today the current date
+     * @return the % adherence to this habit
      */
     public double getAdherence(LocalDate today) {
         LocalDate currentDay = today;
