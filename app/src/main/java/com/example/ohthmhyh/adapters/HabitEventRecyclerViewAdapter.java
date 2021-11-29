@@ -215,7 +215,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
          * @param motionEvent1 the MotionEvent at the end of the fling
          * @param v velocity in the X direction
          * @param v1 velocity in the Y direction
-         * @return false - ignore this gesture
+         * @return true - don't ignore this gesture
          */
         @Override
         public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
