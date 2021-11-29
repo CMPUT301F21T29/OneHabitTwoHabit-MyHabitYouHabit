@@ -4,12 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
-
-import com.example.ohthmhyh.activities.MainActivity;
 import com.example.ohthmhyh.database.DatabaseAdapter;
 import com.example.ohthmhyh.database.HabitEventList;
 import com.example.ohthmhyh.database.HabitList;
@@ -20,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 
 
@@ -30,9 +25,6 @@ import org.junit.Test;
 public class DatabaseAdapterTests{
 
     private DatabaseAdapter dba;
-
-    @Rule public ActivityScenarioRule<MainActivity> rule
-            = new ActivityScenarioRule<>(MainActivity.class);
 
     /**
      * Sign in to the existing user before any tests run.

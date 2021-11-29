@@ -20,9 +20,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ohthmhyh.R;
-import com.example.ohthmhyh.database.HabitEventList;
+import com.example.ohthmhyh.database.DatabaseAdapter;
+import com.example.ohthmhyh.entities.Habit;
 import com.example.ohthmhyh.entities.HabitEvent;
 import com.example.ohthmhyh.interfaces.ItemTransportable;
+
+import java.util.ArrayList;
 
 /**
  * An adapter used for putting HabitEvent objects into elements of a RecyclerView. Each row is
@@ -34,19 +37,21 @@ import com.example.ohthmhyh.interfaces.ItemTransportable;
 public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEventRecyclerViewAdapter.ViewHolder>
         implements ItemTransportable {
 
-    private HabitEventList habitEventsList;
     private Context context;
     private ItemTouchHelper itemTouchHelper;
     private OnTouchListener onTouchListener;
+    private ArrayList<HabitEvent> content;
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
 
     /**
      * Constructor for an adapter capable of putting habits into a RecyclerView.
-     * @param habitEventsList A array of habit event
+     * @param content A array of habit event
      * @param context Context from the activity
      * @param onTouchListener A thing that does touch actions
      */
-    public HabitEventRecyclerViewAdapter(HabitEventList habitEventsList, Context context, OnTouchListener onTouchListener){
-        this.habitEventsList=habitEventsList;
+    public HabitEventRecyclerViewAdapter(ArrayList<HabitEvent> content, Context context,
+                                         OnTouchListener onTouchListener){
+        this.content=content;
         this.context=context;
         this.onTouchListener = onTouchListener;
     }
@@ -65,9 +70,19 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //Todo
         //Need to error check because some things might be null
-        HabitEvent habitEvent = habitEventsList.getHabitEvent(position);
+        HabitEvent habitEvent = content.get(position);
+
+        // Find the corresponding Habit name for this HabitEvent.
+        String habitName = "";
+        for (int i = 0; i < databaseAdapter.numberOfHabits(); i++) {
+            if (databaseAdapter.habitAtIndex(i).getUHID() == habitEvent.getHabitUHID()) {
+                habitName = databaseAdapter.habitAtIndex(i).getName();
+                break;
+            }
+        }
+
         holder.displayComment.setText(Html.fromHtml("<i>Comment:</i> " + habitEvent.getComment()));
-        holder.displayHabit.setText(String.valueOf(habitEvent.getHabitUHID()));
+        holder.displayHabit.setText(habitName);
         holder.displayLocation.setText(
                 Html.fromHtml("<i>Location:</i> " + habitEvent.locationString(holder.itemView.getContext())));
 
@@ -77,8 +92,6 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
                 holder.displayUserPic.setImageBitmap(bitmap);
             }
         });
-
-
     }
 
     /**
@@ -87,7 +100,7 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
      */
     @Override
     public int getItemCount() {
-        return habitEventsList.size();
+        return content.size();
     }
 
     /**
@@ -97,7 +110,13 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
      */
     @Override
     public void onItemMoved(int fromPosition, int toPosition) {
-        habitEventsList.moveHabit(fromPosition, toPosition);
+        // Move the HabitEvent in the content.
+        HabitEvent habitEventToMove = content.remove(fromPosition);
+        content.add(toPosition, habitEventToMove);
+
+        // Move the HabitEvent in the database.
+        databaseAdapter.moveHabitEvent(fromPosition, toPosition);
+
         notifyItemMoved(fromPosition, toPosition);
     }
 
@@ -206,7 +225,12 @@ public class HabitEventRecyclerViewAdapter extends RecyclerView.Adapter<HabitEve
                     // habit
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-                        habitEventsList.removeHabitEvent(position);
+                        // Remove the HabitEvent from the content.
+                        content.remove(position);
+
+                        // Remove the HabitEvent from the database.
+                        databaseAdapter.removeHabitEvent(position);
+
                         notifyItemRemoved(position);
                     }
                 });

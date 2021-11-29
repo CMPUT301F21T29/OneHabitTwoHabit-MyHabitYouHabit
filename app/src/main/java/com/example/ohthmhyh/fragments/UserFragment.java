@@ -4,10 +4,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,8 +25,6 @@ import com.example.ohthmhyh.adapters.FriendRequestListAdapter;
 import com.example.ohthmhyh.adapters.FriendsListAdapter;
 import com.example.ohthmhyh.R;
 import com.example.ohthmhyh.database.DatabaseAdapter;
-import com.example.ohthmhyh.entities.User;
-import com.example.ohthmhyh.activities.EditProfileActivity;
 import com.example.ohthmhyh.activities.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -33,6 +35,9 @@ import com.google.firebase.auth.FirebaseAuth;
  * There are no outstanding issues that we are aware of.
  */
 public class UserFragment extends Fragment {
+
+    private DatabaseAdapter databaseAdapter = DatabaseAdapter.getInstance();
+    private View view;
 
     /**
      * An empty constructor required for fragments
@@ -52,9 +57,10 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);  // For the refresh button at the top menu bar.
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
+        view = inflater.inflate(R.layout.fragment_user, container, false);
 
         // set up the sign out button
         Button signOutButton = view.findViewById(R.id.button_sign_out);
@@ -68,25 +74,37 @@ public class UserFragment extends Fragment {
         });
 
         // get the user data and put it into the proper views
-        DatabaseAdapter dba = DatabaseAdapter.getInstance();
-        dba.pullUser(new DatabaseAdapter.ProfileCallback() {
-            @Override
-            public void onProfileCallback(User user) {
-                fillViews(view, user);
-            }
-        });
+        fillViews();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.top_nav_refresh_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.button_refresh) {
+            // Pull the user's updated friend's list and refresh the feed
+            databaseAdapter.pullUser(new DatabaseAdapter.OnLoadedListener() {
+                @Override
+                public void onLoaded() {
+                    fillViews();
+                }
+            });
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
     /**
      * Fills the views in the fragment that are dependent on the user object
      * that is retrieved from the database.
-     * @param view The fragment view being filled
-     * @param user The user object used to populate the views
      */
-    private void fillViews(View view, User user){
+    private void fillViews(){
 
         // get the views
         TextView usernameTV= view.findViewById(R.id.username_TV);
@@ -98,7 +116,7 @@ public class UserFragment extends Fragment {
         Button searchBtn = view.findViewById(R.id.send_request_btn);
 
         // set the views
-        usernameTV.setText(user.getUsername());
+        usernameTV.setText(databaseAdapter.userUsername());
 
         //check if there is a bio. If not show a message
         emptyRequestTV.setText("Looks like you're all caught up!");
@@ -107,7 +125,7 @@ public class UserFragment extends Fragment {
         // fill the friends list view
         friendsLV.setEmptyView(emptyFriendsTV);
         FriendsListAdapter friendsAdapter = new FriendsListAdapter(getActivity(),
-                R.layout.item_friend, user.getFriendList());
+                R.layout.item_friend, databaseAdapter.userFriendList());
         friendsLV.setAdapter(friendsAdapter);
 
         // When a friend is tapped, ask if they should be removed
@@ -124,7 +142,7 @@ public class UserFragment extends Fragment {
                             // when "yes" is pressed, delete the friend
                             @Override
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                user.removeFriend(position);
+                                databaseAdapter.removeUserFriend(position);
                                 friendsAdapter.notifyDataSetChanged();
                             }})
                         .setNegativeButton(android.R.string.no, null)
@@ -135,18 +153,18 @@ public class UserFragment extends Fragment {
         // fill the friend request list view
         requestLV.setEmptyView(emptyRequestTV);
         FriendRequestListAdapter FRAdapter = new FriendRequestListAdapter(getActivity(),
-                R.layout.item_friend_request, user.getFriendRequests());
+                R.layout.item_friend_request, databaseAdapter.userFriendRequests());
         FRAdapter.setCustomButtonListener(new FriendRequestListAdapter.buttonListener() {
             @Override
             public void onAcceptClickListener(int position) {
-                user.acceptFriendRequest(position);
+                databaseAdapter.acceptUserFriendRequest(position);
                 friendsAdapter.notifyDataSetChanged();
                 FRAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onDeclineClickListener(int position) {
-                user.denyFriendRequest(position);
+                databaseAdapter.denyUserFriendRequest(position);
                 FRAdapter.notifyDataSetChanged();
             }
         });
@@ -166,7 +184,7 @@ public class UserFragment extends Fragment {
                             public void onUsernameCheckCallback(boolean usernameExists) {
                                 if(usernameExists){
                                     // send the friend request
-                                    user.sendFriendRequest(username);
+                                    databaseAdapter.sendUserFriendRequest(username);
                                     Toast.makeText(getContext(), "Friend request sent!", Toast.LENGTH_SHORT).show();
                                 }
                                 else{

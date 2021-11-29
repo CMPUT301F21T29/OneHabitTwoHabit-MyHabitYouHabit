@@ -15,4 +15,10 @@ public class TestConstants {
     public final static String NONEXISTENT_USER_EMAIL = "non_existent@gmail.com";
     public final static String NONEXISTENT_USER_USERNAME = "non_existent_username";
     public final static String NONEXISTENT_USER_PASSWORD = "password";
+
+    /**
+     * The amount of time (in milliseconds) to wait for the user's data (HabitList, HabitEventList,
+     * and User objects) upon signing in or loading the app.
+     */
+    public static final int LOADING_WAIT_TIME_MS = 15000;
 }
