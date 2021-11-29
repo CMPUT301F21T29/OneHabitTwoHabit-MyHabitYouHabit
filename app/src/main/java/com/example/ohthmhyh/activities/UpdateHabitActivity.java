@@ -192,5 +192,14 @@ public class UpdateHabitActivity extends AppCompatActivity implements DatePicker
 
         // Since the Habit already exists, its date cannot be edited.
         dateTextView.setEnabled(false);
+
+        // Since the Habit already exists, prevent days from being edited.
+        mondayToggleButton.setEnabled(false);
+        tuesdayToggleButton.setEnabled(false);
+        wednesdayToggleButton.setEnabled(false);
+        thursdayToggleButton.setEnabled(false);
+        fridayToggleButton.setEnabled(false);
+        saturdayToggleButton.setEnabled(false);
+        sundayToggleButton.setEnabled(false);
     }
 }
