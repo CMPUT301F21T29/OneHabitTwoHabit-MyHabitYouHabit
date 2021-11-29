@@ -127,7 +127,7 @@ public class HabitTodayFragmentTest {
         toY = fromY;
         solo.drag(fromX, toX, fromY, toY, 2);
         Thread.sleep(2000);  // Wait for everything to load.
-        solo.clickOnButton("OK");
+        solo.clickOnView(solo.getView(android.R.id.button1));
         assertFalse(solo.searchText(HABIT_NAME));
     }
 
@@ -186,7 +186,7 @@ public class HabitTodayFragmentTest {
             toY = fromY;
             solo.drag(fromX, toX, fromY, toY, 3);
             Thread.sleep(2000);  // Wait for everything to load.
-            solo.clickOnButton("OK");
+            solo.clickOnView(solo.getView(android.R.id.button1));
             assertFalse(solo.searchText(Titles[i]));
         }
     }
@@ -232,7 +232,7 @@ public class HabitTodayFragmentTest {
 
 
 
-        //Delete the 7 habit
+        //Delete the habit
         int fromX, toX, fromY, toY;
         int[] location = new int[2];
         View row;
@@ -248,7 +248,7 @@ public class HabitTodayFragmentTest {
         toY = fromY;
         solo.drag(fromX, toX, fromY, toY, 3);
         Thread.sleep(2000);  // Wait for everything to load.
-        solo.clickOnButton("OK");
+        solo.clickOnView(solo.getView(android.R.id.button1));
         assertFalse(solo.searchText(title));
     }
 
