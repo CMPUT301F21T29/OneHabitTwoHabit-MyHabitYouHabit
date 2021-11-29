@@ -68,7 +68,9 @@ public class FeedFragment extends Fragment{
 
         return view;
     }
-
+    /**
+     * Inflates the menu
+     */
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);

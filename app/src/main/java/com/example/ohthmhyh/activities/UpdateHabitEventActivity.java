@@ -367,10 +367,8 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // TODO: This is very similar to the HabitEvent's locationString method. Would be good to
-    //       eventually aggregate this functionality somehow.
     /**
-     * Returns the location cordinates in a more human-friendly format.
+     * Returns the location coordinates in a more human-friendly format.
      * @param location that needs to be converted
      * @return The location of this HabitEvent in a more human-friendly format.
      */

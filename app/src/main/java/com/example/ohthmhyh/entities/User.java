@@ -48,7 +48,6 @@ public class User {
 
     /**
      * Set the users username
-     * @return String.
      */
     public void setUsername(String username) {
         this.username = username;
