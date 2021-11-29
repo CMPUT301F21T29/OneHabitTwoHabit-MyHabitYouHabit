@@ -3,32 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_edit_profile.xml" value="0.36666666666666664" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/fragment_user.xml" value="0.25" />
-        <entry key="..\:/Josh/Desktop/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/item_friend.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/NTT/Desktop/CMPUT301/GroupProject_CMPUT301/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_create_habit_event.xml" value="0.264" />
+        <entry key="..\:/Users/NTT/Desktop/CMPUT301/GroupProject_CMPUT301/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/activity_update_habit_event.xml" value="0.264" />
+        <entry key="..\:/Users/NTT/Desktop/CMPUT301/GroupProject_CMPUT301/OneHabitTwoHabit-MyHabitYouHabit/app/src/main/res/layout/create_habit_event.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/drawable/habit_event_default.xml" value="0.23125" />
         <entry key="app/src/main/res/drawable/ic_feed_background.xml" value="0.23125" />
-        <entry key="app/src/main/res/drawable/ic_person_foreground.xml" value="0.21302083333333333" />
-        <entry key="app/src/main/res/drawable/refresh.xml" value="0.21302083333333333" />
-        <entry key="app/src/main/res/layout/activity_edit_profile.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/activity_login.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3802083333333333" />
         <entry key="app/src/main/res/layout/activity_map.xml" value="0.11481481481481481" />
-        <entry key="app/src/main/res/layout/activity_update_habit.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/activity_update_habit_event.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/create_habit_event.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/fragment_feed.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/fragment_habit_events.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/fragment_habits.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/fragment_habits_today.xml" value="0.3802083333333333" />
-        <entry key="app/src/main/res/layout/fragment_user.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/item_friend.xml" value="0.21510416666666668" />
-        <entry key="app/src/main/res/layout/item_friend_request.xml" value="0.34309623430962344" />
+        <entry key="app/src/main/res/layout/fragment_habits_today.xml" value="0.3807291666666667" />
+        <entry key="app/src/main/res/layout/item_friend.xml" value="0.3807291666666667" />
+        <entry key="app/src/main/res/layout/item_friend_request.xml" value="0.3807291666666667" />
         <entry key="app/src/main/res/layout/item_habit.xml" value="0.33300219953197097" />
-        <entry key="app/src/main/res/layout/item_habit_event.xml" value="0.21510416666666668" />
+        <entry key="app/src/main/res/layout/item_habit_event.xml" value="0.3807291666666667" />
         <entry key="app/src/main/res/layout/item_habit_today.xml" value="0.11851851851851852" />
         <entry key="app/src/main/res/layout/recyclerview_item_hf.xml" value="0.1527777777777778" />
-        <entry key="app/src/main/res/menu/top_nav_refresh_menu.xml" value="0.1751452464154881" />
       </map>
     </option>
   </component>

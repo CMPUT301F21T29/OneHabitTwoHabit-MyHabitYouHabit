@@ -83,11 +83,11 @@ public class HabitEventsFragmentTest {
      */
     @Test
     public void testAddHabitEventShowsUp() throws Exception {
-        solo.clickOnView((Button) solo.getView(R.id.checkBox_ht));
+        solo.clickOnView(solo.getView(R.id.checkBox_ht));
         assertTrue(solo.searchText("Enter a comment"));
-        assertTrue(solo.searchText("Click to add Image"));
-        assertTrue(solo.searchText("Add location button"));
-        assertTrue(solo.searchText("Create Event"));
+        assertTrue(solo.searchText("Click image to change"));
+        assertTrue(solo.searchText("Change Location"));
+        assertTrue(solo.searchText("Done"));
     }
 
     /**

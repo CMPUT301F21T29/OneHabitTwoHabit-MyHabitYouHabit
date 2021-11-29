@@ -100,7 +100,7 @@ public class UpdateHabitEventActivity extends AppCompatActivity {
         } else {
             // Default list view (not editing)
             Habit currentHabit = databaseAdapter.habitAtIndex(habitIndex);
-            displayHabitView.setText("Habit: " + currentHabit.getName());
+            displayHabitView.setText("I have completed Habit: " + currentHabit.getName());
             habit = currentHabit;
         }
     }
